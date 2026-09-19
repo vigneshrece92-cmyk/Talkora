@@ -15,6 +15,8 @@ native app.
 - 🧠 **Core learning** — curated dictionary + offline intents, levels & XP, streaks + daily goals
 - 📝 **Practice** — mistake book, SM-2 spaced repetition, quizzes (unscramble, cloze, type, read-aloud, listening) + AI quizzes, 12 badges
 - 🔤 **Script Trainer** — learn Tamil / Devanagari / Malayalam alphabets with voiced letter cards, known-tracking and letter quizzes
+- 📘 **Grammar Guide** — two-minute essentials for all 5 languages with spoken examples
+- 👋 **Onboarding tour**, 📤 share-progress card, 🔥 streak nudge + optional daily reminder
 - 🤖 **AI tutor (free)** — conversations at levels A1–B2, interactive stories with choices, session reviews, grammar feedback. Default provider Pollinations `gpt-oss-20b` — **no key needed**
 - 💾 **Private** — everything lives in your browser's localStorage; JSON backup / restore / wipe
 - 📶 **Offline** — the service worker caches the whole app shell; machine translation is only used online for unseen sentences

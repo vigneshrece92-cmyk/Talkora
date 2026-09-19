@@ -502,6 +502,34 @@ body.dark .sdetail{background:linear-gradient(150deg,#2b2118,#241c15);border-col
 .sdetail .ht{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
 .sdetail .grow{flex:1;min-width:120px;}
 
+
+/* ---------- grammar guide ---------- */
+.gsec{border:1px solid var(--line);border-radius:16px;padding:13px 15px;margin-top:10px;background:var(--bg);box-shadow:var(--shadow-sm);}
+.gsec h4{font-size:14px;font-weight:800;margin-bottom:4px;}
+.gsec p{font-size:13.5px;color:var(--ink);opacity:.9;}
+.gex{margin-top:8px;background:linear-gradient(135deg,#e6fbf7,#f0fffb);border:1.5px solid #aae8dc;border-radius:12px;
+  padding:8px 12px;font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+body.dark .gex{background:linear-gradient(135deg,#12332e,#0f2622);border-color:#1d5a51;}
+
+/* ---------- onboarding tour ---------- */
+.tourbg{position:fixed;inset:0;background:rgba(20,12,6,.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  z-index:120;display:flex;align-items:center;justify-content:center;padding:20px;}
+.tourcard{background:var(--card);border:1px solid var(--line);border-radius:26px;max-width:420px;width:100%;
+  padding:26px 22px;text-align:center;box-shadow:var(--shadow-lg);animation:popin .3s cubic-bezier(.22,1.2,.32,1.1);}
+.tourcard .tic{font-size:52px;line-height:1.2;filter:drop-shadow(0 4px 6px rgba(93,58,20,.25));}
+.tourcard h3{font-size:19px;font-weight:800;margin:10px 0 6px;letter-spacing:-.2px;}
+.tourcard p{font-size:13.5px;color:var(--ink-soft);font-weight:500;line-height:1.55;}
+.tourdots{display:flex;gap:6px;justify-content:center;margin:16px 0 14px;}
+.tourdots i{width:8px;height:8px;border-radius:99px;background:var(--line-strong);transition:all .25s;}
+.tourdots i.on{width:22px;background:var(--brand-grad);}
+.tourbtns{display:flex;gap:8px;justify-content:center;}
+
+/* ---------- streak nudge ---------- */
+.nudge{display:flex;align-items:center;gap:9px;flex-wrap:wrap;background:linear-gradient(135deg,#fff8ef,#ffeddb);
+  border:1.5px solid #ffb27e;border-radius:16px;padding:10px 14px;margin:12px 0 2px;font-size:13px;font-weight:600;
+  box-shadow:var(--shadow-sm), inset 0 1px 0 #fff;animation:fadein .3s ease;}
+body.dark .nudge{background:linear-gradient(135deg,#2b2118,#241c15);border-color:#6b4a30;box-shadow:none;}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
 }
@@ -540,6 +568,7 @@ body.dark .sdetail{background:linear-gradient(150deg,#2b2118,#241c15);border-col
       <button data-view="lesson"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Lesson</button>
       <button data-view="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/><path d="M8 23h8"/></svg>Say It</button>
       <button data-view="script"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Script</button>
+      <button data-view="grammar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Grammar</button>
       <button data-view="words"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5z"/></svg>Words</button>
       <button data-view="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>Progress</button>
     </nav>
@@ -752,6 +781,16 @@ body.dark .sdetail{background:linear-gradient(150deg,#2b2118,#241c15);border-col
       </div>
       <div id="scrquiz" style="margin-top:14px;display:none;"></div>
       <p class="hint" style="margin-top:12px;">English &amp; French use the Latin alphabet — for them, practice sounds in <b>Say It</b>. Tap any letter to see &amp; hear it; mark letters you know.</p>
+    </div>
+  </section>
+
+  <!-- GRAMMAR GUIDE -->
+  <section class="view" id="view-grammar">
+    <div class="card">
+      <div style="font-size:16px;font-weight:800;margin-bottom:10px;">📘 Grammar Guide</div>
+      <div class="catbar" id="grbar"></div>
+      <div id="grbody"></div>
+      <p class="hint" style="margin-top:10px;">Two-minute essentials — the patterns that make sentences click. Tap 🔊 to hear any example.</p>
     </div>
   </section>
 
@@ -1377,6 +1416,7 @@ function touchStreak(){
 function addXp(n,label){
   touchStreak();
   S.xp+=n;
+  S.lastPractice=new Date().toISOString().slice(0,10);
   const before=levelOf(S.xp-n), after=levelOf(S.xp);
   if(n>0) S.today.xp+=n;
   save(); renderXp();
@@ -2736,6 +2776,7 @@ function switchView(name){
   if(name==="progress") renderProgress();
   if(name==="bot") renderBotSeg();
   if(name==="script") renderScript();
+  if(name==="grammar") renderGrammar();
   if(name==="cards"){ renderCatbar(); renderCard(); }
   if(name==="words") renderWords();
   if(name==="lesson"&&document.getElementById("lessonmenu").style.display!=="none") renderLessonCats();
@@ -3202,6 +3243,137 @@ function initScript(){
   };
 }
 document.addEventListener("DOMContentLoaded",initScript);
+
+
+/* ---------------- GRAMMAR GUIDE ---------------- */
+const GRAMMAR={
+  en:[["Word order","Subject → Verb → Object. Adjectives go before the noun.","She eats hot rice."],
+      ["Nouns","No grammatical gender. Plurals usually add -s. Articles: a / an / the.","one book → two books"],
+      ["Verbs & tenses","Time is shown by helper words: go / went / will go / have gone. Third person adds -s.","I eat · she eats · they ate"],
+      ["Questions & politeness","Questions use do / is helpers. Soften requests with please and could you…?","Could you help me, please?"]],
+  ta:[["Word order","Subject → Object → Verb — the verb always comes last.","அவள் சாப்பிடுகிறாள் (she eats)"],
+      ["Nouns","No articles and no gender in verbs. Plural: -கள். Always prefer the polite நீங்கள்.","புத்தகங்கள் (books)"],
+      ["Verbs","Endings carry person and number; there is no separate word for 'to be'. Present tense: -கிற-.","நான் போகிறேன் (I go)"],
+      ["Questions","Just add the -ஆ ending to the verb — word order stays the same.","நீ வருகிறாயா? (are you coming?)"]],
+  hi:[["Word order","Subject → Object → Verb; the verb closes the sentence.","वह चावल खाती है (she eats rice)"],
+      ["Gender","Nouns are masculine or feminine, and verbs and adjectives agree with them.","लड़का जाता है · लड़की जाती है"],
+      ["Verbs","Habitual present: -ता / -ती / -ते. Future adds -गा / -गी. Use the respectful आप.","मैं जाता हूँ (I go)"],
+      ["Questions","No inversion — add क्या or simply raise your intonation.","क्या आप चाय पियेंगे? (will you have tea?)"]],
+  ml:[["Word order","Subject → Object → Verb; describing words come before what they describe.","അവൾ ചോറ് കഴിക്കുന്നു (she eats rice)"],
+      ["Nouns","No gender. Plural: -കൾ (or -മാർ for people). Polite you: നിങ്ങൾ.","പുസ്തകങ്ങൾ (books)"],
+      ["Verbs","Present ends in -ുന്നു, the verb sits last, and no 'to be' is needed.","ഞാൻ പോകുന്നു (I go)"],
+      ["Questions","Add the -ോ ending (or ആണോ) — the order of words never changes.","നിങ്ങൾ വരുന്നുണ്ടോ? (are you coming?)"]],
+  fr:[["Word order","Subject → Verb → Object; adjectives usually come after the noun.","Elle mange du riz (she eats rice)"],
+      ["Gender","Every noun is le (masc) or la (fem); plurals add a silent -s.","le livre · la table · les livres"],
+      ["Verbs","Endings change with the person; past tenses use an avoir / être helper.","je mange · nous mangeons · j'ai mangé"],
+      ["Questions","Three styles: rising tone, est-ce que, or inversion. Use vous with strangers.","Est-ce que tu parles anglais ?"]]
+};
+S.grLang=S.grLang||S.learn;
+function renderGrammar(){
+  if(!GRAMMAR[S.grLang]) S.grLang=S.learn&&GRAMMAR[S.learn]?S.learn:"en";
+  const bar=document.getElementById("grbar");
+  if(bar){ let h=""; Object.keys(GRAMMAR).forEach(c=>{
+      h+='<button class="chip" style="'+(S.grLang===c?"border-color:var(--orange);color:var(--orange-dark);background:#fff4ec;":"")+'" data-g="'+c+'">'+LANGS[c].native+" · "+LANGS[c].name+'</button>';
+    }); bar.innerHTML=h;
+    bar.querySelectorAll("button").forEach(b=>b.onclick=()=>{ S.grLang=b.getAttribute("data-g"); save(); renderGrammar(); });
+  }
+  const body=document.getElementById("grbody");
+  if(body){ body.innerHTML=GRAMMAR[S.grLang].map((s,i)=>
+    '<div class="gsec"><h4>'+(i+1)+'. '+esc(s[0])+'</h4><p>'+esc(s[1])+'</p>'+
+    '<div class="gex"><span style="flex:1;">'+esc(s[2])+'</span><button class="mini" data-gx="'+i+'">🔊</button></div></div>').join("");
+    body.querySelectorAll("[data-gx]").forEach(b=>b.onclick=()=>{
+      speak(GRAMMAR[S.grLang][+b.getAttribute("data-gx")][2].replace(/\(.*?\)/g,""),S.grLang);
+    });
+  }
+}
+
+/* ---------------- ONBOARDING TOUR ---------------- */
+const TOUR=[
+  {ic:"🗣",t:"Pick your pair",x:"The top selectors choose what you speak and what you're learning — any pair between 5 languages."},
+  {ic:"🎙",t:"Talk, don't type",x:"The big mic listens to you. In Live Bot it even translates your speech and corrects mistakes out loud."},
+  {ic:"🎮",t:"11 ways to practice",x:"Chat, Live Bot, Translate, Cards, Quiz, Lesson, Say It, Script, Grammar, Words, Progress — swipe the tab bar."},
+  {ic:"🤖",t:"Free AI, zero keys",x:"The AI tutor runs on a free keyless provider by default. ⚙️ Settings lets you tune speed, voice and AI."},
+  {ic:"📱",t:"Install Talkora",x:"Add it to your home screen — it opens full-screen like a native app and works offline."}
+];
+let TOUR_I=0;
+function tourStart(){
+  if(S.tourDone||document.getElementById("tourbg")) return;
+  TOUR_I=0;
+  const bg=document.createElement("div"); bg.id="tourbg"; bg.className="tourbg";
+  document.body.appendChild(bg);
+  tourRender();
+}
+function tourRender(){
+  const bg=document.getElementById("tourbg"); if(!bg) return;
+  const s=TOUR[TOUR_I];
+  bg.innerHTML='<div class="tourcard"><div class="tic">'+s.ic+'</div><h3>'+esc(s.t)+'</h3><p>'+esc(s.x)+'</p>'+
+    '<div class="tourdots">'+TOUR.map((_,i)=>'<i class="'+(i===TOUR_I?"on":"")+'"></i>').join("")+'</div>'+
+    '<div class="tourbtns"><button class="btn ghost" id="tourskip">Skip</button>'+
+    '<button class="btn blue" id="tournext">'+(TOUR_I===TOUR.length-1?"Let's go! 🚀":"Next →")+'</button></div>';
+  document.getElementById("tourskip").onclick=tourEnd;
+  document.getElementById("tournext").onclick=()=>{ if(TOUR_I>=TOUR.length-1) tourEnd(); else { TOUR_I++; tourRender(); } };
+}
+function tourEnd(){ const bg=document.getElementById("tourbg"); if(bg) bg.remove(); S.tourDone=1; save(); }
+
+/* ---------------- SHARE PROGRESS + NUDGE + REMINDER ---------------- */
+function shareProgress(){
+  renderProgress();
+  const g=id=>{ const e=document.getElementById(id); return e?e.textContent:""; };
+  const badges=Object.keys(S.badges||{}).length;
+  const txt="🗣️ Talkora check-in!\n🏅 Level "+g("st-level")+" · "+S.xp+" XP\n🔥 "+S.streak+"-day streak\n📚 "+g("st-known")+" words known · "+badges+" badges\nI'm learning "+LANGS[S.learn].name+" with my voice — free & offline!";
+  if(navigator.share){ navigator.share({text:txt}).catch(()=>{}); }
+  else if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(()=>toast("📋 Progress copied — paste it anywhere!")); }
+  else toast("Sharing not supported here.");
+}
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function packInit(){
+  // share button in Progress
+  const reset=document.getElementById("resetbtn");
+  if(reset&&!document.getElementById("sharebtn")){
+    const b=document.createElement("button"); b.id="sharebtn"; b.className="btn green";
+    b.style.cssText="margin-top:10px;margin-right:8px;"; b.innerHTML="📤 Share my progress";
+    b.onclick=shareProgress;
+    reset.parentElement.insertBefore(b,reset);
+  }
+  // streak nudge (returning users, not practiced today)
+  if(S.xp>0&&S.lastPractice!==todayStr()&&!document.getElementById("nudgebar")){
+    const wrap=document.querySelector(".wrap");
+    if(wrap){ const n=document.createElement("div"); n.id="nudgebar"; n.className="nudge";
+      n.innerHTML='🔥 <b>Protect your streak!</b> A 2-minute quiz keeps it alive.'+
+        '<span style="margin-left:auto;display:flex;gap:6px;"><button class="mini" id="nudgego">⚡ Quick quiz</button><button class="mini" id="nudgex">Later</button></span>';
+      wrap.insertBefore(n,wrap.firstChild);
+      document.getElementById("nudgego").onclick=()=>{ S.nudgeDate=todayStr(); save(); n.remove(); switchView("quiz"); };
+      document.getElementById("nudgex").onclick=()=>{ S.nudgeDate=todayStr(); save(); n.remove(); };
+    }
+  }
+  // daily reminder (browser notification, opt-in)
+  const modal=document.querySelector("#settingsmodal .modal");
+  if(modal&&!document.getElementById("remsrow")){
+    const row=document.createElement("div"); row.className="srow"; row.id="remsrow";
+    row.innerHTML='<span class="sl">🔔 Daily reminder</span><button class="mini" id="rembtn">Enable</button>'+
+      '<span class="sd">Once a day, while Talkora is open, nudge me if I haven\'t practiced.</span>';
+    modal.appendChild(row);
+    const rb=document.getElementById("rembtn");
+    const paint=()=>{ rb.textContent=S.remind?"ON ✓":"Enable"; rb.style.color=S.remind?"var(--good)":""; };
+    rb.onclick=()=>{
+      if(!("Notification" in window)){ toast("Notifications aren't supported in this browser."); return; }
+      if(S.remind){ S.remind=false; save(); paint(); return; }
+      Notification.requestPermission().then(p=>{
+        if(p==="granted"){ S.remind=true; save(); toast("🔔 Reminder on — once a day."); }
+        else toast("Permission not granted.");
+        paint();
+      });
+    };
+    paint();
+  }
+  // fire the notification once per unpracticed day
+  if(S.remind&&("Notification" in window)&&Notification.permission==="granted"&&S.lastPractice!==todayStr()&&S.nudgeNotif!==todayStr()){
+    S.nudgeNotif=todayStr(); save();
+    try{ new Notification("Talkora 🔥",{body:"Your streak misses you — one quick quiz?"}); }catch(e){}
+  }
+  if(!S.tourDone) setTimeout(tourStart,700);
+}
+document.addEventListener("DOMContentLoaded",packInit);
 
 /* ---------------- INIT ---------------- */
 function initLangSelects(){
