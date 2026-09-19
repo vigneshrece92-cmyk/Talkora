@@ -1372,7 +1372,7 @@ let VOICES=[];
 function loadVoices(){ VOICES=(window.speechSynthesis||{}).getVoices()||[]; }
 if("speechSynthesis" in window){ loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
 function speak(text,lang,rate,cb){
-  if(!("speechSynthesis" in window)||!text) return;
+  if(!("speechSynthesis" in window)||!text){ if(cb) cb(); return; }
   try{
     const u=new SpeechSynthesisUtterance(text);
     let v=null;
