@@ -452,6 +452,35 @@ body.dark .ib-tx b{color:#ffb27e;}
 .ib-x{border:0; background:none; font-size:15px; color:var(--ink-soft); cursor:pointer; padding:8px; line-height:1;}
 .ib-x:hover{color:var(--ink);}
 
+
+/* ---------- live bot ---------- */
+.botstage{text-align:center; background:linear-gradient(165deg,var(--card) 55%,#fff2e8);}
+body.dark .botstage{background:linear-gradient(165deg,var(--card) 55%,#2a2017);}
+.botstat{font-size:13px;color:var(--ink-soft);font-weight:700;margin-bottom:12px;}
+.seg{display:inline-flex;gap:4px;background:rgba(120,85,50,.07);border:1px solid rgba(120,85,50,.10);border-radius:999px;padding:4px;margin-bottom:16px;}
+body.dark .seg{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.07);}
+.seg button{border:0;background:transparent;border-radius:999px;padding:8px 15px;font-family:inherit;font-size:12.5px;font-weight:800;color:var(--ink-soft);cursor:pointer;transition:all .18s;}
+.seg button:hover{color:var(--ink);}
+.seg button.on{background:var(--brand-grad);color:#fff;box-shadow:var(--glow-brand), inset 0 1px 0 rgba(255,255,255,.35);}
+.botmic{width:104px;height:104px;border-radius:50%;border:0;cursor:pointer;font-size:42px;color:#fff;
+  background:radial-gradient(circle at 30% 24%, #ffb894 0%, #ff7a45 38%, #ff531f 72%, #e03a0c 100%);
+  box-shadow:var(--glow-brand), inset 0 4px 8px rgba(255,255,255,.45), inset 0 -8px 16px rgba(170,35,0,.45);
+  transition:transform .15s; margin:4px auto 6px; display:flex;align-items:center;justify-content:center; position:relative;}
+.botmic:hover{transform:scale(1.05);}
+.botmic:active{transform:scale(.95);}
+.botmic.rec{animation:pulse 1.2s infinite;}
+.botmic.rec::after{content:"";position:absolute;inset:-10px;border-radius:50%;border:3px solid var(--orange);opacity:.5;animation:ring 1.2s infinite;}
+.brow{display:flex;flex-direction:column;gap:3px;max-width:92%;animation:msgin .28s cubic-bezier(.22,.9,.32,1.15);}
+.brow.user{align-self:flex-end;align-items:flex-end;}
+.brow.bot{align-self:flex-start;align-items:flex-start;}
+.brow .tag2{font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-soft);padding:0 4px;}
+.brow .bub{padding:11px 15px;border-radius:16px;font-size:15px;border:1px solid var(--line);background:var(--bubble-bot);box-shadow:var(--shadow-sm);word-wrap:break-word;}
+.brow.user .bub{background:var(--bubble-me-grad);color:#fff;border-color:transparent;box-shadow:var(--glow-teal);}
+.brow .fix{margin-top:6px;background:linear-gradient(135deg,#fff8ef,#ffeddb);border:1.5px solid #ffd9b8;border-radius:14px;padding:10px 13px;font-size:13.5px;text-align:left;}
+body.dark .brow .fix{background:linear-gradient(135deg,#2b2118,#241c15);border-color:#4d3a29;}
+.brow .fix .lbl{font-size:10.5px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:var(--orange-dark);margin-bottom:3px;}
+body.dark .brow .fix .lbl{color:#ff9d5c;}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
 }
@@ -483,6 +512,7 @@ body.dark .ib-tx b{color:#ffb27e;}
     </div>
     <nav id="tabs">
       <button data-view="chat" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>Chat</button>
+      <button data-view="bot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="9" width="16" height="11" rx="3"/><path d="M12 9V6"/><circle cx="12" cy="4.5" r="1.5"/><path d="M9.5 14h.01"/><path d="M14.5 14h.01"/><path d="M9.5 17h5"/><path d="M2 13v3"/><path d="M22 13v3"/></svg>Live Bot</button>
       <button data-view="translate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10"/><path d="M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/></svg>Translate</button>
       <button data-view="cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Cards</button>
       <button data-view="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Quiz</button>
@@ -520,6 +550,29 @@ body.dark .ib-tx b{color:#ffb27e;}
         <button class="mini" id="reviewbtn">📝 Review session</button>
         <button class="mini" id="clearbtn">🧹 Clear chat</button>
       </div>
+    </div>
+  </section>
+
+  <!-- LIVE BOT -->
+  <section class="view" id="view-bot">
+    <div class="card botstage">
+      <div class="botstat" id="botstat">🤖 <b>Talkora Live Bot</b> — your hands-free voice coach</div>
+      <div class="seg" id="botseg">
+        <button data-mode="speak" class="on">🗣 Speak</button>
+        <button data-mode="learn">🎯 Try</button>
+      </div>
+      <button class="botmic" id="botmic" title="Tap and speak">🎤</button>
+      <div class="interim" id="botinterim" style="text-align:center;"></div>
+      <div class="chatctrl" style="justify-content:center;">
+        <button class="mini" id="botauto">🔁 Auto-listen: OFF</button>
+        <button class="mini" id="botvoice">🔊 Voice replies: ON</button>
+        <button class="mini" id="botclear">🧹 Clear</button>
+      </div>
+      <p class="hint" id="bothint" style="text-align:center;margin-top:10px;"></p>
+    </div>
+    <div class="card" style="margin-top:14px;">
+      <div id="botlog" style="display:flex;flex-direction:column;gap:10px;"></div>
+      <div class="hint" id="botempty" style="text-align:center;padding:18px 0;">Your voice session with the bot appears here. Tap 🎤 and start talking!</div>
     </div>
   </section>
 
@@ -1318,7 +1371,7 @@ function beep(kind){
 let VOICES=[];
 function loadVoices(){ VOICES=(window.speechSynthesis||{}).getVoices()||[]; }
 if("speechSynthesis" in window){ loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
-function speak(text,lang,rate){
+function speak(text,lang,rate,cb){
   if(!("speechSynthesis" in window)||!text) return;
   try{
     const u=new SpeechSynthesisUtterance(text);
@@ -1328,6 +1381,7 @@ function speak(text,lang,rate){
     if(v) u.voice=v;
     u.lang=(LANGS[lang]||LANGS.en).tts;
     u.rate=rate||(S.slow?0.55:S.rate);
+    if(cb){ u.onend=cb; u.onerror=cb; }
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);
   }catch(e){}
@@ -2638,6 +2692,7 @@ function switchView(name){
   document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.getAttribute("data-view")===name));
   document.getElementById("view-"+name).classList.add("on");
   if(name==="progress") renderProgress();
+  if(name==="bot") renderBotSeg();
   if(name==="cards"){ renderCatbar(); renderCard(); }
   if(name==="words") renderWords();
   if(name==="lesson"&&document.getElementById("lessonmenu").style.display!=="none") renderLessonCats();
@@ -2722,6 +2777,147 @@ function updateAiBadge(){
   }
 }
 function applyDark(){ document.body.classList.toggle("dark",!!S.dark); }
+
+
+/* ---------------- LIVE BOT (interactive voice coach) ---------------- */
+S.bot=S.bot||{mode:"speak",auto:false,voice:true};
+const BOT={busy:false,rec:null};
+function botMicBtn(){ return document.getElementById("botmic"); }
+function renderBotSeg(){
+  const X=LANGS[S.speak],Y=LANGS[S.learn];
+  const bx=document.querySelector("#botseg [data-mode='speak']"),by=document.querySelector("#botseg [data-mode='learn']");
+  if(bx){ bx.innerHTML="🗣 Speak "+esc(X.name); bx.classList.toggle("on",S.bot.mode==="speak"); }
+  if(by){ by.innerHTML="🎯 Try "+esc(Y.name); by.classList.toggle("on",S.bot.mode==="learn"); }
+  const h=document.getElementById("bothint");
+  if(h) h.innerHTML = S.bot.mode==="speak"
+    ? "Speak in <b>"+esc(X.name)+"</b> — I translate it and say it out loud in <b>"+esc(Y.name)+"</b>. Then try repeating it!"
+    : "Speak in <b>"+esc(Y.name)+"</b> — I listen, and if something is wrong I correct you <b>through voice</b>.";
+  const a=document.getElementById("botauto"); if(a) a.textContent="🔁 Auto-listen: "+(S.bot.auto?"ON":"OFF");
+  const v=document.getElementById("botvoice"); if(v) v.textContent="🔊 Voice replies: "+(S.bot.voice?"ON":"OFF");
+}
+function botStat(html){ const s=document.getElementById("botstat"); if(s) s.innerHTML=html; }
+function botRow(cls,html){
+  const log=document.getElementById("botlog"); if(!log) return;
+  const e=document.getElementById("botempty"); if(e) e.style.display="none";
+  const d=document.createElement("div"); d.className="brow "+cls; d.innerHTML=html; log.appendChild(d);
+  while(log.children.length>40) log.removeChild(log.firstChild);
+}
+function botRelisten(delay){
+  if(S.bot.auto) setTimeout(()=>{ if(S.bot.auto&&!BOT.busy&&!(window.speechSynthesis&&window.speechSynthesis.speaking)) botListen(); },delay||500);
+}
+function botListen(){
+  if(!SR){ toast("🎤 Voice input needs Chrome or Edge — Chat & Translate still work by typing."); return; }
+  const mb=botMicBtn();
+  if(BOT.busy&&BOT.rec){ try{BOT.rec.stop();}catch(e){} return; }
+  if(BOT.busy) return;
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  BOT.busy=true;
+  const lang=S.bot.mode==="learn"?S.learn:S.speak;
+  if(mb) mb.classList.add("rec");
+  botStat("🎧 Listening in <b>"+esc(LANGS[lang].name)+"</b>… speak now");
+  BOT.rec=newRec(lang,
+    { interim:t=>{ const i=document.getElementById("botinterim"); if(i) i.textContent="“"+t+"”"; },
+      text:t=>{ botHeard(t,lang); } },
+    ()=>{ if(mb) mb.classList.remove("rec");
+          const i=document.getElementById("botinterim"); if(i) i.textContent="";
+          BOT.rec=null;
+          if(!BOT.busy) botStat("🤖 Tap the mic when ready");
+    });
+  if(!BOT.rec){ BOT.busy=false; if(mb) mb.classList.remove("rec"); return; }
+  try{ BOT.rec.start(); }catch(e){ BOT.busy=false; if(mb) mb.classList.remove("rec"); }
+}
+async function botHeard(text,lang){
+  BOT.busy=true;
+  botRow("user",'<span class="tag2">You · '+esc(LANGS[lang].name)+'</span><div class="bub">'+esc(text)+'</div>');
+  if(lang===S.speak) await botTranslate(text); else await botCorrect(text);
+  BOT.busy=false;
+  botStat("🤖 "+(S.bot.auto?"Listening again soon…":"Tap the mic when ready"));
+  botRelisten(600);
+}
+async function botTranslate(text){
+  botStat("🧠 Translating…");
+  const from=S.speak,to=S.learn;
+  let out=null;
+  const exact=PHRASEMAPS[from]&&PHRASEMAPS[from].get(norm(text));
+  if(exact) out=T(exact,to);
+  if(!out){
+    try{
+      const r=await fetch("/api/translate?q="+encodeURIComponent(text)+"&from="+from+"&to="+to);
+      const j=await r.json(); if(j&&j.ok&&j.text) out=j.text;
+    }catch(e){}
+  }
+  if(!out){
+    botRow("bot",'<span class="tag2">Talkora</span><div class="bub">⚠️ I couldn\'t translate that right now — try a simpler phrase, or check your connection.</div>');
+    return;
+  }
+  addXp(2,"live bot");
+  botRow("bot",'<span class="tag2">Talkora · '+esc(LANGS[to].name)+'</span><div class="bub">🌐 '+esc(out)+'</div>'+
+    '<div class="fix"><div class="lbl">🎯 Now you try</div>Say it in '+esc(LANGS[to].name)+' — switch to 🎯 Try and tap the mic!</div>');
+  S.bot.mode="learn"; renderBotSeg(); save();
+  const after=()=>botStat("🎯 Your turn — say it in <b>"+esc(LANGS[to].name)+"</b>");
+  if(S.bot.voice) speak(out,to,undefined,after); else after();
+}
+async function botCorrect(text){
+  botStat("🧠 Checking your "+esc(LANGS[S.learn].name)+"…");
+  const X=LANGS[S.speak],Y=LANGS[S.learn];
+  if(aiReady()){
+    try{
+      const sys=[
+        "You are \"Talkora\", an encouraging speaking coach.",
+        "The learner's native language is "+X.name+". They just tried speaking in "+Y.name+". The speech recogniser heard: \""+text+"\".",
+        "Judge grammar and word choice of what they most likely intended; ignore pure recognition artifacts.",
+        "Reply with ONLY valid JSON (no markdown): {\"perfect\":true|false,\"corrected\":\"...\",\"tip\":\"...\",\"praise\":\"...\"}",
+        "- corrected: the natural correct sentence in "+Y.name+" (short).",
+        "- tip: ONE brief coaching tip in "+X.name+" (max 10 words); empty string if perfect.",
+        "- praise: short cheerful praise in "+Y.name+".",
+      ].join("\n");
+      const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({provider:S.ai.provider,key:S.ai.key,model:S.ai.model,
+          messages:[{role:"system",content:sys},{role:"user",content:text}],max_tokens:300})});
+      const j=await r.json();
+      if(!j.ok) throw new Error(j.error||"AI failed");
+      let s=String(j.text).trim().replace(/^```(?:json)?/,"").replace(/```$/,"").trim();
+      const a=s.indexOf("{"),b=s.lastIndexOf("}"); if(a>=0&&b>a) s=s.slice(a,b+1);
+      const o=JSON.parse(s);
+      const corrected=String(o.corrected||text).slice(0,300), tip=String(o.tip||""), praise=String(o.praise||"Great job!");
+      const perfect=!!o.perfect;
+      addXp(perfect?5:3,"live bot");
+      const line=perfect?(praise+" "+corrected):("Almost! Say it like this: "+corrected);
+      botRow("bot",'<span class="tag2">Talkora · coach</span><div class="bub">'+(perfect?"✅ ":"🛠️ ")+esc(line)+'</div>'+
+        (tip&&!perfect?'<div class="fix"><div class="lbl">💡 Tip · '+esc(X.name)+'</div>'+esc(tip)+'</div>':''));
+      if(S.bot.voice) speak(line,S.learn,undefined,()=>botStat("🤖 "+(S.bot.auto?"Listening again soon…":"Tap the mic when ready")));
+      return;
+    }catch(e){ /* offline fallback below */ }
+  }
+  const hit=PHRASEMAPS[S.learn]&&PHRASEMAPS[S.learn].get(norm(text));
+  if(hit){
+    const say=T(hit,S.learn);
+    addXp(3,"live bot");
+    botRow("bot",'<span class="tag2">Talkora · coach</span><div class="bub">✅ Perfect! '+esc(say)+'</div>');
+    if(S.bot.voice) speak("Perfect! "+say,S.learn);
+  }else{
+    botRow("bot",'<span class="tag2">Talkora</span><div class="bub">🎧 I heard you! For out-loud corrections, enable the free AI Coach in ⚙️ Settings.</div>');
+    if(S.bot.voice) speak("I heard you! Keep practicing.",S.learn);
+  }
+}
+function initBot(){
+  const mb=botMicBtn();
+  if(mb) mb.onclick=()=>botListen();
+  document.querySelectorAll("#botseg button").forEach(b=>{
+    b.onclick=()=>{ S.bot.mode=b.getAttribute("data-mode"); save(); renderBotSeg(); };
+  });
+  const a=document.getElementById("botauto");
+  if(a) a.onclick=()=>{ S.bot.auto=!S.bot.auto; save(); renderBotSeg(); if(S.bot.auto&&!BOT.busy) botListen(); };
+  const v=document.getElementById("botvoice");
+  if(v) v.onclick=()=>{ S.bot.voice=!S.bot.voice; save(); renderBotSeg(); };
+  const c=document.getElementById("botclear");
+  if(c) c.onclick=()=>{ const l=document.getElementById("botlog"); if(l) l.innerHTML=""; const e=document.getElementById("botempty"); if(e) e.style.display=""; };
+  const sS=document.getElementById("selSpeak"),sL=document.getElementById("selLearn");
+  if(sS) sS.addEventListener("change",renderBotSeg);
+  if(sL) sL.addEventListener("change",renderBotSeg);
+  renderBotSeg();
+}
+document.addEventListener("DOMContentLoaded",initBot);
 
 /* ---------------- INIT ---------------- */
 function initLangSelects(){
