@@ -1,0 +1,2784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Talkora — Learn 5 languages by voice</title>
+<meta name="description" content="Speak English, Tamil, हिन्दी, മലയാളം or Français — your voice tutor listens, understands and replies in the language you're learning. Free, offline-first, installable on your phone.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ff6a3d'/%3E%3Cpath d='M12 18a8 8 0 0 1 8-8h24a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8H30l-9 8v-8h-1a8 8 0 0 1-8-8z' fill='white'/%3E%3Crect x='20' y='20' width='5' height='10' rx='2.5' fill='%23ff6a3d'/%3E%3Crect x='29' y='16' width='5' height='18' rx='2.5' fill='%23ff6a3d'/%3E%3Crect x='38' y='19' width='5' height='12' rx='2.5' fill='%23ff6a3d'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#ff6a3d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Talkora">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root{
+    --orange:#ff6a3d; --orange-dark:#e04e1f; --teal:#0f9d8f; --teal-dark:#0b7d72;
+    --bg:#fff8f2; --card:#ffffff; --ink:#2b2118; --ink-soft:#7a6a5c;
+    --line:#f0e2d4; --bubble-me:#0f9d8f; --bubble-bot:#fff;
+    --gold:#ffb703; --good:#2f9e44; --bad:#e03131; --warn:#f08c00;
+    --shadow:0 6px 24px rgba(120,70,20,.10); --radius:18px;
+  }
+  body.dark{
+    --bg:#171310; --card:#221c17; --ink:#f2e9df; --ink-soft:#a3937f;
+    --line:#3a3129; --bubble-bot:#2a231d; --shadow:0 6px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans","Noto Sans Tamil","Noto Sans Devanagari","Noto Sans Malayalam","Latha",sans-serif;
+    background:linear-gradient(180deg,#fff3e8 0%, var(--bg) 240px);
+    color:var(--ink); line-height:1.45; transition:background .3s,color .3s;
+  }
+  body.dark{background:linear-gradient(180deg,#241d16 0%, var(--bg) 240px);}
+  .wrap{max-width:780px; margin:0 auto; padding:0 14px 40px;}
+
+  /* header */
+  header{position:sticky; top:0; z-index:50; background:rgba(255,248,242,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  body.dark header{background:rgba(23,19,16,.92);}
+  .hrow{display:flex; align-items:center; gap:10px; padding:12px 0 8px;}
+  .logo{width:44px;height:44px;border-radius:13px;flex:0 0 44px;background:linear-gradient(135deg,var(--orange),#ff9d5c);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;font-weight:700; box-shadow:var(--shadow);}
+  .htitle h1{font-size:19px; letter-spacing:.2px;}
+  .htitle h1 .ta{color:var(--orange-dark);}
+  .htitle p{font-size:12px;color:var(--ink-soft);}
+  .hstats{margin-left:auto; display:flex; align-items:center; gap:8px;}
+  .pill{display:flex; align-items:center; gap:6px; background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:7px 13px; box-shadow:var(--shadow); font-size:13px; font-weight:700;}
+  .pill small{color:var(--ink-soft); font-weight:500;}
+  .pill .star{color:var(--gold); font-size:15px;}
+  .iconbtn{border:1px solid var(--line); background:var(--card); border-radius:12px; width:40px; height:40px; font-size:18px; cursor:pointer; box-shadow:var(--shadow);}
+  .iconbtn:hover{border-color:var(--orange);}
+
+  /* direction */
+  .dirbar{display:flex; align-items:center; gap:8px; padding:0 0 12px; flex-wrap:wrap;}
+  .dirbar label{font-size:11.5px; color:var(--ink-soft); font-weight:700; text-transform:uppercase; letter-spacing:.5px;}
+  select{
+    font-family:inherit; font-size:14px; font-weight:600; color:var(--ink);
+    background:var(--card); border:1.5px solid var(--line); border-radius:12px; padding:8px 10px; cursor:pointer; outline:none;
+  }
+  select:focus{border-color:var(--teal);}
+  .dir-arrow{font-size:12px; color:var(--ink-soft); font-weight:700;}
+
+  /* tabs */
+  nav{display:flex; gap:6px; padding-bottom:10px; overflow-x:auto; scrollbar-width:none;}
+  nav::-webkit-scrollbar{display:none;}
+  nav button{border:1px solid var(--line); background:var(--card); color:var(--ink-soft); padding:8px 14px; border-radius:12px;
+    font-size:13.5px; font-weight:700; cursor:pointer; white-space:nowrap; font-family:inherit; transition:all .15s;}
+  nav button.on{background:var(--teal); border-color:var(--teal); color:#fff; box-shadow:0 3px 10px rgba(15,157,143,.3);}
+
+  .view{display:none; animation:fadein .25s ease;}
+  .view.on{display:block;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px;}
+  .card + .card{margin-top:14px;}
+  .hint{font-size:12.5px; color:var(--ink-soft);}
+  .tr-text{font-size:13px; color:var(--ink-soft); font-style:italic; margin-top:2px;}
+
+  /* word of day */
+  .wot{display:flex; align-items:center; gap:10px; background:linear-gradient(135deg,#fff6ec,#ffefe0); border:1.5px solid #ffd9bd;
+    border-radius:14px; padding:10px 14px; margin-bottom:12px; font-size:14.5px; flex-wrap:wrap;}
+  body.dark .wot{background:linear-gradient(135deg,#2a221a,#241d17); border-color:#4a3a2c;}
+  .wot .lbl{font-size:10.5px; font-weight:800; letter-spacing:.8px; color:var(--orange-dark); text-transform:uppercase;}
+  .wot .grow{flex:1;}
+
+  /* chat */
+  .mic-banner{display:none; font-size:12.5px; background:#fff7e0; border:1px solid #ffe1a1; color:#7a5b12;
+    padding:8px 12px; border-radius:12px; margin-bottom:10px;}
+  body.dark .mic-banner{background:#2e2614; border-color:#5a4a1e; color:#e8c86a;}
+  .mic-banner.on{display:block;}
+  .ai-badge{font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:999px; display:inline-flex; gap:5px; align-items:center;}
+  .ai-badge.on{background:#e9fbf8; color:var(--teal-dark); border:1px solid #b9ebe2;}
+  .ai-badge.off{background:var(--bg); color:var(--ink-soft); border:1px solid var(--line);}
+  body.dark .ai-badge.on{background:#12332e; color:#5ad4c5; border-color:#1d5a51;}
+  #chatlog{height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:4px 2px 10px; scroll-behavior:smooth;}
+  .msg{max-width:84%; display:flex; flex-direction:column; gap:3px;}
+  .msg .who{font-size:11px; color:var(--ink-soft); font-weight:700; margin-bottom:2px; padding:0 4px;}
+  .msg .bub{padding:10px 14px; border-radius:16px; font-size:15px; word-wrap:break-word; border:1px solid var(--line); background:var(--bubble-bot);}
+  .msg.bot{align-self:flex-start;}
+  .msg.user{align-self:flex-end; align-items:flex-end;}
+  .msg.user .bub{background:var(--bubble-me); color:#fff; border-color:var(--bubble-me);}
+  .msg .sub{font-size:12.5px; color:var(--ink-soft); padding:0 4px;}
+  .msg .actions{display:flex; gap:6px; padding:0 2px;}
+  .mini{border:1px solid var(--line); background:var(--card); color:var(--ink-soft); border-radius:999px; font-size:11.5px;
+    padding:3px 10px; cursor:pointer; font-family:inherit; font-weight:700;}
+  .mini:hover{background:var(--bg); color:var(--ink);}
+  .teach{margin-top:6px; background:linear-gradient(135deg,#fff6ec,#ffefe0); border:1.5px dashed #ffb27e; border-radius:14px; padding:10px 12px;}
+  body.dark .teach{background:linear-gradient(135deg,#2a221a,#241d17); border-color:#6b4a30;}
+  .teach .lbl{font-size:10.5px; font-weight:800; letter-spacing:.8px; color:var(--orange-dark); text-transform:uppercase; margin-bottom:4px;}
+  body.dark .teach .lbl{color:#ffb27e;}
+  .teach .row{display:flex; align-items:center; gap:8px;}
+  .teach .row .grow{flex:1; font-size:14.5px;}
+
+  .quick{display:flex; gap:7px; flex-wrap:wrap; padding:10px 0 2px;}
+  .chip{border:1px solid var(--line); background:var(--card); border-radius:999px; padding:6px 13px; font-size:13px;
+    cursor:pointer; color:var(--ink); font-family:inherit; font-weight:600; transition:all .12s;}
+  .chip:hover{border-color:var(--orange); color:var(--orange-dark); background:#fff4ec;}
+  body.dark .chip:hover{background:#2a221a;}
+
+  .inputrow{display:flex; gap:8px; align-items:center; margin-top:12px; position:relative;}
+  .inputrow input{flex:1; border:1.5px solid var(--line); border-radius:14px; padding:13px 16px; font-size:15px;
+    font-family:inherit; background:var(--card); color:var(--ink); outline:none; transition:border .15s; min-width:0;}
+  .inputrow input:focus{border-color:var(--teal);}
+  .sendbtn{border:0; background:var(--teal); color:#fff; width:48px; height:48px; border-radius:14px; font-size:20px; cursor:pointer; flex:0 0 48px; transition:all .15s;}
+  .sendbtn:hover{background:var(--teal-dark);}
+  .micbtn{border:0; width:64px; height:64px; border-radius:50%; flex:0 0 64px; cursor:pointer;
+    background:linear-gradient(135deg,var(--orange),#ff9d5c); color:#fff; font-size:26px;
+    box-shadow:0 6px 18px rgba(255,106,61,.4); transition:transform .1s;
+    display:flex; align-items:center; justify-content:center; position:relative;}
+  .micbtn:hover{transform:scale(1.05);}
+  .micbtn.rec{animation:pulse 1.2s infinite;}
+  .micbtn.rec::after{content:""; position:absolute; inset:-8px; border-radius:50%; border:3px solid var(--orange); opacity:.5; animation:ring 1.2s infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);} 50%{transform:scale(1.07);}}
+  @keyframes ring{0%{transform:scale(.9); opacity:.6;} 100%{transform:scale(1.25); opacity:0;}}
+  .interim{font-size:12.5px; color:var(--teal); min-height:16px; padding:2px 4px; font-style:italic;}
+  .chatctrl{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap;}
+
+  /* translate */
+  .t-result{margin-top:12px;}
+  .t-full{background:linear-gradient(135deg,#e9fbf8,#f3fffd); border:1.5px solid #b9ebe2; border-radius:14px; padding:12px 14px; font-size:18px; margin-top:8px;}
+  body.dark .t-full{background:linear-gradient(135deg,#12332e,#0f2622); border-color:#1d5a51;}
+  .t-full .tag{font-size:10.5px; font-weight:800; letter-spacing:.8px; color:var(--teal-dark); text-transform:uppercase;}
+  body.dark .t-full .tag{color:#5ad4c5;}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .wchip{background:var(--bg); border:1px solid var(--line); border-radius:9px; padding:5px 10px; font-size:13px;}
+  .wchip b{display:block; font-size:13.5px;}
+  .wchip small{color:var(--ink-soft); font-size:11px;}
+  .wchip.unknown{background:#fdecec; border-color:#f5c2c2;}
+  body.dark .wchip.unknown{background:#33201f; border-color:#5a2e2e;}
+  .recents{margin-top:14px;}
+  .recent-item{width:100%; text-align:left; border:1px solid var(--line); background:var(--card); border-radius:12px;
+    padding:9px 12px; margin-top:7px; cursor:pointer; font-family:inherit; font-size:14px; color:var(--ink);
+    display:flex; justify-content:space-between; gap:8px;}
+  .recent-item:hover{border-color:var(--teal);}
+  .recent-item .arrow{color:var(--ink-soft);}
+
+  /* cards */
+  .catbar{display:flex; gap:7px; flex-wrap:wrap; margin-bottom:14px;}
+  .fcard{min-height:230px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; cursor:pointer; user-select:none; perspective:600px;}
+  .fcard .inner{transform-style:preserve-3d; transition:transform .4s; width:100%; min-height:230px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;}
+  .fcard.flipped .inner{transform:rotateY(180deg);}
+  .fcard .face{backface-visibility:hidden; -webkit-backface-visibility:hidden; width:100%; min-height:230px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:18px;}
+  .fcard .back{transform:rotateY(180deg);}
+  .fcard .face .big{font-size:30px; font-weight:600;}
+  .fcard .face .tr{font-size:15px; color:var(--ink-soft); font-style:italic;}
+  .fcard .face .en{font-size:20px;}
+  .fcard .face .hintflip{font-size:11px; color:var(--ink-soft); margin-top:8px; opacity:.7;}
+  .fcard .face .known-badge{font-size:11px; color:var(--good); font-weight:800;}
+  .factions{display:flex; gap:8px; margin-top:14px; justify-content:center; flex-wrap:wrap;}
+  .btn{border:0; border-radius:13px; padding:12px 20px; font-size:15px; font-weight:700; cursor:pointer;
+    font-family:inherit; transition:all .15s; display:inline-flex; align-items:center; justify-content:center; gap:7px; color:var(--ink);}
+  .btn.green{background:var(--good); color:#fff;}
+  .btn.green:hover{filter:brightness(1.08);}
+  .btn.red{background:var(--card); color:var(--bad); border:1.5px solid #f0bcbc;}
+  .btn.red:hover{background:#fdf3f3;}
+  body.dark .btn.red:hover{background:#33201f;}
+  .btn.blue{background:var(--teal); color:#fff;}
+  .btn.blue:hover{background:var(--teal-dark);}
+  .btn.ghost{background:var(--bg); color:var(--ink-soft); border:1.5px solid var(--line);}
+  .btn.ghost:hover{color:var(--ink);}
+  .btn.big{width:100%; padding:15px;}
+  .btn:disabled{opacity:.5; cursor:not-allowed;}
+  .progress-line{display:flex; align-items:center; gap:10px; margin-bottom:12px; font-size:13px; color:var(--ink-soft); font-weight:700;}
+  .pbar{flex:1; height:10px; background:var(--line); border-radius:99px; overflow:hidden;}
+  .pbar i{display:block; height:100%; background:linear-gradient(90deg,var(--teal),#37c4b4); border-radius:99px; transition:width .3s;}
+
+  /* quiz */
+  .qopt{width:100%; text-align:left; border:1.5px solid var(--line); background:var(--card); border-radius:14px;
+    padding:13px 16px; margin-top:8px; cursor:pointer; font-family:inherit; font-size:15.5px; color:var(--ink); transition:all .12s;}
+  .qopt:hover:not(:disabled){border-color:var(--teal); transform:translateX(3px);}
+  .qopt.correct{border-color:var(--good); background:#e9f9ee; color:var(--good); font-weight:800;}
+  body.dark .qopt.correct{background:#17351f;}
+  .qopt.wrong{border-color:var(--bad); background:#fdecec; color:var(--bad);}
+  body.dark .qopt.wrong{background:#33201f;}
+  .qhead{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .qword{font-size:24px; font-weight:700; margin:10px 0;}
+  .qresult{text-align:center; padding:10px 0;}
+  .qresult .big{font-size:40px;}
+  .qresult .n{font-size:26px; font-weight:800; margin:8px 0;}
+
+  /* lesson */
+  .lsteps{display:flex; gap:6px; margin-bottom:14px;}
+  .lstep{flex:1; height:8px; border-radius:99px; background:var(--line); overflow:hidden;}
+  .lstep i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--orange),#ffb27e); transition:width .3s;}
+  .lstep.done i{width:100%;}
+  .lcard{text-align:center; padding:22px 14px; background:linear-gradient(135deg,#fff6ec,#fff); border-radius:16px;
+    border:1.5px solid #ffd9bd; margin-bottom:14px;}
+  body.dark .lcard{background:linear-gradient(135deg,#2a221a,#241d17); border-color:#4a3a2c;}
+  .lcard .big{font-size:30px; font-weight:700; margin:8px 0;}
+
+  /* practice */
+  .pphrase{text-align:center; padding:26px 16px; background:linear-gradient(135deg,#fff6ec,#fff); border-radius:16px;
+    border:1.5px solid #ffd9bd; margin-bottom:14px;}
+  body.dark .pphrase{background:linear-gradient(135deg,#2a221a,#241d17); border-color:#4a3a2c;}
+  .pphrase .big{font-size:28px; font-weight:600; margin:6px 0;}
+  .score{text-align:center; font-size:20px; font-weight:800; margin-top:12px; min-height:28px;}
+  .score.good{color:var(--good);} .score.ok{color:var(--warn);} .score.bad{color:var(--bad);}
+  .heard{font-size:13.5px; color:var(--ink-soft); text-align:center; margin-top:4px; min-height:18px; font-style:italic;}
+
+  /* progress */
+  .stat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;}
+  .stat{background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:14px; text-align:center;}
+  .stat .n{font-size:26px; font-weight:800; color:var(--orange-dark);}
+  .stat .l{font-size:11px; color:var(--ink-soft); font-weight:700; text-transform:uppercase; letter-spacing:.5px;}
+  .catrow{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px dashed var(--line);}
+  .catrow:last-child{border-bottom:0;}
+  .catrow .nm{width:150px; font-size:13.5px; font-weight:700; flex:0 0 150px;}
+  .catrow .pct{width:44px; text-align:right; font-size:12.5px; color:var(--ink-soft); font-weight:700;}
+
+  /* settings modal */
+  .modal-bg{position:fixed; inset:0; background:rgba(20,12,6,.55); z-index:90; display:none; align-items:flex-start;
+    justify-content:center; padding:30px 14px; overflow-y:auto;}
+  .modal-bg.on{display:flex;}
+  .modal{background:var(--card); border:1px solid var(--line); border-radius:20px; max-width:520px; width:100%;
+    padding:20px; box-shadow:0 20px 60px rgba(0,0,0,.35); animation:fadein .2s ease;}
+  .modal h2{font-size:18px; margin-bottom:4px;}
+  .srow{display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px dashed var(--line); font-size:14px; flex-wrap:wrap;}
+  .srow:last-child{border-bottom:0;}
+  .srow .sl{flex:1; min-width:120px; font-weight:700;}
+  .srow .sd{font-size:11.5px; color:var(--ink-soft); font-weight:500; flex-basis:100%; margin-top:2px;}
+  .srow input[type=text], .srow input[type=password]{flex:1; min-width:140px; border:1.5px solid var(--line); border-radius:10px;
+    padding:8px 10px; font-size:13.5px; font-family:inherit; background:var(--bg); color:var(--ink); outline:none;}
+  .srow input[type=range]{flex:1; accent-color:var(--orange);}
+  .srow input[type=checkbox]{width:18px; height:18px; accent-color:var(--orange); cursor:pointer;}
+  .toclose{float:right; border:1px solid var(--line); background:var(--bg); border-radius:10px; width:32px; height:32px; cursor:pointer; font-size:15px; color:var(--ink-soft);}
+
+  /* badges */
+  .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px;}
+  .bcell{border:1.5px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center;background:var(--bg);}
+  .bcell .bi{font-size:30px;line-height:1.1;}
+  .bcell .bn{font-size:12.5px;font-weight:800;margin-top:5px;}
+  .bcell .bd{font-size:10.5px;color:var(--ink-soft);margin-top:2px;line-height:1.35;}
+  .bcell.lock{opacity:.35;filter:grayscale(1);}
+
+  /* words browser */
+  .wordrow{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:8px;background:var(--card);}
+  .wordrow .wgrow{flex:1;min-width:0;}
+  .wordrow .wt{font-size:15.5px;}
+  .wordrow .wt i{color:var(--ink-soft);font-weight:500;font-size:13px;}
+  .wordrow .wm{font-size:13px;color:var(--ink-soft);margin-top:1px;}
+  .starbtn{border:1px solid var(--line);background:var(--bg);width:38px;height:38px;border-radius:11px;font-size:19px;cursor:pointer;color:var(--ink-soft);flex:0 0 38px;font-family:inherit;}
+  .starbtn.on{color:var(--gold);border-color:var(--gold);background:#fff8e6;}
+  body.dark .starbtn.on{background:#2e2614;}
+
+  /* unscramble chips */
+  .uchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;min-height:46px;align-content:flex-start;}
+  .uchip{border:1.5px solid var(--line);background:var(--card);border-radius:11px;padding:9px 15px;font-size:15.5px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--ink);transition:all .12s;}
+  .uchip:hover:not(:disabled){border-color:var(--teal);transform:translateY(-1px);}
+  .uchip.on{border-color:var(--teal);background:#e9fbf8;}
+  body.dark .uchip.on{background:#12332e;}
+  .uchip.good{border-color:var(--good);background:#e9f9ee;color:var(--good);}
+  body.dark .uchip.good{background:#17351f;}
+  .uchip.bad{border-color:var(--bad);background:#fdecec;color:var(--bad);}
+  body.dark .uchip.bad{background:#33201f;}
+  .ushake{animation:ushake .4s;}
+  @keyframes ushake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+  /* toast */
+  #toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
+    background:var(--ink); color:var(--bg); padding:12px 22px; border-radius:999px; font-size:14px; font-weight:700;
+    transition:transform .3s cubic-bezier(.2,.9,.3,1.3); z-index:100; box-shadow:0 8px 30px rgba(0,0,0,.3);
+    max-width:92vw; text-align:center;}
+  body.dark #toast{background:#f2e9df; color:#241d17;}
+  #toast.on{transform:translateX(-50%) translateY(0);}
+  #toast .lv{color:var(--gold);}
+
+  footer{margin-top:26px; text-align:center; font-size:12px; color:var(--ink-soft); line-height:1.7;}
+  @media (max-width:560px){
+    .stat-grid{grid-template-columns:repeat(2,1fr);}
+    #chatlog{height:340px;}
+    .msg{max-width:94%;}
+    .catrow .nm{width:110px; flex-basis:110px;}
+    .htitle h1{font-size:16.5px;}
+    .htitle p{font-size:11px;}
+    .pill{padding:6px 10px; font-size:12px;}
+    .iconbtn{width:38px;height:38px;font-size:16px;}
+    .dirbar select{font-size:13px; padding:7px 8px;}
+  }
+  @media (max-width:400px){
+    .hrow{flex-wrap:wrap; row-gap:6px;}
+  }
+  @media (max-width:380px){
+    .htitle p{display:none;}
+    .logo{width:40px;height:40px;flex-basis:40px;font-size:23px;border-radius:12px;}
+  }
+
+  /* ---- PWA / app-feel ---- */
+  html{-webkit-text-size-adjust:100%;}
+  body{-webkit-tap-highlight-color:transparent;}
+  button,.chip,select,nav button{touch-action:manipulation;}
+  header{padding-top:env(safe-area-inset-top);}
+  footer{padding-bottom:calc(6px + env(safe-area-inset-bottom));}
+  @media (display-mode:standalone){
+    .installbar{bottom:calc(14px + env(safe-area-inset-bottom));}
+  }
+
+  /* install bar */
+  .installbar{position:fixed; left:14px; right:14px; bottom:calc(14px + env(safe-area-inset-bottom)); z-index:80;
+    background:var(--card); border:1.5px solid var(--orange); border-radius:16px; box-shadow:0 12px 34px rgba(120,60,10,.28);
+    display:none; align-items:center; gap:10px; padding:12px 10px 12px 14px;}
+  .installbar.on{display:flex; animation:fadein .3s ease;}
+  .ib-ic{font-size:26px; line-height:1; flex:0 0 auto;}
+  .ib-tx{flex:1; font-size:12.5px; font-weight:600; line-height:1.35; min-width:0; color:var(--ink-soft);}
+  .ib-tx b{color:var(--orange-dark);}
+  body.dark .ib-tx b{color:#ffb27e;}
+  .ib-btn{background:linear-gradient(135deg,var(--orange),#ff9d5c); color:#fff; border:0; border-radius:12px;
+    padding:10px 16px; font-weight:800; font-size:13.5px; cursor:pointer; font-family:inherit; white-space:nowrap;
+    box-shadow:0 3px 10px rgba(224,78,31,.35);}
+  .ib-x{border:0; background:none; font-size:15px; color:var(--ink-soft); cursor:pointer; padding:8px; line-height:1;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <div class="logo"><svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true"><path d='M12 18a8 8 0 0 1 8-8h24a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8H30l-9 8v-8h-1a8 8 0 0 1-8-8z' fill='white'/><rect x='20' y='20' width='5' height='10' rx='2.5' fill='#ff6a3d'/><rect x='29' y='16' width='5' height='18' rx='2.5' fill='#ff6a3d'/><rect x='38' y='19' width='5' height='12' rx='2.5' fill='#ff6a3d'/></svg></div>
+      <div class="htitle">
+        <h1>Talkora <span class="ta">· வணக்கம்!</span></h1>
+        <p>Speak any of 5 languages — it listens, understands &amp; replies</p>
+      </div>
+      <div class="hstats">
+        <div class="pill"><span>🔥</span><span id="streakval">1</span></div>
+        <div class="pill"><span class="star">★</span><span id="xpval">0 XP</span><small id="lvlval">Beginner</small></div>
+        <button class="iconbtn" id="settingsbtn" title="Settings">⚙️</button>
+      </div>
+    </div>
+    <div class="dirbar">
+      <label>I speak</label>
+      <select id="selSpeak"></select>
+      <span class="dir-arrow">➜</span>
+      <label>I want to learn</label>
+      <select id="selLearn"></select>
+    </div>
+    <nav id="tabs">
+      <button data-view="chat" class="on">💬 Chat</button>
+      <button data-view="translate">🔄 Translate</button>
+      <button data-view="cards">🃏 Flashcards</button>
+      <button data-view="quiz">❓ Quiz</button>
+      <button data-view="lesson">📚 Lesson</button>
+      <button data-view="speak">🎯 Say It</button>
+      <button data-view="words">📖 Words</button>
+      <button data-view="progress">📈 Progress</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- CHAT -->
+  <section class="view on" id="view-chat">
+    <div class="wot" id="wot"></div>
+    <div class="mic-banner" id="micbanner"></div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+        <span class="ai-badge off" id="aibadge">🤖 Offline tutor</span>
+        <span class="hint" style="margin-left:auto;">Type in your language, or tap the mic</span>
+      </div>
+      <div id="chatlog"></div>
+      <div class="quick" id="quick"></div>
+      <div class="interim" id="interim"></div>
+      <div class="inputrow">
+        <button class="micbtn" id="micbtn" title="Tap and speak">🎤</button>
+        <input id="chatinput" type="text" placeholder="Type in your language…" autocomplete="off">
+        <button class="sendbtn" id="sendbtn" title="Send">➤</button>
+      </div>
+      <div class="chatctrl">
+        <button class="mini" id="slowbtn">🐢 Slow voice: OFF</button>
+        <button class="mini" id="replaybtn">🔊 Replay last reply</button>
+        <button class="mini" id="convbtn">🗣 Free conversation: OFF</button>
+        <button class="mini" id="reviewbtn">📝 Review session</button>
+        <button class="mini" id="clearbtn">🧹 Clear chat</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRANSLATE -->
+  <section class="view" id="view-translate">
+    <div class="card">
+      <div style="font-size:16px;font-weight:700;margin-bottom:4px;">🔄 Any sentence → other language</div>
+      <p class="hint" style="margin-bottom:12px;">Speak or type anything in <b id="tfrom">Tamil</b>. You get a full machine translation plus word-by-word learning from our phrase book (150+ curated entries × 5 languages).</p>
+      <div class="inputrow" style="margin-top:0;">
+        <button class="micbtn" id="tmscbtn" title="Tap and speak" style="width:52px;height:52px;flex-basis:52px;font-size:22px;">🎤</button>
+        <input id="transinput" type="text" placeholder="எ.கா: நான் பசிக்கிறேன் / I am hungry / मैं भूखा हूँ" autocomplete="off">
+        <button class="btn blue" id="transbtn" style="border-radius:14px;">Translate</button>
+      </div>
+      <div class="t-result" id="transresult"></div>
+      <div class="recents" id="recenttrans"></div>
+    </div>
+  </section>
+
+  <!-- FLASHCARDS -->
+  <section class="view" id="view-cards">
+    <div class="catbar" id="catbar"></div>
+    <div class="card">
+      <div class="progress-line"><span id="fcount">0/0 known</span><div class="pbar"><i id="fbar" style="width:0%"></i></div></div>
+      <div class="fcard" id="fcard">
+        <div class="inner">
+          <div class="face" id="ffront"></div>
+          <div class="face back" id="fback"></div>
+        </div>
+      </div>
+      <div class="factions">
+        <button class="btn ghost" id="faudio">🔊 Listen</button>
+        <button class="btn blue" id="fflip">🔄 Flip</button>
+      </div>
+      <div class="factions" style="margin-top:8px;">
+        <button class="btn red" id="ffail" style="flex:1;">✖ Still learning<br><small class="hint">again tomorrow</small></button>
+        <button class="btn blue" id="fgood" style="flex:1;">👍 Good<br><small class="hint" style="color:#fff;opacity:.85;">spaced review</small></button>
+        <button class="btn green" id="fknow" style="flex:1;">✔ I know this<br><small class="hint" style="color:#fff;opacity:.85;">longer review</small></button>
+      </div>
+      <div class="factions" style="margin-top:8px;">
+        <button class="btn ghost" id="frestart">↻ Restart deck</button>
+        <button class="btn ghost" id="freview">🔁 Review mistakes only</button>
+      </div>
+      <p class="hint" id="srsnote" style="margin-top:10px;"></p>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="view" id="view-quiz">
+    <div class="card" id="quizmenu">
+      <div style="font-size:16px;font-weight:700;margin-bottom:4px;">❓ Quiz — pick a mode, earn XP</div>
+      <p class="hint" style="margin-bottom:14px;">Test yourself in <b id="quizhint">English</b>.</p>
+      <div class="factions" style="margin-top:0;">
+        <button class="btn blue" id="qreadbtn">📖 Reading<br><small class="hint" style="color:#fff;opacity:.85;">see it, pick the meaning</small></button>
+        <button class="btn blue" id="qlistenbtn">👂 Listening<br><small class="hint" style="color:#fff;opacity:.85;">hear it, pick what you heard</small></button>
+        <button class="btn blue" id="qunscbtn">🔀 Unscramble<br><small class="hint" style="color:#fff;opacity:.85;">tap the words in order</small></button>
+        <button class="btn blue" id="qclozebtn">✍️ Fill the gap<br><small class="hint" style="color:#fff;opacity:.85;">pick the missing word</small></button>
+        <button class="btn blue" id="qtypebtn">⌨️ Dictation<br><small class="hint" style="color:#fff;opacity:.85;">hear it, type it</small></button>
+      </div>
+      <div class="srow" style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;">
+        <span class="sl" style="white-space:nowrap;">🤖 AI quiz</span>
+        <input type="text" id="aitopic" placeholder="topic (optional): food, travel, numbers…">
+        <button class="btn ghost" id="aquizbtn" style="padding:8px 14px;font-size:13px;">Generate</button>
+        <span class="sd">5 custom questions with explanations — uses your AI key from ⚙️ Settings.</span>
+      </div>
+      <p class="hint" id="qlistennote" style="margin-top:8px;"></p>
+    </div>
+    <div class="card" id="quizplay" style="display:none;">
+      <div class="qhead">
+        <span class="pill" id="qcount">1/10</span>
+        <span class="pill">🔥 streak <b id="qstreak">0</b></span>
+        <span class="pill" style="margin-left:auto;">⭐ <b id="qscore">0</b></span>
+      </div>
+      <div id="qbody"></div>
+    </div>
+    <div class="card" id="quizdone" style="display:none;">
+      <div class="qresult">
+        <div class="big" id="qemoji">🏆</div>
+        <div class="n" id="qfinal">8/10</div>
+        <p class="hint" id="qmsg">Great job!</p>
+        <div class="factions" style="margin-top:14px;">
+          <button class="btn blue" id="qagainbtn">🔁 Play again</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON -->
+  <section class="view" id="view-lesson">
+    <div class="card" id="lessonmenu">
+      <div style="font-size:16px;font-weight:700;margin-bottom:4px;">📚 Mini-lesson — 5 steps, ~2 min</div>
+      <p class="hint" style="margin-bottom:12px;">Learn 1 word + 1 phrase, pass a 3-question quiz, and pronounce a phrase. Pick a topic:</p>
+      <div class="catbar" id="lessoncats" style="margin-bottom:6px;"></div>
+      <div class="srow" style="margin-top:10px;border-top:1px dashed var(--line);padding-top:12px;">
+        <span class="sl">🤖 AI story &amp; quiz</span>
+        <button class="btn ghost" id="astorybtn" style="padding:8px 14px;font-size:13px;">Write my story</button>
+        <span class="sd">A short graded story in your learning language + 3 comprehension questions. Uses your AI key from ⚙️.</span>
+      </div>
+    </div>
+    <div class="card" id="lessonplay" style="display:none;">
+      <div class="lsteps" id="lsteps"></div>
+      <div id="lbody"></div>
+      <div class="factions" id="lactions"></div>
+    </div>
+  </section>
+
+  <!-- SAY IT -->
+  <section class="view" id="view-speak">
+    <div class="card">
+      <div style="font-size:16px;font-weight:700;">🎯 Say it in <span id="prlang" style="color:var(--teal-dark);">Tamil</span></div>
+      <p class="hint" style="margin-bottom:12px;">Listen to the phrase, then press the mic and say it out loud. I'll score how close you were!</p>
+      <div class="pphrase" id="pphrase"></div>
+      <div class="factions" style="margin-top:0;margin-bottom:6px;">
+        <button class="btn blue big" id="pmicbtn" style="max-width:280px;">🎤 Say it now</button>
+      </div>
+      <div class="score" id="pscore"></div>
+      <div class="heard" id="pheard"></div>
+      <div class="factions">
+        <button class="btn ghost" id="phint">💡 Show hint</button>
+        <button class="btn ghost" id="pskip">⏭ New phrase</button>
+      </div>
+      <p class="hint" id="primicnote" style="margin-top:10px;"></p>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <div style="font-size:16px;font-weight:700;">🎧 Shadowing — repeat full sentences</div>
+      <p class="hint" style="margin-bottom:12px;">Listen to the sentence (it plays on its own), then press the mic and shadow it right after. Bigger sentences = bigger XP.</p>
+      <div class="pphrase" id="shphrase"></div>
+      <div class="factions" style="margin-top:0;margin-bottom:6px;">
+        <button class="btn blue big" id="shmicsay" style="max-width:280px;">🎤 Shadow now</button>
+      </div>
+      <div class="score" id="shscore"></div>
+      <div class="heard" id="shheard"></div>
+      <div class="factions">
+        <button class="btn ghost" id="shhint">💡 Show meaning</button>
+        <button class="btn ghost" id="shnew">⏭ New sentence</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORDS -->
+  <section class="view" id="view-words">
+    <div class="card">
+      <div style="font-size:16px;font-weight:700;margin-bottom:4px;">📖 Phrase book — search &amp; star</div>
+      <p class="hint" style="margin-bottom:10px;">Search in any of the 5 languages (native script or roman). Tap ⭐ to star favorites and build your personal list.</p>
+      <div class="inputrow" style="margin-top:0;">
+        <input id="wsearch" type="text" placeholder="Search: water / தண்ணீர் / पानी / പള്ളം / eau …" autocomplete="off">
+      </div>
+      <div class="catbar" id="wchips" style="margin:12px 0 4px;"></div>
+      <div id="wordslist"></div>
+    </div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section class="view" id="view-progress">
+    <div class="card">
+      <div class="stat-grid">
+        <div class="stat"><div class="n" id="st-xp">0</div><div class="l">Total XP</div></div>
+        <div class="stat"><div class="n" id="st-streak">0</div><div class="l">Day streak 🔥</div></div>
+        <div class="stat"><div class="n" id="st-known">0</div><div class="l">Words known</div></div>
+        <div class="stat"><div class="n" id="st-chat">0</div><div class="l">Chat messages</div></div>
+        <div class="stat"><div class="n" id="st-level">1</div><div class="l">Level</div></div>
+        <div class="stat"><div class="n" id="st-perfect">0</div><div class="l">Perfect says 🎯</div></div>
+        <div class="stat"><div class="n" id="st-mistakes">0</div><div class="l">In notebook 📓</div></div>
+        <div class="stat"><div class="n" id="st-favs">0</div><div class="l">Starred ⭐</div></div>
+      </div>
+      <div class="progress-line"><span>🎯 Daily goal</span><div class="pbar"><i id="goalbar" style="width:0%;background:linear-gradient(90deg,var(--gold),#ffd166);"></i></div><span id="goaltxt">0/100</span></div>
+      <div class="progress-line"><span>Level <b id="lvlname2">Beginner</b> → next</span><div class="pbar"><i id="lvlbar" style="width:0%"></i></div></div>
+      <button class="btn red" id="resetbtn" style="margin-top:10px;">🗑 Reset all progress</button>
+    </div>
+    <div class="card">
+      <div style="font-size:16px; font-weight:700; margin-bottom:8px;">Category mastery</div>
+      <div id="catmastery"></div>
+    </div>
+    <div class="card">
+      <div style="font-size:16px; font-weight:700; margin-bottom:8px;">🏅 Badges <span class="hint" id="badgecount" style="font-weight:500;"></span></div>
+      <p class="hint" style="margin-bottom:10px;">Earn them by practicing — chat, quizzes, streaks, pronunciation and XP.</p>
+      <div class="bgrid" id="bgrid"></div>
+    </div>
+  </section>
+
+  <footer>
+    Talkora · வணக்கம் · नमस्ते · നമസ്കാരം · Bonjour — your 5-language practice partner. <br>
+    Voice + TTS run in your browser (Chrome / Edge recommended). Online translation: free MyMemory API.
+    AI tutor: bring your own OpenAI / Anthropic / Gemini key in ⚙️ (stored only in your browser).
+  </footer>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-bg" id="settingsmodal">
+  <div class="modal">
+    <button class="toclose" id="settingsclose">✕</button>
+    <h2>⚙️ Settings</h2>
+    <p class="hint" style="margin-bottom:10px;">Everything is saved locally in your browser.</p>
+
+    <div style="font-size:13px;font-weight:800;margin:14px 0 2px;color:var(--teal-dark);">🤖 AI tutor (optional)</div>
+    <div class="srow"><span class="sl">Enable AI chat</span><input type="checkbox" id="ai-on"><span class="sd">Open-ended conversation with an LLM — works keyless with the free provider. Falls back to the built-in tutor when off or on error.</span></div>
+    <div class="srow"><span class="sl">Provider</span>
+      <select id="ai-provider" style="flex:1;">
+        <option value="pollinations">Free — no key needed (open-source)</option>
+        <option value="openai">OpenAI (your key)</option>
+        <option value="anthropic">Anthropic / Claude (your key)</option>
+        <option value="gemini">Google Gemini (your key)</option>
+      </select>
+    </div>
+    <div class="srow"><span class="sl">Model</span><input type="text" id="ai-model" placeholder="auto"></div>
+    <div class="srow"><span class="sl">API key</span><input type="password" id="ai-key" placeholder="sk-..."><span class="sd">Sent only from your browser to the provider (via this app's server). Never shared, never logged.</span></div>
+    <div class="srow" id="ai-freenote" style="display:none;border-bottom:0;padding-top:0;"><span class="sd" style="flex-basis:auto;color:var(--teal-dark);">ℹ️ <b>Free provider:</b> no API key needed — runs the open-source <b>gpt-oss-20b</b> model via Pollinations. Replies can take ~20–40 s and are occasionally rate-limited. Perfect for trying everything out!</span></div>
+    <div class="srow"><span class="sl">AI level</span>
+      <select id="ailevsel" style="flex:1;">
+        <option value="b1">Beginner — short simple sentences</option>
+        <option value="b2">Intermediate — everyday conversation</option>
+        <option value="c1">Advanced — natural, idiomatic</option>
+      </select><span class="sd">Used by free conversation mode, AI quizzes and AI stories.</span></div>
+
+    <div style="font-size:13px;font-weight:800;margin:16px 0 2px;color:var(--teal-dark);">💾 Data</div>
+    <div class="srow"><span class="sl">Export progress</span>
+      <button class="btn ghost" id="expbtn" style="padding:8px 14px;font-size:13px;">⬇️ Download JSON</button>
+      <span class="sd">Saves XP, known words, badges, notebook, stars &amp; settings to a file you keep.</span></div>
+    <div class="srow"><span class="sl">Import backup</span>
+      <button class="btn ghost" id="impbtn" style="padding:8px 14px;font-size:13px;">⬆️ Choose file</button>
+      <input type="file" id="impfile" accept="application/json,.json" style="display:none;">
+      <span class="sd">Replaces your current progress with a previous export.</span></div>
+
+    <div style="font-size:13px;font-weight:800;margin:16px 0 2px;color:var(--teal-dark);">🎮 Preferences</div>
+    <div class="srow"><span class="sl">Daily XP goal</span>
+      <select id="goal-sel">
+        <option value="50">50 — warm-up</option>
+        <option value="100">100 — steady</option>
+        <option value="200">200 — serious</option>
+        <option value="400">400 — champion</option>
+      </select>
+    </div>
+    <div class="srow"><span class="sl">Voice speed</span><input type="range" id="rate-sel" min="0.5" max="1.2" step="0.05"><b id="rate-val" style="min-width:34px;text-align:right;">1.0</b></div>
+    <div class="srow"><span class="sl">Sound effects</span><input type="checkbox" id="sound-sel"></div>
+    <div class="srow"><span class="sl">Dark mode</span><input type="checkbox" id="dark-sel"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   VAZHKAM — 5-language voice learning app
+   en (English) · ta (தமிழ்) · hi (हिन्दी) · ml (മലയാളം) · fr (Français)
+   ============================================================ */
+
+/* ---------------- LANGUAGES ---------------- */
+const LANGS = {
+  en:{name:"English", native:"English", stt:"en-IN", tts:"en-IN", voices:[/^en[-_]IN/i,/^en[-_]GB/i,/^en[-_]US/i,/^en/i]},
+  ta:{name:"Tamil", native:"தமிழ்", stt:"ta-IN", tts:"ta-IN", voices:[/^ta[-_]IN/i,/^ta/i]},
+  hi:{name:"Hindi", native:"हिन्दी", stt:"hi-IN", tts:"hi-IN", voices:[/^hi[-_]IN/i,/^hi/i]},
+  ml:{name:"Malayalam", native:"മലയാളം", stt:"ml-IN", tts:"ml-IN", voices:[/^ml[-_]IN/i,/^ml/i]},
+  fr:{name:"French", native:"Français", stt:"fr-FR", tts:"fr-FR", voices:[/^fr[-_]FR/i,/^fr[-_]CA/i,/^fr/i]},
+};
+const LCODES = ["en","ta","hi","ml","fr"];
+
+/* ---------------- DICTIONARY ----------------
+   RAW rows: [id, cat, "w"|"p", en, ta, hi, ml, fr]  ·  "text|translit" */
+const RAW = [
+ // greetings
+ ["g1","greetings","w","Hello","வணக்கம்|vanakkam","नमस्ते|namaste","നമസ്കാരം|namaskāram","Bonjour"],
+ ["g2","greetings","w","Good morning","நல்ல காலை|nalla kaalai","सुप्रभात|suprabhāat","നല്ല രാവിലെ|nalla rāvilē","Bonjour (matin)"],
+ ["g3","greetings","w","Good evening","நல்ல மாலை|nalla maalai","शुभ संध्या|shubha sandhyā","നല്ല വൈകുന്നേരം|nalla vaikkunnēraṁ","Bonsoir"],
+ ["g4","greetings","w","Good night","நல்ல இரவு|nalla iravu","शुभ रात्रि|shubha rātri","നല്ല രാത്രി|nalla rāthri","Bonne nuit"],
+ ["g5","greetings","w","Thank you","நன்றி|nandri","धन्यवाद|dhanyavāad","നന്ദി|nandi","Merci"],
+ ["g6","greetings","w","You're welcome","எதுவும் வேண்டாம்|edhuvum venndham","कोई बात नहीं|koi baat nahīṁ","വേണ്ട|veṇṇa","Je vous en prie"],
+ ["g7","greetings","w","Sorry","மன்னிக்கவும்|mannikkavum","माफ़ कीजिए|māf kijiye","ക്ഷമിക്കണം|kshamikkaṇam","Désolé"],
+ ["g8","greetings","w","Please","தயவு|dhayavu","कृपया|kṛpayā","ദയവു|dhayavu","S'il vous plaît"],
+ ["g9","greetings","w","Yes","ஆம்|āṁ","हाँ|hāṁ","അതെ|athē","Oui"],
+ ["g10","greetings","w","No","இல்லை|illai","नहीं|nahīṁ","ഇല്ല|illā","Non"],
+ ["g11","greetings","w","Welcome","வரவேற்கிறோம்|varaveeruginrom","स्वागत है|svāgat hai","സ്വാഗതം|svāgaṭaṁ","Bienvenue"],
+ // people & self
+ ["p1","people","w","Name","பெயர்|peyar","नाम|nām","പേര്|pēṟ","Nom"],
+ ["p2","people","w","I","நான்|nān","मैं|main","ഞാൻ|jñān","Je"],
+ ["p3","people","w","You","நீங்கள்|neenga","आप|aap","നിങ്ങൾ|niṅgḷṛ","Vous"],
+ ["p4","people","w","He","அவன்|avaan","वह|vah","അദ്ദേഹം|addēhaṁ","Il"],
+ ["p5","people","w","She","அவள்|avaal","वह|vah","അവൾ|avaḷ","Elle"],
+ ["p6","people","w","Friend","நண்பர்|nanpar","दोस्त|dost","കൂട്ടുകാരൻ|kūṭṭukāraṇṁ","Ami"],
+ ["p7","people","w","Home","வீடு|veedu","घर|ghar","വീട്|vīṭ","Maison"],
+ ["p8","people","w","Country","நாடு|naadu","देश|dēsh","രാജ്യം|rājyam","Pays"],
+ ["p9","people","w","Language","மொழி|mozhhi","भाषा|bhāṣā","ഭാഷ|bhāsha","Langue"],
+ ["p10","people","w","To speak","பேசு|pesu","बोलना|bolnā","പറയുക|paṟayuka","Parler"],
+ ["p11","people","w","To understand","புரி|puri","समझना|samajhnā","മനസ്സിലാക്കുക|manaṣṣilākkuka","Comprendre"],
+ ["p12","people","w","To learn","கற்றுக்கொள்|karthukol","सीखना|sīkhnā","പഠിക്കുക|paṭhikkuka","Apprendre"],
+ ["p13","people","w","Work","வேலை|vela","काम|kaam","ജോലി|jōli","Travail"],
+ ["p14","people","w","Family","குடும்பம்|kudumbam","परिवार|parivaar","കുടുംബം|kuḍūmbam","Famille"],
+ // food
+ ["f1","food","w","Food","உணவு|unavu","खाना|khānā","ഭക്ഷണം|bhaikshanam","Nourriture"],
+ ["f2","food","w","Water","தண்ணீர்|thanneer","पानी|pānī","വെള്ളം|vëllam","Eau"],
+ ["f3","food","w","Rice","சாதம்|saadam","चावल|chāvaal","ചോറു|chōra","Riz"],
+ ["f4","food","w","Bread","ரொட்டி|rotiy","रोटी|roṭī","അപ്പം|appam","Pain"],
+ ["f5","food","w","Milk","பால்|paal","दूध|dūdh","പാൽ|pāl","Lait"],
+ ["f6","food","w","Sugar","சர்க்காரை|sarkkarai","चीनी|chīnī","പഞ്ചസാര|pañchaśāra","Sucre"],
+ ["f7","food","w","Salt","உப்பு|uppu","नमक|namak","ഉപ്പ്|uppe","Sel"],
+ ["f8","food","w","Tea","தே|tē","चाय|chāy","ചായ|chāya","Thé"],
+ ["f9","food","w","Coffee","காபி|kaapi","कॉफ़ी|kāphī","കാപ്പി|kāppi","Café"],
+ ["f10","food","w","Fruit","பழம்|pazham","फल|phal","പഴം|paẓam","Fruit"],
+ ["f11","food","w","Sweet","அடை|adai","मिठाई|mithāī","വീരം|vīram","Dessert"],
+ ["f12","food","w","Hungry","பசி|pasippu","भूख|bhūkhh","തടി|ṭaḍi","Faim"],
+ ["f13","food","w","Thirsty","தாகம்|thaagam","प्यास|pyās","ദാഹം|dāhaṁ","Soif"],
+ ["f14","food","w","Tasty","சுவையான|suvaiyān","स्वादिष्ट|svādisht","രുചികരം|rucikaram","Délicieux"],
+ ["f15","food","w","Bill","பில்லை|billai","बिल|bil","ബിൽ|bil","Addition"],
+ ["f16","food","w","Menu","மெனு|menu","मेन्यू|menū","മെനു|menu","Menu"],
+ ["f17","food","w","Vegetarian","வெஜி|veji","शाहजही|shāhjahi","സാത്വം|sātvam","Végétarien"],
+ // travel
+ ["t1","travel","w","Bus","பஸ்|bus","बस|bas","ബസ്|bas","Bus"],
+ ["t2","travel","w","Train","ரயில்|rail","ट्रेन|train","ട്രെയിൻ|train","Train"],
+ ["t3","travel","w","Airplane","விமானம்|vimanam","हवाई जहाज़|hawāī jahāz","വിമാനം|vimānam","Avion"],
+ ["t4","travel","w","Ticket","டிக்கெட்|tikket","टिकट|tikat","ടിക്കറ്റ്|tikkeṭṭ","Billet"],
+ ["t5","travel","w","Where","எங்கே|engae","कहाँ|kahaan","എവിടെ|evide","Où"],
+ ["t6","travel","w","Here","இங்கு|ingku","यहाँ|yahaan","ഇവിടെ|ivide","Ici"],
+ ["t7","travel","w","There","அங்கு|angku","वहाँ|vahaan","അവിടെ|avide","Là"],
+ ["t8","travel","w","Left","இடது|idathu","बायें|bāyēṁ","ഇടത്ത്|iḍatt","Gauche"],
+ ["t9","travel","w","Right","வலது|valathu","दाहिनेँ|dāhinēṁ","വലത്ത്|valatt","Droite"],
+ ["t10","travel","w","Forward","முன்னே|munne","आगे|āge","മുന്നോട്ട്|munnoṭṭ","Devant"],
+ ["t11","travel","w","Car","வண்டி|vandi","कार|kār","കാർ|kār","Voiture"],
+ ["t12","travel","w","Hotel","ஹோட்ரல்|hoṭṭal","होटल|hoṭal","ഹോട്ടൽ|hoṭṭal","Hôtel"],
+ ["t13","travel","w","Road","பாடை|paadai","सड़क|saḍak","വഴി|vaẓi","Route"],
+ ["t14","travel","w","Airport","விமான நிலையம்|viman nilayam","हवाई अड्डा|hawāī aḍḍā","ഏര്പോർട്ട്|ērapoṛṭṭ","Aéroport"],
+ // shopping
+ ["s1","shopping","w","Shop","கடை|kadai","दुकान|dukān","കട|kaḍḍ","Magasin"],
+ ["s2","shopping","w","Price","விலை|vilai","कीमत|keemat","വില|vila","Prix"],
+ ["s3","shopping","w","Money","பணம்|panam","पैसा|paisā","പണം|paṇam","Argent"],
+ ["s4","shopping","w","Cash","ரொக்கம்|rokkam","नक़्दी|naqṛdī","റക്കം|raṭṭam","Espèces"],
+ ["s5","shopping","w","To buy","வாங்கு|vaangu","खरीदना|kharīdnā","വാങ്ങുക|vāṅguka","Acheter"],
+ ["s6","shopping","w","Expensive","விலையுயர்ந்த|vilai uyarntha","महंगा|mahangā","വിലയേറിയ|vilayēriya","Cher"],
+ ["s7","shopping","w","Discount","தள்ளுபடி|ṭalluppadi","छूट|chhūṭ","കിഴിവു|kiẓivu","Réduction"],
+ ["s8","shopping","w","Bag","பை|bai","बैग|baig","ബാഗ്|bāg","Sac"],
+ // time
+ ["d1","time","w","Today","இன்று|indru","आज|aaj","ഇന്ന്|innā","Aujourd'hui"],
+ ["d2","time","w","Tomorrow","நாளை|naalai","कल|kal","നാളെ|nāle","Demain"],
+ ["d3","time","w","Yesterday","நேற்று|netru","बीता कल|bītā kal","ഇന്നലെ|innalē","Hier"],
+ ["d4","time","w","Morning","காலை|kaalai","सुबह|subah","രാവിലെ|rāvilē","Matin"],
+ ["d5","time","w","Noon","மதியம்|madhyam","दोपहर|doaphar","ഉച്ച|ucca","Midi"],
+ ["d6","time","w","Evening","மாலை|maalai","शाम|shām","വൈകുന്നേരം|vaikkunnēraṁ","Soir"],
+ ["d7","time","w","Night","இரவு|iravu","रात|rāt","രാത്രി|rāthri","Nuit"],
+ ["d8","time","w","Day","நாள்|naal","दिन|din","ദിവസം|divaṣam","Jour"],
+ ["d9","time","w","Week","வாரம்|vaaram","हफ़्ता|haphṭā","വാരം|vāraṁ","Semaine"],
+ ["d10","time","w","Month","மாதம்|maadham","महीना|mahīnā","മാസം|māsaṁ","Mois"],
+ ["d11","time","w","Year","ஆண்டு|aandu","साल|sāl","വർഷം|varshaṁ","Année"],
+ ["d12","time","w","Hour","மணி|mani","घंटा|ghantā","മണി|maṇi","Heure"],
+ ["d13","time","w","Minute","நிமிடம்|nimidam","मिनट|minat","മിനിറ്റ്|minitṭ","Minute"],
+ ["d14","time","w","When","எப்போது|eppodhu","कब|kab","എപ്പോൾ|eppōḷ","Quand"],
+ ["d15","time","w","Time","நேரம்|neeram","समय|samay","നേരം|nēraṁ","Temps"],
+ // weather
+ ["w1","weather","w","Rain","மழை|mazhai","बारिश|bārish","മഴ|maẓa","Pluie"],
+ ["w2","weather","w","Sun","வெயில்|vaiyl","सूरज|sūraj","വെയിൽ|veyil","Soleil"],
+ ["w3","weather","w","Hot","சூடான|sūdān","गर्म|garam","ചൂട്|chūṭṟḍ","Chaud"],
+ ["w4","weather","w","Cold","குளிர்|kulir","ठंड|thand","തണുപ്പ്|ṭaṇuppu","Froid"],
+ ["w5","weather","w","Cloud","மேகம்|megam","बादल|bādal","മേഘം|mēgham","Nuage"],
+ ["w6","weather","w","Sky","வானம்|vaanam","आसमान|āsmān","ആകാശം|ākāśam","Ciel"],
+ ["w7","weather","w","Wind","காற்று|kaatru","हवा|havā","കാറ്റ്|kāṭṭ","Vent"],
+ // numbers
+ ["n1","numbers","w","One","ஒன்று|onru","एक|ek","ഒന്ന്|oṇṇu","Un"],
+ ["n2","numbers","w","Two","இரண்டு|irundu","दो|do","രണ്ട്|raṇṭṭ","Deux"],
+ ["n3","numbers","w","Three","மஊன்ற்ு|moonru","तीन|tīn","മൂന്ന്|mūṇṇ","Trois"],
+ ["n4","numbers","w","Four","நான்கு|naangu","चार|chār","നാല്|nāḷ","Quatre"],
+ ["n5","numbers","w","Five","ஐந்து|ainthu","पाँच|pāñch","അഞ്ച്|añch","Cinq"],
+ ["n6","numbers","w","Six","ஆறு|aar","छह|chhah","ആറ്|āṭṭ","Six"],
+ ["n7","numbers","w","Seven","ஏழு|eizhu","सात|sāṭ","ഏഴ്|ēḷ","Sept"],
+ ["n8","numbers","w","Eight","எட்டு|ett","आठ|āṭh","എട്ട്|eṭṭ","Huit"],
+ ["n9","numbers","w","Nine","ஒன்பது|onbathu","नौ|nau","ഒൻപത്|oṉpaṭṭ","Neuf"],
+ ["n10","numbers","w","Ten","பத்து|pattu","दस|das","പത്തു|pattu","Dix"],
+ // emotions
+ ["e1","emotions","w","Happy","மகிழ்ச்சி|magizhchchi","खुश|khush","സന്തോഷം|santaṣam","Heureux"],
+ ["e2","emotions","w","Sad","வறுதத்தம்|varuththam","उदास|udās","വിഷമം|viṣamaṁ","Triste"],
+ ["e3","emotions","w","Love","அன்பு|anbu","प्यार|pyār","സ്നേഹം|snehaṁ","Amour"],
+ ["e4","emotions","w","Fear","பயம்|payam","डर|dar","ഭയം|bhayam","Peur"],
+ ["e5","emotions","w","Peace","அமைதி|amaithi","शांति|shānti","ശാന്തി|shānti","Paix"],
+ // family
+ ["fa1","family","w","Mother","அம்மா|amma","माँ|mā","അമ്മ|amṁa","Mère"],
+ ["fa2","family","w","Father","அப்பா|appa","पिता|pita","അച്ഛൻ|acchan","Père"],
+ ["fa3","family","w","Sister","சகோதரி|sagodari","बहन|bahen","സഹോദരി|sahōdari","Sœur"],
+ ["fa4","family","w","Brother","சகோதரன்|sagodaran","भाई|bhāī","സഹോദരൻ|sahōdaraṇṁ","Frère"],
+ ["fa5","family","w","Child","குழந்தை|kuzhandhai","बच्चा|baccā","കുട്ടി|kuṭṭi","Enfant"],
+ ["fa6","family","w","Wife","மனைவி|manaivi","पत्नी|patrī","ഭാര്യ|bhāryy","Femme"],
+ ["fa7","family","w","Husband","கணவர்|kanavar","पति|pati","പതി|pati","Mari"],
+ ["fa8","family","w","Son","மகன்|mahan","बेटा|beta","മകൻ|makan","Fils"],
+ ["fa9","family","w","Daughter","மகள்|magal","बेटी|betī","മകൾ|makal","Fille"],
+ ["fa10","family","w","Grandmother","பாட்டி|paatti","दादी|dāḍī","അമ്മാമ്മ|ammāmṁa","Grand-mère"],
+ ["fa11","family","w","Grandfather","தாத்தா|thaathaa","दादा|dāda","താതാ|thāthā","Grand-père"],
+ // colors
+ ["c1","colors","w","Red","சிவப்பு|sivappu","लाल|lāl","ചുവപ്പ്|chuvappu","Rouge"],
+ ["c2","colors","w","Green","பச்சை|pachchai","हरा|harā","പച്ച|paccha","Vert"],
+ ["c3","colors","w","Blue","நீலம்|neelam","नीला|nīlā","നീല|nīla","Bleu"],
+ ["c4","colors","w","Yellow","மஞ்சள்|manjal","पीला|pīlā","മഞ്ഞ|manja","Jaune"],
+ ["c5","colors","w","White","வெளளையு|vellaai","सफ़ेद|saphēd","വെളുപ്പ്|veḷuppu","Blanc"],
+ ["c6","colors","w","Black","கருப்பு|karuppu","काला|kālā","കറുപ്പ്|karuppu","Noir"],
+ // body
+ ["b1","body","w","Head","தலை|thaalai","सिर|sir","തല|thala","Tête"],
+ ["b2","body","w","Eye","கண்|kan","आँख|āñkh","കണ്ണു|kaṇṇu","Œil"],
+ ["b3","body","w","Hand","கை|kai","हाथ|hāth","കൈ|kai","Main"],
+ ["b4","body","w","Foot","கால்|kaal","पैर|pair","കാൽ|kāḷ","Pied"],
+ ["b5","body","w","Mouth","வாய்|vaai","मुँह|munhh","വായ്|vāy","Bouche"],
+ ["b6","body","w","Nose","மஊக்கு|mooggu","नाक|nāk","മൂക്കു|mūkku","Nez"],
+ // emergency
+ ["h1","emergency","w","Help","உதவி|udhavi","मदद|madad","സഹായം|sahāyam","Aide"],
+ ["h2","emergency","w","Doctor","மருத்துவர்|maruththavar","डॉक्टर|doktar","ഡോക്ടർ|ḍokṭar","Docteur"],
+ ["h3","emergency","w","Hospital","மருத்துவமனை|maruththavanai","अस्पताल|aspatal","ഹോസ്പിറ്റൽ|hoṣpitṭal","Hôpital"],
+ ["h4","emergency","w","Police","காவல்|kaaval","पुलिस|pulis","പോലീസ്|pōlīsa","Police"],
+ ["h5","emergency","w","Fire","தீ|thii","आग|āg","തീ|thī","Feu"],
+ ["h6","emergency","w","Danger","அபாயம்|apaayam","खतरा|khaṭarā","കെട|keṭa","Danger"],
+ ["h7","emergency","w","Phone","போன்|pon","फ़ोन|phōn","ഫോൺ|phōn","Téléphone"],
+ // ---------- PHRASES ----------
+ ["ph1","greetings","p","How are you?","நீங்கள் எப்படி?|neenga eppadi?","आप कैसे हैं?|aap kaise haiṁ?","നിങ്ങൾ എങ്ങനെ?|niṅgḷṛ eṅganē?","Comment allez-vous ?"],
+ ["ph2","greetings","p","I am fine","நான் நல்லதாக இருக்கிறேன்|naan nelladhaaga irukkiraen","मैं ठीक हूँ|main thīk hūṁ","ഞാൻ നല്ലതാണ്|jñān nallathān","Je vais bien"],
+ ["ph3","greetings","p","What is your name?","உங்கள் பெயர் என்ன?|ungal peyar enna?","आपका नाम क्या है?|aapkā nām kyā hai?","നിങ്ങളുടെ പേര് എന്താണ്?|niṅgḷṛude pēṟ eñthāṇṇ?","Comment vous appelez-vous ?"],
+ ["ph4","greetings","p","My name is…","என் பெயர் …|en peyar…","मेरा नाम …|mera nām…","എന്റെ പേര് …|eṇṭe pēṟ…","Je m'appelle…"],
+ ["ph5","greetings","p","Nice to meet you","எங்களை சந்தித்ததில் மகிழ்ச்சி|engalai sandhithadhil magizhchchi","आपसे मिलकर खुशी हुई|aapse milkar khushī hūī","നിങ്ങളെ കാണാൻ സന്തോഷം|niṅgḷṛe kāṇāṁ santaṣam","Enchanté"],
+ ["ph6","greetings","p","Where are you from?","எங்கிருந்து வந்தீர்கள்?|engirundu vandheergala?","आप कहाँ से हैं?|aap kahaan se haiṁ?","നിങ്ങൾ എവിടെനിന്നാണ്?|niṅgḷṛ evide-ninnāṇṇ?","D'où venez-vous ?"],
+ ["ph7","greetings","p","I am from India","நான் இந்தியாவிலிருந்து வந்தேன்|naan indhiyavil irundu vanthan","मैं भारत से हूँ|main bhārat se hūṁ","ഞാൻ ഇന്ത്യയിൽ നിന്നാണ്|jñān inṭyil ninnāṇṇ","Je viens de l'Inde"],
+ ["ph8","food","p","I am hungry","நான் பசிக்கிறேன்|naan pasichiraen","मुझे भूख लगी है|mujhe bhūkhh lagī hai","എനിക്ക് തടിയുണ്ട്|enikku ṭaḍiyuṇṭṭ","J'ai faim"],
+ ["ph9","food","p","I want water","தண்ணீர் வேண்டும்|thanneer vendum","मुझे पानी चाहिए|mujhe pānī chāhiye","എനിക്ക് വെള്ളം വേണം|enikku vëllam vēṇaṁ","Je voudrais de l'eau, s'il vous plaît"],
+ ["ph10","food","p","The food is very tasty","உணவு மிகவும் சுவையாக இருக்கிறது|unavu migavum suvaaiyaaga irukkiraadhu","खाना बहुत स्वादिष्ट है|khānā bahut svādisht hai","ഭക്ഷണം വളരെ രുചികരമാണ്|bhaikshanam vaḷare rucikaramāṇṇ","La nourriture est très délicieuse"],
+ ["ph11","food","p","Menu please","மெனுவை கொடுங்கள்|menuvai kodunga","मेन्यू दीजिए|menu dījie","മെനു തരിണം|menu tariṇaṁ","Le menu, s'il vous plaît"],
+ ["ph12","food","p","Bill please","பில்லை கொடுங்கள்|billai kodunga","बिल लाइए|bil lāīe","ബിൽ തരിണം|bil tariṇaṁ","L'addition, s'il vous plaît"],
+ ["ph13","travel","p","Where is this?","இது எங்கே?|idhu engae?","यह कहाँ है?|yeh kahaan hai?","ഇത് എവിടെ?|itta evide?","Où est-ce ?"],
+ ["ph14","travel","p","Where is the shop?","கடை எங்கே?|kadai engae?","दुकान कहाँ है?|dukān kahaan hai?","കട എവിടെ?|kaḍḍ evide?","Où est le magasin ?"],
+ ["ph15","travel","p","Where is the bus stop?","பஸ் நிலையம் எங்கே?|bus nilayam engae?","बस स्टॉप कहाँ है?|bas ṣṭōp kahaan hai?","ബസ് സ്റ്റോപ്പ് എവിടെ?|bas stoṣṭṭ evide?","Où est l'arrêt de bus ?"],
+ ["ph16","travel","p","How far is it?","இது எவ்வளவு தூரம்?|idhu evvalavu dhooram?","यह कितनी दूर है?|yeh kitnī dūr hai?","ഇത് എത്ര ദൂരം?|itta eṭra dūraṁ?","C'est loin d'ici ?"],
+ ["ph17","time","p","What time is it?","இது எத்தனை மணி?|idhu ethanaa mani?","यह कितने बजे हैं?|yeh kitne bajē haiṁ?","ഇപ്പോൾ എത്ര മണി?|ippōḷ eṭra maṇi?","Quelle heure est-il ?"],
+ ["ph18","shopping","p","How much is this?","இது எவ்வளவு?|idhu evvalavu?","यह कितने का है?|yeh kitne kā hai?","ഇത് എത്ര വില?|itta eṭra vila?","C'est combien ?"],
+ ["ph19","shopping","p","It is too expensive","இது மிகவும் விலை உயர்ந்தது|idhu migavum vilai uyarandhadhu","यह बहुत महंगा है|yeh bahut mahangā hai","ഇത് വളരെ വിലയേറിയതാണ്|itta vaḷare vilayēriyatāṇṁ","C'est trop cher"],
+ ["ph20","shopping","p","I want to buy this","நான் இதை வாங்க விரும்புகிறேன்|naan idhai vaangu virumbukiraen","मैं यह खरीदना चाहता हूँ|main yeh kharīdnā chāhtā hūṁ","ഇത് എനിക്ക് വേണം|itta enikku vēṇaṁ","Je voudrais acheter ceci"],
+ ["ph21","weather","p","It is raining","இன்று மழை பெய்கிறது|indru mazhai peigiraadhu","बारिश हो रही है|bārish ho rahī hai","ഇപ്പോൾ മഴ പെയ്യുന്നു|ippōḷ maẓa peyyunu","Il pleut"],
+ ["ph22","weather","p","Today is very hot","இன்று மிகவும் சூடாக உள்ளது|indru migavum soodaaga allaadhu","आज बहुत गर्म है|aaj bahut garam hai","ഇന്ന് വളരെ ചൂടാണ്|innā vaḷare chūṭāṇṁ","Il fait très chaud aujourd'hui"],
+ ["ph23","emotions","p","I am happy","நான் மகிழ்ச்சியாக இருக்கிறேன்|naan magizhchiyaaga irukkiraen","मैं खुश हूँ|main khush hūṁ","ഞാൻ സന്തോഷമാണ്|jñān santaṣamāṇṁ","Je suis heureux"],
+ ["ph24","emotions","p","I am sad","நான் வருத்தமாக இருக்கிறேன்|naan varuththamaaga irukkiraen","मैं उदास हूँ|main udās hūṁ","എനിക്ക് വിഷമമാണ്|enikku viṣamāṇṁ","Je suis triste"],
+ ["ph25","emotions","p","I love you","எனக்கு நீங்கள் பிடிக்கிறீர்கள்|enakku neenga pidikkiraergu","मैं तुमसे प्यार करता हूँ|main tumse pyār kartā hūṁ","ഞാൻ നിന്നെ പ്രേമിക്കുന്നു|jñān ninne prēmikkuṇu","Je t'aime"],
+ ["ph26","emergency","p","Please help me","என்னை உதவுங்கள்|ennai udhvangal","कृपया मेरी मदद करें|kṛpayā merī madad kareṁ","ദയവായി എനിക്കു സഹായിക്കുക|dhayavāyī enikku sahāyikkuka","Aidez-moi, s'il vous plaît"],
+ ["ph27","emergency","p","Please call a doctor","ஒரு மருத்துவரை அழைக்கவும்|oru maruththavari azhaikkavum","एक डॉक्टर को बुलाइए|ek doktar ko bulāīe","ഒരു ഡോക്ടറെ വിളിക്കുക|oru ḍokṭare viḷikka","Appelez un médecin, s'il vous plaît"],
+ ["ph28","emergency","p","Where is the hospital?","மருத்தவமநாஐ் engae?|maruththavanai engae?","अस्पताल कहाँ है?|aspatal kahaan hai?","ഹോസ്പിറ്റൽ എവിടെ?|hoṣpitṭal evide?","Où est l'hôpital ?"],
+ ["ph29","people","p","Do you speak Tamil?","நீங்கள் தமிழ் பேசுகிறீர்களா?|neengal tamil pesugiraergala?","क्या आप तमिल बोलते हैं?|kya aap tamiḷ bolte haiṁ?","നിങ്ങൾ തമിഴ് പരയുന്നുണ്ടോ?|niṅgḷṛ tamiẟṟ paṟayunnuṇḍō?","Parlez-vous tamoul ?"],
+ ["ph30","people","p","I am learning Tamil","நான் தமிழ் கற்றுக்கொள்கிறேன்|naan tamil karthukkolaigiraen","मैं तमिल सीख रहा हूँ|main tamiḷ sīkh rahā hūṁ","ഞാൻ തമിഴ് പഠിക്കുന്നു|jñān tamiẟṟ paṭhikkuṇu","J'apprends le tamoul"],
+ ["ph31","people","p","Please speak slowly","மெதுவாக பேசுங்கள்|medhuvaaga pesunga","धीरे बोलें|dhīre boleṁ","മന്തമായി പറയൂ|manta māyī paṟayū","Parlez lentement, s'il vous plaît"],
+ ["ph32","people","p","Please say it again","மீண்டும் சொல்லுங்கள்|miyndrum sollunga","दोबारा कहिए|dobārā kahīe","വീണ്ടും പറയൂ|vīṇḍum paṟayū","Pouvez-vous répéter ?"],
+ ["ph33","people","p","I don't understand","நான் புரியவில்லை|naan puriville","मुझे समझ नहीं आया|mujhe samajh nahīṁ āyā","എനിക്ക് മനസ്സിലായില്ല|enikku manaṣṣilāyillā","Je ne comprends pas"],
+ ["ph34","family","p","I have two children","எனக்கு இரண்டு குழந்தைகள் உள்ளன|enakku irundu kuzhandhaigal allaana","मेरे दो बच्चे हैं|mere do baccche haiṁ","എനിക്ക് രണ്ടു കുട്ടികളുണ്ട്|enikku raṇṭu kuṭṭikaḷuṇṭṭ","J'ai deux enfants"],
+ ["ph35","greetings","p","See you tomorrow","நாளை காணுோம்|naalai kaṇoom","कल मिलेंगे|kal milēṅge","നാളെ കാണാം|nāle kāṇām","À demain"],
+];
+
+function parse1(s){ const i=s.indexOf("|"); return i<0?{t:s}:{t:s.slice(0,i),tr:s.slice(i+1)}; }
+const DICT = RAW.map(r=>({id:r[0],cat:r[1],type:r[2],langs:{en:parse1(r[3]),ta:parse1(r[4]),hi:parse1(r[5]),ml:parse1(r[6]),fr:parse1(r[7])}}));
+const BYID = {}; DICT.forEach(d=>BYID[d.id]=d);
+const WORDS_ALL = DICT.filter(d=>d.type==="w");
+const PHR_ALL = DICT.filter(d=>d.type==="p");
+const WORDMAPS={}, PHRASEMAPS={};
+LCODES.forEach(L=>{
+  WORDMAPS[L]=new Map(); PHRASEMAPS[L]=new Map();
+  WORDS_ALL.forEach(e=>WORDMAPS[L].set(norm(e.langs[L].t),e));
+  PHR_ALL.forEach(e=>PHRASEMAPS[L].set(norm(e.langs[L].t),e));
+});
+const CATS = [
+ {id:"greetings", en:"Greetings", icon:"👋"},
+ {id:"people",    en:"People & Self", icon:"🙋"},
+ {id:"food",      en:"Food & Dining", icon:"🍛"},
+ {id:"travel",    en:"Travel", icon:"🚌"},
+ {id:"shopping",  en:"Shopping", icon:"🛍️"},
+ {id:"time",      en:"Time & Date", icon:"⏰"},
+ {id:"weather",   en:"Weather", icon:"🌦️"},
+ {id:"numbers",   en:"Numbers", icon:"🔢"},
+ {id:"emotions",  en:"Feelings", icon:"💛"},
+ {id:"family",    en:"Family", icon:"👪"},
+ {id:"colors",    en:"Colors", icon:"🎨"},
+ {id:"body",      en:"Body", icon:"🧍"},
+ {id:"emergency", en:"Emergency", icon:"🚨"},
+];
+
+/* ---------------- helpers ---------------- */
+function norm(s){ return String(s||"").toLowerCase().replace(/[^\p{L}\p{N}\s]/gu," ").replace(/\s+/g," ").trim(); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function T(e,L){ const l=e.langs[L]; return l?l.t:""; }
+function TR(e,L){ const l=e.langs[L]; return (l&&l.tr)||""; }
+function display(e,L){ return T(e,L)+(TR(e,L)?" ("+TR(e,L)+")":""); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function lev(a,b){
+  const m=a.length,n=b.length;
+  if(!m) return n; if(!n) return m;
+  let prev=new Array(n+1); for(let j=0;j<=n;j++) prev[j]=j;
+  for(let i=1;i<=m;i++){
+    let cur=[i];
+    for(let j=1;j<=n;j++){
+      const cost=a[i-1]===b[j-1]?0:1;
+      cur[j]=Math.min(prev[j]+1, cur[j-1]+1, prev[j-1]+cost);
+    }
+    prev=cur;
+  }
+  return prev[n];
+}
+
+/* ---------------- OFFLINE CHAT BRAIN (all 5 languages) ---------------- */
+const INTENTS = [
+ { id:"greeting", teach:"ph1",
+   pat:{ en:/\b(hi|hello|hey|yo|good (morning|afternoon|evening|day))\b/i,
+         ta:/வாண்க்க|வாண்க்கம்|காலை வாண்க்க|நல்ல காலை|நல்ல மாலை|ஹலோ|ஹெலோ|ஹலலோ/,
+         hi:/नमस्ते|नमस्कार|हेलो|हाय|हैलो|सुप्रभात|शुभ/,
+         ml:/നമസ്കാരം|ഹായ്|ഹെലോ|ഹായ/,
+         fr:/\b(bonjour|bonsoir|salut|coucou|hello|hi|yo)\b/i },
+   resp:{ en:"Hello! Vanakkam! Namaste! 🙏 I am your language partner. How are you today?",
+          ta:"வாண்க்கம்! Namaste! நான உங்க்ள மெழித் துணை. நிங்க்ள எ்பபடி இருக்கிறிஈர்கள்?",
+          hi:"नमस्ते! वणक्कम! 🙏 मैं आपका भाषा-साथी हूँ। आज आप कैसे हैं?",
+          ml:"നമസ്കാരം! വണക്ക്കം! 🙏 ഞാൻ നിങ്ങളുടെ ഭാഷാ സഹായി. ഇന്ന് നിങ്ങൾ എങ്ങനെ?",
+          fr:"Bonjour ! Vanakkam ! 🙏 Je suis votre partenaire de langue. Comment allez-vous aujourd'hui ?" },
+ },
+ { id:"howare", teach:"ph2",
+   pat:{ en:/\b(how are you|how's it going|how is it going|whats up|what's up|how do you do|hows it going)\b/i,
+         ta:/எப்படியு|எப்போ|நலமா|நல்லதா/,
+         hi:/कैस|कसे/,
+         ml:/എങ്ങനെ|ഭാല്യ/,
+         fr:/comment allez-vous|comment vas-tu|ça va|ca va|comment ça va|quoi de neuf|tu vas bien/i },
+   resp:{ en:"I am doing great, thank you for asking! How about you?",
+          ta:"நான் மிக நல்லதாயு இருக்கிறேன், கேட்டதற்கு நன்றி! நீங்கள் எப்படியு?",
+          hi:"मैं बहुत अच्छा हूँ, पूछने के लिए धन्यवाद! आप कैसे हैं?",
+          ml:"ഞാൻ വളരെ നല്ലതാണ്, ചോദിച്ചതിന് നന്ദി! നിങ്ങൾ എങ്ങനെ?",
+          fr:"Je vais très bien, merci de demander ! Et vous, comment allez-vous ?" },
+ },
+ { id:"name", teach:"ph3",
+   pat:{ en:/\b(my name is|call me|i am called)\b/i,
+         ta:/என் பெயரு|என்னை \w+ என்று அழை/,
+         hi:/मेरा नाम|मेरे नाम|अपना नाम/,
+         ml:/എന്റെ പേര്/,
+         fr:/je m'appelle|mon nom est|m'appelle/i },
+   resp:{ en:"Nice to meet you, {NAME}! 🙌 What would you like to practice today?",
+          ta:"{NAME}! உங்களை சந்தித்ததில் மகிழ்ச்சி! 🙌 இன்று என்ன பயிற்சியு செய்வது?",
+          hi:"{NAME}! आपसे मिलकर खुशी हुई! 🙌 आज आप क्या अभ्यास करना चाहेंगे?",
+          ml:"{NAME}! നിങ്ങളെ കണ്ടതോടെ സന്തോഷം! 🙌 ഇന്ന് എന്ത് പരിശീലിക്കാം?",
+          fr:"Enchanté de vous rencontrer, {NAME} ! 🙌 Que voulez-vous pratiquer aujourd'hui ?" },
+ },
+ { id:"thanks", teach:"g5",
+   pat:{ en:/\b(thanks|thank you|thx|appreciate)\b/i,
+         ta:/நன்றி|தயவுசெய்து நன்றி/,
+         hi:/धन्यवाद|शुक्रिया|थैंक्स|थैंक/,
+         ml:/നന്ദി/,
+         fr:/\b(merci|remercie|remercient)\b/i },
+   resp:{ en:"Anytime! I am always happy to help. 🌟",
+          ta:"எப்போதும் உதவ மகிழ்ச்சி! 🌟 வேறு ஏதாவது?",
+          hi:"हमेशा आपकी मदद के लिए तैयार! 🌟 और कुछ?",
+          ml:"സഹായിക്കാൻ എപ്പോഴും സന്തോഷം! 🌟 മറ്റെന്തെങ്കിലും?",
+          fr:"Avec plaisir ! Je suis toujours ravi de vous aider. 🌟" },
+ },
+ { id:"sorry", teach:"g7",
+   pat:{ en:/\b(sorry|excuse me|apologize|apologies|my bad)\b/i,
+         ta:/മன்னിക്കவும்|சாரி|துணிக|தவறு/,
+         hi:/माफ़|माफी|क्षमा|सॉरी|सॉरी/,
+         ml:/ക്ഷമിക്കുക|ക്ഷമിക്കണം|സോറി/,
+         fr:/désolé|desole|pardon|excusez|excuse-moi|navré/i },
+   resp:{ en:"No problem at all! Mistakes are how we learn. Try again! 💪",
+          ta:"ஒன்றும் இல்லை! தவற்தான் கற்கும் வழியு. மீண்டும் முயற்சிக்கவும்! 💪",
+          hi:"कोई बात नहीं! गलतियाँ ही सीखने का रास्ता है। फिर कोशिश करें! 💪",
+          ml:"ഒന്നും വേണ്ട! പിശക്കുകളാണ് പഠിക്കുന്ന വഴി. വീണ്ടും ശ്രമിക്കൂ! 💪",
+          fr:"Pas de problème ! Les erreurs, c'est comme ça qu'on apprend. Retentez ! 💪" },
+ },
+ { id:"bye", teach:"ph35",
+   pat:{ en:/\b(bye|goodbye|good bye|see you|good night|see you later|take care|talk to you soon|gn)\b/i,
+         ta:/விடை|அ்பபோ/,
+         hi:/अलविदा|बाय|फिर मिलेंगे|अगली|गुड नाइट/,
+         ml:/വായ്|പിന്നെ കാണാം|നല്ല രാത്രി/,
+         fr:/au revoir|adieu|à bientôt|a bientôt|bonne nuit|ciao/i },
+   resp:{ en:"Goodbye! Great practice today. See you tomorrow! 👋",
+          ta:"வணக்கம்! இன்று நல்ல பயிற்சியு. நாளை காணுோம்! 👋",
+          hi:"अलविदा! आज का अभ्यास बढ़िया था। कल मिलेंगे! 👋",
+          ml:"നമസ്കാരം! ഇന്ന് നല്ല പരിശീലനം. നാളെ കാണാം! 👋",
+          fr:"Au revoir ! Super pratique aujourd'hui. À demain ! 👋" },
+ },
+ { id:"food", teach:"ph8",
+   pat:{ en:/\b(hungry|thirsty|food|eat|eating|water|menu|bill|coffee|tea|rice|bread|curry|soup|spicy|milk|sweet|tasty|delicious|lunch|dinner|breakfast|vegetarian|biryani|dosa|idli|pancake|restaurant)\b/i,
+         ta:/பசி|உணவு|சாப்பிட|தண்ணீர்|மெனு|பில்லை|பில்|காபி|காரி|தாளம்|சூபா|சோறு|ரொட்டி|பூரி|பால்|அடை|சுவை|காரம்|உப்பு|தாகம்|வெஜി|சாப்பாடு|மோர்|பழம்/,
+         hi:/खाना|भूख|प्यास|पानी|बिल|मेन्यू|चाय|कॉफ़ी|मीठा|रोटी|चावल|दूध|सलाद|डिश|रेस्टोरेंट|शालान|खाना/,
+         ml:/ഭക്ഷണം|വെള്ളം|തടി|ദാഹം|മെനു|ബിൽ|ചായ|കാപ്പി|അരി|അപ്പം|പാല്|പഞ്ചസാര|ഉപ്പ്|കായ്|പഴം|വീരം|രുചി/,
+         fr:/\b(faim|soif|nourriture|manger|restaur|menu|addition|thé|café|riz|pain|fromage|lait|sucre|sel|dessert|délicieux|vegetarien)\b/i },
+   resp:{ en:"Great topic! Let's talk about food. Try saying 'I am hungry' in your target language!",
+          ta:"நல்ல விஷயம்! உணவு பற்றியு பேசுலாம். 'நான் பசிக்கிறேன்' சொல்லுங்கள்!",
+          hi:"बढ़िया विषय! खाने पर बात करें। 'मुझे भूख लगी है' कहकर देखें!",
+          ml:"നല്ല വിഷയം! ഭക്ഷണത്തെക്കുറിച്ച് പരിശീലിക്കാം. 'എനിക്ക് തടിയുണ്ട്' പറയൂ!",
+          fr:"Super sujet ! Parlons de manger. Essayez de dire « J'ai faim » !" },
+ },
+ { id:"travel", teach:"ph14",
+   pat:{ en:/\b(where|bus|train|flight|ticket|how far|direction|station|go|going|left|right|forward|back|here|there|car|bike|drive|arrive|reach|hotel|airport|road|street|parking)\b/i,
+         ta:/எங்கே|பஸ்|ரயில்|விமானம்|டிக்கெட்|தூரம்|வழி|பாதை|நிலையம்|போக|செல்ல|இடது|வலது|முன்னே|பின்னே|இங்கு|அங்கு|வண்டி|சைக்கிள்/,
+         hi:/कहाँ|कहां|बस|ट्रेन|टिकट|फ्लाइट|दूर|रास्ता|सड़क|होटल|एयरपोर्ट|गाड़ी|साइकिल|सामने|पीछे|बायें|दाहिनें/,
+         ml:/എവിടെ|ബസു|ട്രെയിൻ|ടിക്കറ്റ്|വിമാനം|ദൂരം|വഴി|ഇടത്ത്|വലത്ത്|മുന്നോട്ട്|പിന്നോട്ട്|ഇവിടെ|അവിടെ|കാർ|ഹോട്ടൽ|ഏര്പോർട്ട്/,
+         fr:/\b(où|bus|train|avion|billet|station|aéroport|hôtel|route|droite|gauche|avant|arrière|ici|là|loin|voiture|parking|allée)\b/i },
+   resp:{ en:"Travel! Very useful: 'Where is the shop?' — try it in your target language!",
+          ta:"பயணம்! மிகவும் பயனுள்ள வார்த்தை: 'கடையு எங்கே?' — சொல்லுங்கள்!",
+          hi:"यात्रा! बहुत उपयोगी: 'दुकान कहाँ है?' — कहकर देखें!",
+          ml:"യാത്ര! വളരെ ഉപയോഗപ്രദം: 'കട എവിടെ?' — പറയൂ!",
+          fr:"Voyage ! Très utile : « Où est le magasin ? » — essayez !" },
+ },
+ { id:"shopping", teach:"ph18",
+   pat:{ en:/\b(price|cost|how much|shop|store|buy|buying|money|cash|discount|quality|bag|sell|sale|expensive|cheap|market)\b/i,
+         ta:/விலை|எவ்வளவு|கடை|வாங்க|பணம்|ரொக்கம்|மலிவு|தரம்|பை|விற்பனை|கொடுங்கள்/,
+         hi:/कीमत|कितने|दुकान|खरीद|पैसा|नक़्दी|सस्ता|महंगा|बैग|खरीदारी|छूट/,
+         ml:/വില|എത്ര|കട|വാങ്ങ|പണം|റക്കം|ബാഗ്|കിഴിവു|വിലയേറിയ/,
+         fr:/\b(prix|combien|magasin|boutique|acheter|argent|espèces|cher|pas cher|sac|solde|réduction|marque)\b/i },
+   resp:{ en:"Shopping! How do you ask the price? Say 'How much is this?' in your target language!",
+          ta:"வர்த்தகம்! விலை எப்படி கேட்பானு? 'இது எவ்வளவு?' சொல்லுங்கள்!",
+          hi:"खरीदारी! कीमत कैसे पूछें? 'यह कितने का है?' कहें!",
+          ml:"വാങ്ങൽ! വില എങ്ങനെ ചോദിക്കാം? 'ഇത് എത്ര വില?' പറയൂ!",
+          fr:"Achats ! Comment demander le prix ? Dites « C'est combien ? »" },
+ },
+ { id:"time", teach:"ph17",
+   pat:{ en:/\b(time|today|tomorrow|yesterday|morning|noon|evening|night|week|month|year|day|clock|late|early|minute|hour|date|when)\b/i,
+         ta:/மனி|நேரம்|இன்று|நாளை|நேற்று|காலை|மதியம்|மாலை|இரவு|வாரம்|மாதம்|ஆண்டு|தினம்|நிமிடம்|எப்போது/,
+         hi:/समय|बजे|आज|कल|सुबह|शाम|रात|दिन|हफ़्ता|महीना|साल|घंटा|मिनट|कब|तारीख/,
+         ml:/മണി|നേരം|ഇന്ന്|നാളെ|ഇന്നലെ|രാവിലെ|ഉച്ച|വൈകുന്നേരം|രാത്രി|ദിവസം|വാരം|മാസം|വർഷം|മിനിറ്റ്|എപ്പോൾ/,
+         fr:/\b(heure|aujourd'hui|demain|hier|matin|midi|soir|nuit|semaine|mois|année|quand|date|jour|minute)\b/i },
+   resp:{ en:"Time! Learn to ask the time in your target language — you will use it every day!",
+          ta:"நேரம்! நேரம் கேட்க வார்த்தைகளு கற்றுக்கொள்ளுங்கள்!",
+          hi:"समय! समय पूछने की बात सीखें!",
+          ml:"നേരം! സമയം ചോദിക്കുന്നത് പഠിക്കാം!",
+          fr:"Le temps ! Apprenez à demander l'heure — indispensable !" },
+ },
+ { id:"weather", teach:"ph21",
+   pat:{ en:/\b(rain|rainy|sunny|sun|hot|cold|weather|wind|cloud|sky|humid|storm|temperature|degree|monsoon)\b/i,
+         ta:/மழை|வெய்இல்|குளிர்|கார்து|மேகம்|வானம்|சஊடா|குளிர்்சி|மஊடு|வெப்பம்/,
+         hi:/बारिश|सूरज|गर्मी|गर्म|ठंड|बादल|आसमान|हवा|मौसम|डिग्री/,
+         ml:/മഴ|വെയിൽ|ചൂട്|തണുപ്പ്|മേഘം|ആകാശം|കാറ്റ്|കാലാവസ്ഥ/,
+         fr:/\b(pluie|soleil|chaud|froid|nuage|ciel|vent|température|tempête|orage|météo|brume)\b/i },
+   resp:{ en:"Weather talk! Say 'It is raining' in your target language!",
+          ta:"வானிலை! 'இன்று மழையு பெய்கிறது' சொல்லுங்கள்!",
+          hi:"मौसम! 'बारिश हो रही है' कहकर देखें!",
+          ml:"കാലാവസ്ഥ! 'ഇപ്പോൾ മഴ പെയ്യുന്നു' പറയൂ!",
+          fr:"La météo ! Dites « Il pleut » !" },
+ },
+ { id:"numbers", teach:"n5",
+   pat:{ en:/\b(one|two|three|four|five|six|seven|eight|nine|ten|twenty|fifty|hundred|thousand|number|count|counting|digit)\b/i,
+         ta:/ஒன்று|இரண்டு|மூன்று|நான்கு|ஐந்து|ஆறு|ஏழு|எட்டு|ஒன்பது|பத்து|இருபது|ஐம்பது|நூறு|ஆயிரம்|எண்|எண்ண/,
+         hi:/एक|दो|तीन|चार|पाँच|छह|सात|आठ|नौ|दस|बीस|पचास|सौ|हज़ार|गिनती|संख्या/,
+         ml:/ഒന്ന്|രണ്ട്|മൂന്ന്|നാല്|അഞ്ച്|ആറ്|ഏഴ്|എട്ട്|ഒൻപത്|പത്തു|ഇരുപത്|നൂറ്|ആയിരം|സംഖ്യ/,
+         fr:/\b(un|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|vingt|cent|mille|nombre|compter|chiffre)\b/i },
+   resp:{ en:"Let's count! Follow me: One, Two, Three — in your target language!",
+          ta:"எண்ணுங்கள்! One, Two, Three — உங்கள் மொழியில் சொல்லுங்கள்!",
+          hi:"गिनती करें! One, Two, Three — अपनी भाषा में बोलें!",
+          ml:"സംഖ്യകൾ! One, Two, Three — നിങ്ങളുടെ ഭാഷയിൽ പറയൂ!",
+          fr:"Comptons ! One, Two, Three — dites-le dans votre langue !" },
+ },
+ { id:"family", teach:"ph34",
+   pat:{ en:/\b(mother|mom|mum|father|dad|sister|brother|child|children|husband|wife|son|daughter|grandfather|grandmother|family|relative|uncle|aunt)\b/i,
+         ta:/அம்மா|அப்பா|சகோதரி|சகோதரனு|குழந்தையு|கணவனு|மனைவியு|மகனு|மகளு|தாத்தா|பாட்டி|குடும்பம்|உறவு/,
+         hi:/माँ|पिता|बहन|भाई|बच्चा|बच्च|पत्नी|पति|बेटा|बेटी|दादी|दादा|परिवार|चाचा|चाची/,
+         ml:/അമ്മ|അച്ഛൻ|സഹോദരി|സഹോദരൻ|കുട്ടി|ഭാര്യ|പതി|മകൻ|മകൾ|അമ്മാമ്മ|താതാ|കുടുംബം/,
+         fr:/\b(mère|père|sœur|frère|enfant|femme|mari|fils|fille|grand-mère|grand-père|famille|tonton|tante)\b/i },
+   resp:{ en:"Family! Say 'I have two children' in your target language!",
+          ta:"குடும்பம்! 'எனக்கு இரண்டு குழந்தையு உண்டு' சொல்லுங்கள்!",
+          hi:"परिवार! 'मेरे दो बच्चे हैं' कहकर देखें!",
+          ml:"കുടുംബം! 'എനിക്ക് രണ്ടു കുട്ടികളുണ്ട്' പറയൂ!",
+          fr:"Famille ! Dites « J'ai deux enfants » !" },
+ },
+ { id:"colors", teach:"c1",
+   pat:{ en:/\b(red|green|blue|yellow|white|black|color|colour|orange|pink|purple|grey|gray|brown)\b/i,
+         ta:/சிவ்ப்பு|ப்ச்சை|நில்ம்|மஞ்ச்ள்|வெளளையு|கரு்ப்பு|வண்ண்ம்/,
+         hi:/लाल|हरा|नीला|पीला|सफ़ेद|काला|रंग|गुलाबी|बैंगनी|भूरा/,
+         ml:/ചുവപ്പ്|പച്ച|നീല|മഞ്ഞ|വെളുപ്പ്|കറുപ്പ്|നിറം/,
+         fr:/\b(rouge|vert|bleu|jaune|blanc|noir|couleur|rose|violet|marron|orange)\b/i },
+   resp:{ en:"Colors! Red, Green, Blue — say them in your target language! What is your favorite?",
+          ta:"வண்ணங்கள்! Red, Green, Blue — உங்கள் மொழியில் சொல்லுங்கள்! விரும்பும் வண்ணம் என்ன?",
+          hi:"रंग! Red, Green, Blue — अपनी भाषा में बोलें! आपका पसंदीदा रंग कौन सा है?",
+          ml:"നിറങ്ങൾ! Red, Green, Blue — നിങ്ങളുടെ ഭാഷയിൽ പറയൂ! നിങ്ങൾക്ക് ഇഷ്ടപ്പെട്ട നിറം ഏതാണ്?",
+          fr:"Les couleurs ! Red, Green, Blue — dites-les dans votre langue ! Quelle est votre couleur préférée ?" },
+ },
+ { id:"help", teach:"ph32",
+   pat:{ en:/\b(help|help me|not understand|don't understand|dont understand|say again|repeat|speak slowly|slowly|explain|teach|teaching|practice|mistake|correct|right|wrong|confused|what is this|how do i say|how do you say)\b/i,
+         ta:/புரியவில்லை|புரியாது|உதவி|உதவு|மீண்டு|மெதுவாக|க்ர்து|கற்பி|விளக்கு|விளக்கம்|தவ்ரு|சரியா/,
+         hi:/मदद|समझ नहीं|दोबारा|धीरे|समझाओ|सीख/,
+         ml:/സഹായം|മനസ്സിലായില്ല|വീണ്ടും|മന്തമായി|വിശദീകരിക്കുക|പഠി/,
+         fr:/\b(aide|comprends|répéter|lentement|expliquer|apprends|exercice|faute|correction|difficile|confus)\b/i },
+   resp:{ en:"I am here to help! If you do not understand, say 'Please say it again' — and try the Translate tab for any sentence!",
+          ta:"நான் உதவக்காக இருக்கிறேன்! புரியவில்லையெனில் 'மீண்டும் சொல்லுங்கள்' சொல்லுங்கள் — Translate முகத்தையும் முயற்சிக்கவும்!",
+          hi:"मैं मदद के लिए यहाँ हूँ! समझ न आया तो 'दोबारा कहिए' बोलें — और Translate टैब भी आजमाएँ!",
+          ml:"ഞാൻ സഹായിക്കാൻ ഇവിടെയുണ്ട്! മനസ്സിലായില്ലെങ്കിൽ 'വീണ്ടും പറയൂ' പറയൂ — Translate ടാബും പരീക്ഷിക്കൂ!",
+          fr:"Je suis là pour vous aider ! Si vous ne comprenez pas, dites « Pouvez-vous répéter ? » — et essayez l'onglet Traduire !" },
+ },
+ { id:"language", teach:"ph30",
+   pat:{ en:/\b(tamil|english|hindi|malayalam|french|language|speak|speaking|learn|learning|study|translate|translation|word|vocabulary|pronunciation|fluency)\b/i,
+         ta:/தமிழ்|ஆங்கில்ம்|हिन्दी|മലൾറසം|Français|மெழி|மெயிற்சி|கற்க|பேசு|படி/,
+         hi:/तमिल|हिंदी|अंग्रेज़ी|मलयालम|फ़्रेंच|भाषा|बोलना|बोलते|सीखना|अनुवाद|शब्द|उच्चारण|शब्दकोश/,
+         ml:/തമിഴ്|മലയാളം|ഇംഗ്ലീഷ്|ഹിന്ദി|ഫ്രഞ്ച്|ഭാഷ|പറയ|പഠി|വിവർത്തനം|ശബ്ദം|ഉച്ചാരണം/,
+         fr:/\b(tamoul|tamil|hindi|malayalam|français|anglais|langue|parler|apprendre|traduire|mot|vocabulaire|prononciation)\b/i },
+   resp:{ en:"I can help in Tamil, English, Hindi, Malayalam and French! What do you want to learn today? Try a topic: food, travel, shopping, time, weather…",
+          ta:"நான் தமிழ், English, हिन्दी, മലയാളം, Français-ல் உதவ முடியும்! இன்று என்ன கற்க விரும்புகிறீர்கள்?",
+          hi:"मैं तमिल, English, हिन्दी, मलयालम और Français में मदद कर सकता हूँ! आज आप क्या सीखना चाहेंगे?",
+          ml:"ഞാൻ தமிழ், English, हिन्दी, മലയാളം, Français-ൽ സഹായിക്കാൻ കഴിയും! ഇന്ന് എന്ത് പഠിക്കാം?",
+          fr:"Je peux aider en tamoul, English, हिन्दी, മലയാളം et Français ! Que voulez-vous apprendre aujourd'hui ?" },
+ },
+];
+const DEFAULT_INTENT = {
+  en:"I didn't quite catch that! 😅 Let's pick a topic — food, travel, shopping, time, weather, numbers, family, colors — or say 'help'! (Tip: enable the AI tutor in ⚙️ for open-ended chat.)",
+  ta:"கேட்பதில்லை! 😅 ஒரு முகத்தை தேர்வுசெய்யுங்கள்: உணவு, பயணம், கடை, நேரம், வானிலை, எண்கள், குடும்பம், வண்ணம் — அல்லது 'உதவியு' சொல்லுங்கள்! (⚙️-ல் AI tutor-ஐ இயக்கினால் எதுவும் பேசலாம்.)",
+  hi:"मुझे ठीक से नहीं समझा! 😅 एक विषय चुनें — खाना, यात्रा, खरीदारी, समय, मौसम, गिनती, परिवार, रंग — या 'मदद' बोलें! (⚙️ में AI tutor चालू करें तो कुछ भी बात कर सकते हैं।)",
+  ml:"സംഗീതമായില്ല! 😅 ഒരു വിഷയം തിരഞ്ഞെടുക്കൂ — ഭക്ഷണം, യാത്ര, വാങ്ങൽ, നേരം, കാലാവസ്ഥ, സംഖ്യകൾ, കുടുംബം, നിറങ്ങൾ — അല്ലെങ്കിൽ 'സഹായം' പറയൂ! (⚙️-ൽ AI tutor ഓൺ ചെയ്താൽ എന്തും സംസാരിക്കാം.)",
+  fr:"Je n'ai pas bien compris ! 😅 Choisissez un sujet — manger, voyage, achats, heure, météo, nombres, famille, couleurs — ou dites « aide » ! (Activez le tuteur IA dans ⚙️ pour discuter librement.)",
+};
+const NAME_PAT = {
+  en:/my name is\s+([a-zA-Zà-ÿ']{2,15})/i,
+  fr:/je m'appelle\s+([A-Za-zÀ-ÿ]{2,15})/i,
+  ta:/என் பெயரு\s+(\S+)/,
+  hi:/मेरा नाम\s+(\S+)/,
+  ml:/എന്റെ പേര്\s+(\S+)/,
+};
+const QUICK_IDS = ["ph8","ph14","ph18","ph17","ph21","ph30"];
+
+/* ---------------- STATE ---------------- */
+const SKEY="talkora_v2";
+const SKEY_OLD="vazhakam_v2";
+function migrateOldKey(){ try{
+  if(!localStorage.getItem(SKEY) && localStorage.getItem(SKEY_OLD)){
+    localStorage.setItem(SKEY, localStorage.getItem(SKEY_OLD));
+    localStorage.removeItem(SKEY_OLD);
+  }
+}catch(e){} }
+migrateOldKey();
+function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+function loadS(){ try{ return JSON.parse(localStorage.getItem(SKEY)||"{}"); }catch(e){ return {}; } }
+function sDefaults(){
+  return {
+    speak:"ta", learn:"en",
+    xp:0, streak:1, lastDate:todayStr(),
+    known:{}, unknown:{}, chatCount:0, perfect:0,
+    name:null, recents:[],
+    goal:100, today:{date:todayStr(),xp:0},
+    sound:true, dark:false, rate:1.0, slow:false,
+    ai:{on:false,provider:"pollinations",model:"",key:""},
+    /* v3 */
+    favs:{}, mistakes:{}, srs:{}, badges:{},
+    bestQuiz:0, aiChats:0, convOn:false, aiLevel:"b2",
+  };
+}
+const S = Object.assign(sDefaults(), loadS());
+function save(){ try{ localStorage.setItem(SKEY,JSON.stringify(S)); }catch(e){} }
+
+const LEVELS=[
+ {min:0,en:"Beginner",ta:"தொடக்கம்"},
+ {min:50,en:"Explorer",ta:"ஆய்வாளர்"},
+ {min:150,en:"Speaker",ta:"பேச்சாளர்"},
+ {min:300,en:"Conversationalist",ta:"உரையாடல்"},
+ {min:500,en:"Storyteller",ta:"கதைசொல்லி"},
+ {min:800,en:"Fluent",ta:"பரிச்சயம்"},
+ {min:1200,en:"Master",ta:"மேதை"},
+];
+function levelOf(xp){ let i=0; for(let k=0;k<LEVELS.length;k++) if(xp>=LEVELS[k].min) i=k; return i; }
+function nextLevel(xp){ const i=levelOf(xp); return i<LEVELS.length-1?LEVELS[i+1].min:null; }
+
+let toastTimer=null;
+function toast(html,ms=2800){
+  const t=document.getElementById("toast");
+  t.innerHTML=html; t.classList.add("on");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("on"),ms);
+}
+function touchStreak(){
+  const t=todayStr();
+  if(S.lastDate!==t){
+    const y=new Date(); y.setDate(y.getDate()-1);
+    const ys=y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate();
+    S.streak=(S.lastDate===ys)?S.streak+1:1;
+    S.lastDate=t;
+  }
+  if(S.today.date!==t) S.today={date:t,xp:0};
+}
+function addXp(n,label){
+  touchStreak();
+  S.xp+=n;
+  const before=levelOf(S.xp-n), after=levelOf(S.xp);
+  if(n>0) S.today.xp+=n;
+  save(); renderXp();
+  if(after>before){ toast("🎉 <span class='lv'>Level up!</span> You are now a <b>"+LEVELS[after].en+"</b>",4000); beep("level"); confetti(); }
+  else if(label) toast("+"+n+" XP · "+label);
+  if(n>0 && S.today.xp>=S.goal && S.today.goalDone!==true){
+    S.today.goalDone=true; save();
+    toast("🎯 Daily goal reached! ("+S.today.xp+"/"+S.goal+" XP) Amazing work!",4500); beep("level"); confetti();
+  }
+  checkBadges();
+}
+
+/* ---------------- SOUND ---------------- */
+let AC=null;
+function beep(kind){
+  if(!S.sound) return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    const notes = kind==="good"?[660,880]:kind==="bad"?[220,175]:kind==="level"?[523,659,784,1046]:[440];
+    notes.forEach((f,i)=>{
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type="sine"; o.frequency.value=f;
+      const t0=AC.currentTime+i*0.09;
+      g.gain.setValueAtTime(0.0001,t0);
+      g.gain.exponentialRampToValueAtTime(0.16,t0+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,t0+0.12);
+      o.connect(g); g.connect(AC.destination);
+      o.start(t0); o.stop(t0+0.14);
+    });
+  }catch(e){}
+}
+
+/* ---------------- TTS ---------------- */
+let VOICES=[];
+function loadVoices(){ VOICES=(window.speechSynthesis||{}).getVoices()||[]; }
+if("speechSynthesis" in window){ loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
+function speak(text,lang,rate){
+  if(!("speechSynthesis" in window)||!text) return;
+  try{
+    const u=new SpeechSynthesisUtterance(text);
+    let v=null;
+    const pats=LANGS[lang]?LANGS[lang].voices:[/^en/i];
+    for(const r of pats){ v=VOICES.find(x=>r.test(x.lang)); if(v) break; }
+    if(v) u.voice=v;
+    u.lang=(LANGS[lang]||LANGS.en).tts;
+    u.rate=rate||(S.slow?0.55:S.rate);
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------------- STT ---------------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null, recBusy=false;
+function newRec(lang,onRes,onEnd){
+  if(!SR) return null;
+  const r=new SR();
+  r.lang=LANGS[lang].stt;
+  r.interimResults=true; r.continuous=false; r.maxAlternatives=1;
+  r.onresult=(e)=>{
+    let interim="",final="";
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const t=e.results[i][0].transcript;
+      if(e.results[i].isFinal) final+=t; else interim+=t;
+    }
+    if(interim&&onRes.interim) onRes.interim(interim);
+    if(final&&onRes.text) onRes.text(final.trim());
+  };
+  r.onend=()=>{ recBusy=false; setMic(false); if(onEnd) onEnd(); };
+  r.onerror=(e)=>{
+    recBusy=false; setMic(false);
+    if(e.error==="not-allowed"||e.error==="service-not-allowed") showMicBanner("🎤 Microphone permission was denied. Allow mic access, or type instead.");
+    else if(e.error==="no-speech") showMicBanner("🎤 I didn't hear anything — tap the mic and speak clearly.");
+    else showMicBanner("🎤 Mic problem ("+e.error+"). Try Chrome/Edge in a normal tab, or type instead.");
+  };
+  return r;
+}
+function setMic(on){
+  document.getElementById("micbtn").classList.toggle("rec",on);
+  document.getElementById("tmscbtn").classList.toggle("rec",on);
+  document.getElementById("pmicbtn").innerHTML=on?"🎧 Listening…":"🎤 Say it now";
+}
+function showMicBanner(msg){ const b=document.getElementById("micbanner"); b.textContent=msg; b.classList.add("on"); }
+function initMicBanner(){
+  const b=document.getElementById("micbanner");
+  if(!SR){ b.innerHTML="⚠️ <b>Voice input</b> isn't supported in this browser — type instead. Voice works great in <b>Chrome</b> / <b>Edge</b>."; b.classList.add("on"); return; }
+  if(location.protocol==="file:"){ b.innerHTML="ℹ️ Opened as a file — for voice + online translation + AI tutor, run <b>node server.js</b> and open http://localhost:3000"; b.classList.add("on"); }
+}
+
+/* ---------------- CHAT ---------------- */
+const chatlog=document.getElementById("chatlog");
+let lastBotText="", lastBotLang=null;
+let CHAT_HIST=[];
+
+function addMsg(role,main,sub,teach,teachLang){
+  const div=document.createElement("div");
+  div.className="msg "+role;
+  const who=document.createElement("div");
+  who.className="who"; who.textContent=role==="bot"?"Talkora 🤖":"You · "+LANGS[S.speak].name;
+  div.appendChild(who);
+  const bub=document.createElement("div"); bub.className="bub"; bub.textContent=main;
+  div.appendChild(bub);
+  if(sub){ const s=document.createElement("div"); s.className="sub"; s.textContent=sub; div.appendChild(s); }
+  if(teach){
+    const t=document.createElement("div"); t.className="teach";
+    t.innerHTML="<div class='lbl'>✨ Learn this</div>";
+    const row=document.createElement("div"); row.className="row";
+    const grow=document.createElement("div"); grow.className="grow"; grow.textContent=teach;
+    const ab=document.createElement("button"); ab.className="mini"; ab.textContent="🔊"; ab.title="Listen";
+    const seg=teach.split(/\s*[—(]/)[0].trim();
+    ab.onclick=()=>speak(seg,teachLang||S.learn);
+    row.appendChild(grow); row.appendChild(ab);
+    t.appendChild(row);
+    div.appendChild(t);
+  }
+  if(role==="bot"){
+    const a=document.createElement("div"); a.className="actions";
+    const ab=document.createElement("button"); ab.className="mini"; ab.textContent="🔊 Listen";
+    ab.onclick=()=>speak(main,teachLang||lastBotLang||S.learn);
+    const ab2=document.createElement("button"); ab2.className="mini"; ab2.textContent="🐢 Slow";
+    ab2.onclick=()=>speak(main,teachLang||lastBotLang||S.learn,0.5);
+    a.appendChild(ab); a.appendChild(ab2);
+    div.appendChild(a);
+  }
+  chatlog.appendChild(div);
+  chatlog.scrollTop=chatlog.scrollHeight;
+  return div;
+}
+
+function renderTeach(teachId){
+  const e=BYID[teachId]; if(!e) return null;
+  return T(e,S.learn)+(TR(e,S.learn)?" ("+TR(e,S.learn)+")":"")+" — "+T(e,S.speak);
+}
+function botGreet(){
+  const r={
+    ta:"வாண்க்கம்! Namaste! नमस्कारं! Bonjour! 🙏 நான உங்க்ள மெழித் துணை. 'வாண்க்கம்' என்ரு சோல்ல முடிகிறதா?",
+    hi:"नमस्ते! वणक्कम! नमस्कारं! Bonjour! 🙏 मैं आपका भाषा-तुनै हूँ। क्या आप 'नमस्ते!' बोलेंगे?",
+    en:"Hello! Vanakkam! Namaste! 🙏 I am your language partner. Can you say Hello in my language?",
+    ml:"നമസ്കാരം! വണക്ക്കം! नमस्ते! Bonjour! 🙏 ഞാൻ നിങ്ങളുടെ ഭാഷാ സഹായി. 'നമസ്കാരം' എന്ന് പറയാമോ?",
+    fr:"Bonjour ! Vanakkam ! नमस्ते ! നമസ്കാരം ! 🙏 Je suis votre partenaire de langue. Pouvez-vous dire Bonjour dans ma langue ?",
+  };
+  const sub={
+    ta:"Hello! I am your language partner. Say 'Hello' in Tamil!",
+    hi:"Hello! I am your language partner. Say 'Hello' in Hindi!",
+    en:"Hello! I am your language partner. Say 'Hello' in English (or ask me anything below).",
+    ml:"Hello! I am your language partner. Say 'Hello' in Malayalam!",
+    fr:"Hello! I am your language partner. Say 'Hello' in French!",
+  };
+  lastBotText=r[S.learn]; lastBotLang=S.learn;
+  addMsg("bot",lastBotText,sub[S.learn],renderTeach("g1"),S.learn);
+  speak(T(BYID.g1,S.learn),S.learn);
+}
+
+function findIntent(text){
+  const L=S.speak;
+  for(const it of INTENTS){ if(it.pat[L]&&it.pat[L].test(text)) return it; }
+  for(const L2 of LCODES){ if(L2===L) continue; for(const it of INTENTS){ if(it.pat[L2]&&it.pat[L2].test(text)) return it; } }
+  return null;
+}
+
+async function aiReply(userText,convMode){
+  const X=LANGS[S.speak], Y=LANGS[S.learn];
+  const lvlDesc={
+    b1:"Beginner (A1-A2): use very short, simple sentences of 3-7 words, basic vocabulary only, one idea per message, be extra encouraging.",
+    b2:"Intermediate (B1): short natural everyday sentences, common vocabulary, gentle small talk.",
+    c1:"Advanced (B2-C1): full natural conversation, idiomatic language, a touch of humor."
+  }[S.aiLevel||"b2"];
+  let sys;
+  if(convMode){
+    sys=[
+      "You are \"Talkora\", a warm, friendly conversation partner.",
+      "The user speaks "+X.name+". They are practicing "+Y.name+". Level: "+lvlDesc,
+      "Reply with ONLY valid JSON (no markdown, no code fences) in this exact shape:",
+      '{"main":"...","sub":"...","teach":"..."}',
+      "- \"main\": your next conversational turn in "+Y.name+" ONLY, 1-3 short natural sentences. Keep the chat flowing with a short question.",
+      "- \"sub\": the translation of \"main\" into "+X.name+". If the user's last message contained a clear language mistake, append one brief correction in "+X.name+" like: Correction: ...",
+      "- \"teach\": one useful phrase the user could try saying next, formatted EXACTLY as: <phrase in "+Y.name+"> (<transliteration>) — <meaning in "+X.name+">",
+      "Keep the whole JSON under 220 words. Be friendly and consistent.",
+    ].join("\n");
+  } else {
+  sys=[
+    "You are \"Talkora\", a warm, patient, encouraging language tutor bot.",
+    "The user speaks "+X.name+". You are helping them learn "+Y.name+". Level: "+lvlDesc,
+    "Reply with ONLY valid JSON (no markdown, no code fences) in this exact shape:",
+    '{"main":"...","sub":"...","teach":"..."}',
+    "- \"main\": your reply in "+Y.name+" ONLY, 1-2 short natural sentences. Always ask one short follow-up question to keep the chat going. Use the user's name ("+(S.name||"unknown")+") if known; if unknown you may ask for it once.",
+    "- \"sub\": the translation of \"main\" into "+X.name+", one sentence. If the user made an obvious language mistake, mention the correction briefly here in "+X.name+".",
+    "- \"teach\": one new useful phrase, formatted EXACTLY as: <phrase in "+Y.name+"> (<transliteration of the phrase>) — <meaning in "+X.name+">",
+    "Keep the whole JSON under 220 words. Be friendly and consistent.",
+  ].join("\n");
+  }
+  const msgs=[{role:"system",content:sys}];
+  CHAT_HIST.slice(-8).forEach(m=>msgs.push(m));
+  msgs.push({role:"user",content:userText});
+  const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({provider:S.ai.provider,key:S.ai.key,model:S.ai.model,messages:msgs,max_tokens:700})});
+  const j=await r.json();
+  if(!j.ok) throw new Error(j.error||"AI request failed");
+  let s=String(j.text).trim().replace(/^```(?:json)?/,"").replace(/```$/,"").trim();
+  const a=s.indexOf("{"), b=s.lastIndexOf("}");
+  if(a>=0&&b>a) s=s.slice(a,b+1);
+  const o=JSON.parse(s);
+  return { main:String(o.main||s), sub:o.sub?String(o.sub):null, teach:o.teach?String(o.teach):null };
+}
+
+function botRespond(userText){
+  // offline brain
+  S.chatCount++; save();
+  addMsg("user",userText,null,null,null);
+  const np=userText;
+  const nm=NAME_PAT[S.speak];
+  if(nm){ const m=np.match(nm); if(m&&m[1]) S.name=m[1].replace(/^\d+/,""); }
+  const intent=findIntent(np);
+  let main,sub,teach=null,teachLang=S.learn;
+  if(intent){
+    main=intent.resp[S.learn];
+    sub=intent.resp[S.speak];
+    if(intent.id==="name"&&S.name) main=main.replace(/\{NAME\}/g,S.name);
+    else main=main.replace(/\{NAME\}/g,"friend");
+    teach=renderTeach(intent.teach);
+  } else {
+    main=DEFAULT_INTENT[S.learn];
+    sub=DEFAULT_INTENT[S.speak];
+  }
+  lastBotText=main; lastBotLang=S.learn;
+  setTimeout(()=>{
+    addMsg("bot",main,sub,teach,teachLang);
+    speak(main,S.learn);
+    addXp(5,"chatting");
+  },250);
+}
+
+async function handleUserText(raw){
+  const text=String(raw||"").trim();
+  if(!text) return;
+  if(aiReady()){
+    addMsg("user",text,null,null,null);
+    S.chatCount++; save();
+    const _im=document.getElementById("interim");
+    _im.textContent="🤖 Thinking…"+(S.ai.provider==="pollinations"?" (free AI can take ~30 s)":"");
+    try{
+      const a=await aiReply(text,S.convOn);
+      lastBotText=a.main; lastBotLang=S.learn;
+      S.aiChats=(S.aiChats||0)+1;
+      CHAT_HIST.push({role:"user",content:text});
+      CHAT_HIST.push({role:"assistant",content:a.main});
+      CHAT_HIST=CHAT_HIST.slice(-16);
+      addMsg("bot",a.main,a.sub,a.teach,S.learn);
+      speak(a.main,S.learn);
+      addXp(5,S.convOn?"conversation":"AI chat");
+    }catch(e){
+      showMicBanner("⚠️ AI tutor error ("+e.message+"). Falling back to built-in tutor.");
+      const intent=findIntent(text);
+      let main=DEFAULT_INTENT[S.learn], sub=DEFAULT_INTENT[S.speak];
+      if(intent){ main=intent.resp[S.learn].replace(/\{NAME\}/g,S.name||"friend"); sub=intent.resp[S.speak]; }
+      lastBotText=main; lastBotLang=S.learn;
+      addMsg("bot",main,sub,null,S.learn);
+      speak(main,S.learn);
+      addXp(3,"chatting (offline)");
+    }finally{
+      _im.textContent="";
+    }
+  } else {
+    botRespond(text);
+  }
+}
+
+/* ---------------- TRANSLATE ---------------- */
+function translate(inputText,fromLang,autoSpeak){
+  const text=String(inputText||"").trim();
+  if(!text) return;
+  let from=fromLang;
+  if(!from){ from = hasScript(text,S.speak) ? S.speak : (hasScript(text,S.learn) ? S.learn : S.speak); }
+  const to=from===S.learn?S.speak:S.learn;
+  const result=document.getElementById("transresult");
+  result.innerHTML='<div class="hint">Translating…</div>';
+  const parts=[];
+  const np=norm(text);
+  const exact=PHRASEMAPS[from].get(np);
+  const srcCode=from, dstCode=to;
+  fetch("/api/translate?q="+encodeURIComponent(text)+"&from="+srcCode+"&to="+dstCode)
+    .then(r=>r.json())
+    .then(j=>{
+      if(j&&j.ok&&j.text){
+        parts.push('<div class="t-full"><div class="tag">🌐 Full translation (online)</div>'+
+          '<div style="margin-top:4px;font-size:19px;">'+esc(j.text)+'</div>'+
+          '<button class="mini" style="margin-top:8px;" data-tts="'+esc(j.text)+'" data-lang="'+to+'">🔊 Listen</button></div>');
+      } else {
+        parts.push('<div class="hint" style="margin-top:8px;">⚠️ Online translation unavailable — curated word-by-word below.</div>');
+      }
+      renderRest(parts,text,from,to,exact);
+    })
+    .catch(()=>{
+      parts.push('<div class="hint" style="margin-top:8px;">⚠️ Online translation offline — curated word-by-word below.</div>');
+      renderRest(parts,text,from,to,exact);
+    });
+  function renderRest(parts,text,from,to,exact){
+    if(exact){
+      const other=T(exact,to), othr=TR(exact,to);
+      parts.push('<div class="t-full" style="background:linear-gradient(135deg,#fff6ec,#fff);border-color:#ffd9bd;"><div class="tag">📖 Curated phrase</div>'+
+        '<div style="margin-top:4px;font-size:19px;">'+esc(other)+'</div>'+
+        (othr?'<div class="tr-text">'+esc(othr)+'</div>':'')+
+        '<button class="mini" style="margin-top:8px;" data-tts="'+esc(other)+'" data-lang="'+to+'">🔊 Listen</button></div>');
+    }
+    const words=text.split(/\s+/).filter(Boolean);
+    const chips=[]; let hit=0;
+    for(const w of words){
+      const nw=norm(w);
+      let e=WORDMAPS[from].get(nw)||PHRASEMAPS[from].get(nw);
+      if(e){ hit++;
+        chips.push('<span class="wchip"><b>'+esc(w)+'</b><small>'+esc(T(e,to))+(TR(e,to)?" · "+esc(TR(e,to)):"")+'</small></span>');
+      } else {
+        chips.push('<span class="wchip unknown"><b>'+esc(w)+'</b><small>not in phrase book</small></span>');
+      }
+    }
+    if(words.length){
+      parts.push('<div class="hint" style="margin-top:10px;">Word-by-word ('+hit+'/'+words.length+' found):</div><div class="chips">'+chips.join("")+'</div>');
+    }
+    result.innerHTML=parts.join("");
+    result.querySelectorAll("[data-tts]").forEach(b=>{ b.onclick=()=>speak(b.getAttribute("data-tts"),b.getAttribute("data-lang")); });
+    S.recents.unshift({text,from,to}); S.recents=S.recents.slice(0,6); save(); renderRecents();
+    addXp(3,"translation");
+    if(autoSpeak!==false){
+      const full=result.querySelector(".t-full");
+      if(full){ const d=full.querySelector("div[style]"); if(d) speak(d.textContent,to); }
+    }
+  }
+}
+function hasScript(text,lang){
+  const ranges={ta:/[\u0B80-\u0BFF]/,hi:/[\u0900-\u097F]/,ml:/[\u0D00-\u0D7F]/};
+  return ranges[lang]?ranges[lang].test(text):false;
+}
+function renderRecents(){
+  const box=document.getElementById("recenttrans");
+  if(!S.recents.length){ box.innerHTML=""; return; }
+  box.innerHTML='<div class="hint" style="margin-bottom:4px;">Recent:</div>'+S.recents.map((r,i)=>
+    '<button class="recent-item" data-i="'+i+'"><span>'+esc(r.text)+'</span><span class="arrow">'+LANGS[r.from].native.slice(0,4)+' → '+LANGS[r.to].native.slice(0,4)+' ➜</span></button>'
+  ).join("");
+  box.querySelectorAll(".recent-item").forEach(b=>{
+    b.onclick=()=>{
+      const r=S.recents[+b.getAttribute("data-i")];
+      document.getElementById("transinput").value=r.text;
+      translate(r.text,r.from);
+    };
+  });
+}
+
+/* ---------------- FLASHCARDS ---------------- */
+let fCat="all", fIdx=0, fFailSet=new Set(), fFlipped=false;
+function fDeckItems(){
+  if(fCat==="all") return DICT.slice();
+  if(fCat==="__mistakes") return DICT.filter(d=>fFailSet.has(d.id));
+  if(fCat==="__notebook") return DICT.filter(d=>S.mistakes&&S.mistakes[d.id]);
+  if(fCat==="__due") return srsDueList();
+  return DICT.filter(d=>d.cat===fCat);
+}
+function fKnownCount(items){ let k=0; items.forEach(d=>{ if((S.known[d.cat]||[]).includes(d.id)) k++; }); return k; }
+function renderCatbar(){
+  const box=document.getElementById("catbar");
+  let html='<button class="chip" data-c="all" style="'+(fCat==="all"?"border-color:var(--orange);color:var(--orange-dark);background:#fff4ec;":"")+'">⭐ All</button>';
+  CATS.forEach(c=>{
+    const on=fCat===c.id;
+    html+='<button class="chip" data-c="'+c.id+'" style="'+(on?"border-color:var(--orange);color:var(--orange-dark);background:#fff4ec;":"")+'">'+c.icon+' '+c.en+'</button>';
+  });
+  if(fFailSet.size){
+    const on=fCat==="__mistakes";
+    html+='<button class="chip" data-c="__mistakes" style="'+(on?"border-color:var(--bad);color:var(--bad);background:#fdecec;":"border-color:#f0bcbc;color:var(--bad);")+'">🔁 Mistakes ('+fFailSet.size+')</button>';
+  }
+  const nbN=mistakeCount();
+  if(nbN){
+    const on=fCat==="__notebook";
+    html+='<button class="chip" data-c="__notebook" style="'+(on?"border-color:var(--warn);color:var(--warn);background:#fff7e0;":"border-color:#f5cfa0;color:var(--warn);")+'">📓 Notebook ('+nbN+')</button>';
+  }
+  const dueN=srsDueList().length;
+  if(dueN){
+    const on=fCat==="__due";
+    html+='<button class="chip" data-c="__due" style="'+(on?"border-color:var(--teal);color:var(--teal-dark);background:#e9fbf8;":"border-color:#b9ebe2;color:var(--teal-dark);")+'">🗓 To review ('+dueN+')</button>';
+  }
+  box.innerHTML=html;
+  box.querySelectorAll(".chip").forEach(b=>{
+    b.onclick=()=>{ fCat=b.getAttribute("data-c"); fIdx=0; renderCatbar(); renderCard(); };
+  });
+  const note=document.getElementById("srsnote");
+  if(note) note.textContent="🧠 Spaced repetition: grade each card and it will resurface at the perfect time. '🗓 To review' = due cards + new words.";
+}
+function renderCard(){
+  const items=fDeckItems();
+  if(!items.length){
+    document.getElementById("ffront").innerHTML='<div style="color:var(--ink-soft);font-size:15px;">No cards here yet — try another category 🌱</div>';
+    document.getElementById("fback").innerHTML="";
+    document.getElementById("fcount").textContent="0/0 known";
+    document.getElementById("fbar").style.width="0%";
+    return;
+  }
+  if(fIdx>=items.length) fIdx=0;
+  const d=items[fIdx];
+  const front=T(d,S.learn), frontTr=TR(d,S.learn), back=T(d,S.speak), backTr=TR(d,S.speak);
+  const knownMark=(S.known[d.cat]||[]).includes(d.id)?'<div class="known-badge">✔ known</div>':"";
+  document.getElementById("ffront").innerHTML=
+    '<div class="big">'+esc(front)+'</div>'+(frontTr?'<div class="tr">'+esc(frontTr)+'</div>':'')+
+    '<div class="hintflip">tap to flip</div>'+knownMark;
+  document.getElementById("fback").innerHTML=
+    '<div class="en">'+esc(back)+'</div>'+(backTr?'<div class="tr">'+esc(backTr)+'</div>':'')+
+    '<div class="hintflip">tap to flip back</div>';
+  document.getElementById("fcard").classList.remove("flipped");
+  fFlipped=false;
+  const known=fKnownCount(items), total=items.length;
+  document.getElementById("fcount").textContent=known+"/"+total+" known";
+  document.getElementById("fbar").style.width=(total?Math.round(100*known/total):0)+"%";
+}
+function fNext(){ fIdx=(fIdx+1)%Math.max(1,fDeckItems().length); renderCard(); }
+function fMark(grade){ // "again" | "good" | "know"
+  const items=fDeckItems(); if(!items.length) return;
+  const d=items[fIdx];
+  const arr=S.known[d.cat]=S.known[d.cat]||[];
+  const uarr=S.unknown[d.cat]=S.unknown[d.cat]||[];
+  const ki=arr.indexOf(d.id), ui=uarr.indexOf(d.id);
+  if(grade==="know"){
+    if(ki<0)arr.push(d.id); if(ui>=0)uarr.splice(ui,1);
+    fFailSet.delete(d.id);
+    S.mistakes=S.mistakes||{}; if(S.mistakes[d.id]) delete S.mistakes[d.id];
+    srsGrade(d.id,5);
+    save(); addXp(2,"got it"); beep("good");
+  } else if(grade==="good"){
+    if(ui>=0)uarr.splice(ui,1);
+    srsGrade(d.id,3);
+    save(); addXp(2,"good"); beep("good");
+  } else {
+    if(ui<0)uarr.push(d.id); if(ki>=0)arr.splice(ki,1);
+    fFailSet.add(d.id);
+    srsGrade(d.id,1);
+    addMistake(d.id);
+    save(); addXp(1,"will review"); beep("bad");
+  }
+  fNext(); renderCatbar();
+}
+function fAudio(){
+  const items=fDeckItems(); if(!items.length) return;
+  const d=items[fIdx];
+  if(fFlipped) speak(T(d,S.speak),S.speak);
+  else speak(T(d,S.learn),S.learn);
+}
+
+/* ---------------- QUIZ ---------------- */
+const QZ={mode:null,items:[],i:0,score:0,streak:0,locked:false};
+function startQuiz(mode){
+  QZ.mode=mode; QZ.i=0; QZ.score=0; QZ.streak=0; QZ.locked=false; QZ.us=null;
+  if(mode==="unscramble"||mode==="cloze"){
+    let pool=PHR_ALL.filter(p=>T(p,S.learn).split(/\s+/).length>=3);
+    if(pool.length<5) pool=PHR_ALL;
+    QZ.items=shuffle(pool).slice(0,5);
+  } else if(mode==="type"){
+    let pool=PHR_ALL.filter(p=>{ const n=T(p,S.learn).split(/\s+/).length; return n>=2&&n<=5; });
+    if(pool.length<5) pool=PHR_ALL;
+    QZ.items=shuffle(pool).slice(0,5);
+  } else {
+    const pool=mode==="listen"?WORDS_ALL:WORDS_ALL.concat(PHR_ALL);
+    QZ.items=shuffle(pool).slice(0,10);
+  }
+  document.getElementById("quizmenu").style.display="none";
+  document.getElementById("quizdone").style.display="none";
+  document.getElementById("quizplay").style.display="block";
+  renderQuestion();
+}
+function renderQuestion(){
+  const q=QZ.items[QZ.i];
+  document.getElementById("qcount").textContent=(QZ.i+1)+"/"+QZ.items.length;
+  document.getElementById("qstreak").textContent=QZ.streak;
+  document.getElementById("qscore").textContent=QZ.score;
+  const body=document.getElementById("qbody");
+  if(QZ.mode==="ai"){ renderAiQuestion(q,body); return; }
+  if(QZ.mode==="unscramble"){ renderUnscramble(q,body); return; }
+  if(QZ.mode==="cloze"){ renderCloze(q,body); return; }
+  if(QZ.mode==="type"){ renderDictation(q,body); return; }
+  let head="";
+  if(QZ.mode==="read"){
+    head='<div style="font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;">What does this mean?</div>'+
+      '<div class="qword">'+esc(T(q,S.speak))+'</div>'+
+      (TR(q,S.speak)?'<div class="tr-text">'+esc(TR(q,S.speak))+'</div>':'');
+  } else {
+    head='<div style="font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;">Listen and pick what you hear</div>'+
+      '<div class="qword">🔊</div>'+
+      '<button class="mini" id="qplay" style="font-size:13px;padding:6px 14px;">🔊 Play again</button>';
+  }
+  const others=shuffle(DICT.filter(d=>d.id!==q.id&&(QZ.mode==="listen"||d.type===q.type))).slice(0,3);
+  const opts=shuffle([q].concat(others));
+  let html=head+'<div class="chips" style="flex-direction:column;align-items:stretch;">';
+  opts.forEach(d=>{
+    html+='<button class="qopt" data-id="'+d.id+'">'+esc(T(d,S.learn))+(TR(d,S.learn)?" <span style='opacity:.55;font-size:12px;'>("+esc(TR(d,S.learn))+")</span>":"")+'</button>';
+  });
+  html+="</div>";
+  body.innerHTML=html;
+  if(QZ.mode==="listen"){
+    body.querySelectorAll(".qopt").forEach(b=>{
+      b.onclick=()=>answerQuiz(b,q);
+    });
+    const pb=document.getElementById("qplay");
+    pb.onclick=()=>speak(T(q,S.learn),S.learn);
+    setTimeout(()=>speak(T(q,S.learn),S.learn),350);
+  } else {
+    body.querySelectorAll(".qopt").forEach(b=>{
+      b.onclick=()=>answerQuiz(b,q);
+    });
+  }
+}
+function renderAiQuestion(q,body){
+  body.innerHTML='<div style="font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;">🤖 AI quiz — pick the right answer</div>'
+    +'<div class="qword" style="font-size:18px;line-height:1.55;">'+esc(q.q)+'</div>'
+    +'<div class="chips" style="flex-direction:column;align-items:stretch;">'
+    +q.options.map((op,i)=>'<button class="qopt" data-ai="'+i+'">'+esc(op)+'</button>').join("")
+    +'</div><div class="hint" id="aiqexplain" style="margin-top:10px;min-height:18px;"></div>';
+  body.querySelectorAll(".qopt").forEach(b=>{
+    b.onclick=()=>{
+      if(QZ.locked) return; QZ.locked=true;
+      const i=+b.getAttribute("data-ai");
+      const ok=i===q.answer;
+      body.querySelectorAll(".qopt").forEach((x,xi)=>{ x.disabled=true; if(xi===q.answer) x.classList.add("correct"); });
+      if(!ok) b.classList.add("wrong");
+      document.getElementById("aiqexplain").textContent=q.explain||"";
+      if(ok){ QZ.streak++; QZ.score++; beep("good"); addXp(3+(QZ.streak>=3?1:0),"AI quiz"); }
+      else { QZ.streak=0; beep("bad"); }
+      setTimeout(()=>{ QZ.locked=false; QZ.i++; if(QZ.i>=QZ.items.length) endQuiz(); else renderQuestion(); },ok?1300:2400);
+    };
+  });
+}
+function renderUnscramble(q,body){
+  const words=T(q,S.learn).split(/\s+/);
+  QZ.us={target:words,placed:[],pool:shuffle(words.map(w=>w))};
+  body.innerHTML='<div style="font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;">🔀 Tap the words in the right order</div>'
+    +(TR(q,S.learn)?'<div class="tr-text">'+esc(TR(q,S.learn))+'</div>':'')
+    +'<div class="uchips" id="usplaced" title="your sentence"></div>'
+    +'<div class="uchips" id="uspool"></div>';
+  const pl=document.getElementById("usplaced"), po=document.getElementById("uspool");
+  const draw=()=>{
+    pl.innerHTML=QZ.us.placed.map((w,i)=>'<button class="uchip on" data-i="'+i+'">'+esc(w)+'</button>').join("");
+    po.innerHTML=QZ.us.pool.map((w,i)=>'<button class="uchip" data-i="'+i+'">'+esc(w)+'</button>').join("");
+    pl.querySelectorAll(".uchip").forEach(b=>{
+      b.onclick=()=>{ QZ.us.placed.splice(+b.getAttribute("data-i"),1); draw(); checkUnscramble(q); };
+    });
+    po.querySelectorAll(".uchip").forEach(b=>{
+      b.onclick=()=>{ QZ.us.pool.splice(+b.getAttribute("data-i"),1); QZ.us.placed.push(b.textContent); draw(); checkUnscramble(q); };
+    });
+  };
+  draw();
+}
+function checkUnscramble(q){
+  if(!QZ.us || QZ.us.placed.length!==QZ.us.target.length || QZ.locked) return;
+  QZ.locked=true;
+  const ok=QZ.us.placed.join(" ")===QZ.us.target.join(" ");
+  const pl=document.getElementById("usplaced"), po=document.getElementById("uspool");
+  po.innerHTML="";
+  pl.innerHTML=QZ.us.target.map(w=>'<button class="uchip '+(ok?"good":"bad")+'" disabled>'+esc(w)+'</button>').join("");
+  if(!ok){ pl.classList.add("ushake"); addMistake(q.id); }
+  if(ok){ QZ.streak++; QZ.score++; beep("good"); addXp(4+(QZ.streak>=3?1:0),"unscramble"); }
+  else { QZ.streak=0; beep("bad"); }
+  setTimeout(()=>{ QZ.locked=false; QZ.i++; QZ.us=null; if(QZ.i>=QZ.items.length) endQuiz(); else renderQuestion(); },ok?900:2600);
+}
+function renderCloze(q,body){
+  const words=T(q,S.learn).split(/\s+/);
+  const wi=1+Math.floor(Math.random()*(words.length-1));
+  const target=words[wi];
+  const shown=words.map((w,i)=>i===wi?"______":w).join(" ");
+  const others=shuffle(WORDS_ALL.filter(d=>norm(T(d,S.learn))!==norm(target))).slice(0,3).map(d=>T(d,S.learn));
+  const opts=shuffle([target].concat(others));
+  body.innerHTML='<div style="font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;">✍️ Pick the missing word</div>'
+    +'<div class="qword" style="font-size:20px;line-height:1.55;">'+esc(shown)+'</div>'
+    +(TR(q,S.learn)?'<div class="tr-text">'+esc(TR(q,S.learn))+'</div>':'')
+    +'<div class="chips" style="flex-direction:column;align-items:stretch;">'
+    +opts.map(o=>'<button class="qopt" data-txt="'+esc(o)+'">'+esc(o)+'</button>').join("")
+    +'</div>';
+  body.querySelectorAll(".qopt").forEach(b=>{
+    b.onclick=()=>{
+      if(QZ.locked) return; QZ.locked=true;
+      const ok=norm(b.getAttribute("data-txt"))===norm(target);
+      body.querySelectorAll(".qopt").forEach(x=>{
+        x.disabled=true;
+        if(norm(x.getAttribute("data-txt"))===norm(target)) x.classList.add("correct");
+      });
+      if(ok){ QZ.streak++; QZ.score++; beep("good"); addXp(3+(QZ.streak>=3?1:0),"fill the gap"); }
+      else { b.classList.add("wrong"); QZ.streak=0; beep("bad"); addMistake(q.id); }
+      setTimeout(()=>{ QZ.locked=false; QZ.i++; if(QZ.i>=QZ.items.length) endQuiz(); else renderQuestion(); },ok?800:1800);
+    };
+  });
+}
+function renderDictation(q,body){
+  body.innerHTML='<div style="font-size:13px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;">⌨️ Listen, then type what you hear ('+LANGS[S.learn].name+')</div>'
+    +'<div class="qword">🔊</div>'
+    +'<button class="mini" id="qplay2" style="font-size:13px;padding:6px 14px;">🔊 Play again</button>'
+    +'<div class="inputrow" style="margin-top:14px;"><input id="qtypein" type="text" autocomplete="off" placeholder="Type the sentence…">'
+    +'<button class="btn blue" id="qtypechk" style="border-radius:14px;flex:0 0 auto;">Check</button></div>'
+    +'<div class="hint" id="qtypehint" style="margin-top:8px;min-height:18px;"></div>';
+  const inp=document.getElementById("qtypein"), hint=document.getElementById("qtypehint");
+  const play=()=>speak(T(q,S.learn),S.learn);
+  document.getElementById("qplay2").onclick=play;
+  setTimeout(play,350);
+  const check=()=>{
+    if(QZ.locked) return;
+    const heard=String(inp.value).trim();
+    if(!heard){ QZ.locked=false; return; }
+    QZ.locked=true;
+    const target=norm(T(q,S.learn));
+    const sim=1-lev(target,norm(heard))/Math.max(target.length,1);
+    const ok=sim>=0.75;
+    hint.innerHTML=ok
+      ? '<span style="color:var(--good);font-weight:800;">✔ Correct! ('+Math.round(sim*100)+'%)</span>'
+      : '<span style="color:var(--bad);font-weight:700;">✘ '+Math.round(sim*100)+'% — right: <b>'+esc(T(q,S.learn))+'</b></span>';
+    inp.disabled=true; document.getElementById("qtypechk").disabled=true;
+    if(ok){ QZ.streak++; QZ.score++; beep("good"); addXp(4+(QZ.streak>=3?1:0),"dictation"); }
+    else { QZ.streak=0; beep("bad"); if(sim<0.55) addMistake(q.id); }
+    setTimeout(()=>{ QZ.locked=false; QZ.i++; if(QZ.i>=QZ.items.length) endQuiz(); else renderQuestion(); },ok?1000:2800);
+  };
+  document.getElementById("qtypechk").onclick=check;
+  inp.addEventListener("keydown",e=>{ if(e.key==="Enter") check(); });
+  setTimeout(()=>inp.focus(),100);
+}
+
+function answerQuiz(btn,q){
+  if(QZ.locked) return;
+  QZ.locked=true;
+  const ok=btn.getAttribute("data-id")===q.id;
+  document.querySelectorAll("#qbody .qopt").forEach(b=>{
+    b.disabled=true;
+    if(b.getAttribute("data-id")===q.id) b.classList.add("correct");
+  });
+  if(ok){
+    QZ.streak++; QZ.score++;
+    beep("good");
+    addXp(3+(QZ.streak>=3?1:0),QZ.streak>=3?"quiz streak +4":"quiz correct");
+  } else {
+    btn.classList.add("wrong");
+    QZ.streak=0;
+    beep("bad");
+    if(q&&q.id) addMistake(q.id);
+  }
+  setTimeout(()=>{
+    QZ.locked=false; QZ.i++;
+    if(QZ.i>=QZ.items.length) endQuiz(); else renderQuestion();
+  },ok?800:1600);
+}
+function endQuiz(){
+  document.getElementById("quizplay").style.display="none";
+  document.getElementById("quizdone").style.display="block";
+  const n=QZ.score;
+  S.bestQuiz=Math.max(S.bestQuiz||0,Math.round(10*n/QZ.items.length));
+  save();
+  document.getElementById("qfinal").textContent=n+"/"+QZ.items.length;
+  document.getElementById("qemoji").textContent=n>=9?"🏆":n>=6?"🌟":n>=4?"💪":"🌱";
+  document.getElementById("qmsg").textContent=n>=9?"Perfect! You are on fire!":n>=6?"Great job! Keep going!":n>=4?"Good start — review and retry!":"No problem — mistakes make masters. Try again!";
+}
+
+/* ---------------- LESSON ---------------- */
+const LS={cat:null,step:0,word:null,phrase:null,quiz:[],qi:0,qok:0,sayPhrase:null,done:false};
+function renderLessonCats(){
+  const box=document.getElementById("lessoncats");
+  box.innerHTML=CATS.map(c=>'<button class="chip" data-c="'+c.id+'">'+c.icon+' '+c.en+'</button>').join("");
+  box.querySelectorAll(".chip").forEach(b=>{
+    b.onclick=()=>startLesson(b.getAttribute("data-c"));
+  });
+}
+function startLesson(cat){
+  const words=WORDS_ALL.filter(d=>d.cat===cat);
+  const phrases=PHR_ALL.filter(d=>d.cat===cat);
+  if(!words.length&&!phrases.length){ toast("No content for this category yet 🌱"); return; }
+  LS.cat=cat; LS.step=0;
+  LS.word=words[Math.floor(Math.random()*words.length)];
+  LS.phrase=phrases.length?phrases[Math.floor(Math.random()*phrases.length)]:LS.word;
+  LS.quiz=shuffle(words.concat(phrases)).slice(0,3);
+  LS.qi=0; LS.qok=0;
+  LS.sayPhrase=LS.phrase;
+  LS.done=false;
+  document.getElementById("lessonmenu").style.display="none";
+  document.getElementById("lessonplay").style.display="block";
+  renderLessonStep();
+}
+function renderLessonStep(){
+  const steps=document.getElementById("lsteps");
+  steps.innerHTML=[0,1,2,3,4].map(i=>'<div class="lstep '+(i<LS.step?"done":"")+'"><i></i></div>').join("");
+  const body=document.getElementById("lbody");
+  const act=document.getElementById("lactions");
+  const catName=(CATS.find(c=>c.id===LS.cat)||{en:LS.cat}).en;
+  if(LS.step===0){
+    const e=LS.word;
+    body.innerHTML='<div class="lcard"><div class="hint" style="font-weight:800;">STEP 1 · Learn the word ('+catName+')</div>'+
+      '<div class="big">'+esc(T(e,S.learn))+'</div>'+(TR(e,S.learn)?'<div class="tr-text">'+esc(TR(e,S.learn))+'</div>':'')+
+      '<div style="font-size:15px;margin-top:6px;color:var(--ink-soft);">'+esc(T(e,S.speak))+'</div>'+
+      '<button class="mini" style="margin-top:12px;font-size:13px;padding:7px 14px;" id="laudio1">🔊 Listen</button></div>';
+    act.innerHTML='<button class="btn green big" id="lnext">Got it →</button>';
+    document.getElementById("laudio1").onclick=()=>speak(T(e,S.learn),S.learn);
+    document.getElementById("lnext").onclick=()=>{ LS.step=1; addXp(2,"lesson word"); beep("good"); renderLessonStep(); };
+  }
+  else if(LS.step===1){
+    const e=LS.phrase;
+    body.innerHTML='<div class="lcard"><div class="hint" style="font-weight:800;">STEP 2 · Learn the phrase</div>'+
+      '<div class="big" style="font-size:24px;">'+esc(T(e,S.learn))+'</div>'+(TR(e,S.learn)?'<div class="tr-text">'+esc(TR(e,S.learn))+'</div>':'')+
+      '<div style="font-size:15px;margin-top:6px;color:var(--ink-soft);">'+esc(T(e,S.speak))+'</div>'+
+      '<button class="mini" style="margin-top:12px;font-size:13px;padding:7px 14px;" id="laudio2">🔊 Listen</button></div>';
+    act.innerHTML='<button class="btn green big" id="lnext">Got it →</button>';
+    document.getElementById("laudio2").onclick=()=>speak(T(e,S.learn),S.learn);
+    document.getElementById("lnext").onclick=()=>{ LS.step=2; addXp(2,"lesson phrase"); beep("good"); renderLessonStep(); };
+  }
+  else if(LS.step===2){
+    renderLessonQuiz(body,act);
+  }
+  else if(LS.step===3){
+    const e=LS.sayPhrase;
+    body.innerHTML='<div class="lcard"><div class="hint" style="font-weight:800;">STEP 4 · Say it out loud</div>'+
+      '<div class="big" style="font-size:24px;">'+esc(T(e,S.learn))+'</div>'+(TR(e,S.learn)?'<div class="tr-text">'+esc(TR(e,S.learn))+'</div>':'')+
+      '<button class="mini" style="margin-top:12px;font-size:13px;padding:7px 14px;" id="laudio4">🔊 Listen first</button>'+
+      '<div class="score" id="lscore" style="margin-top:14px;"></div>'+
+      '<div class="heard" id="lheard"></div></div>';
+    document.getElementById("laudio4").onclick=()=>speak(T(e,S.learn),S.learn);
+    const micBtn=document.createElement("button");
+    micBtn.className="btn blue"; micBtn.textContent="🎤 Say it now";
+    micBtn.onclick=()=>{
+      if(!SR){ toast("Mic not supported here — use Chrome/Edge 🎤"); return; }
+      if(recBusy) return;
+      recBusy=true; setMic(true);
+      rec=newRec(S.learn,{ text:t=>{
+        const target=norm(T(e,S.learn)), heard=norm(t);
+        const sim=1-lev(target,heard)/Math.max(target.length,1);
+        const sc=document.getElementById("lscore");
+        document.getElementById("lheard").textContent='Heard: "'+t+'"';
+        if(sim>=0.8){ sc.textContent="🎉 Perfect! ("+Math.round(sim*100)+"%)"; sc.className="score good"; S.perfect++; save(); addXp(5,"lesson pronunciation"); beep("good"); }
+        else { sc.textContent="👍 " + (sim>=0.5?"Good!":"Try again!") + " ("+Math.round(sim*100)+"%)"; sc.className=sim>=0.5?"score ok":"score bad"; beep(sim>=0.5?"good":"bad"); }
+      }},()=>{ rec=null; });
+      try{ rec.start(); }catch(err){ recBusy=false; setMic(false); }
+    };
+    const skipBtn=document.createElement("button");
+    skipBtn.className="btn ghost"; skipBtn.textContent="⏭ Skip";
+    skipBtn.onclick=()=>{ LS.step=4; renderLessonStep(); };
+    act.innerHTML="";
+    act.appendChild(micBtn); act.appendChild(skipBtn);
+  }
+  else if(LS.step===4){
+    body.innerHTML='<div class="lcard"><div style="font-size:44px;">🎉</div>'+
+      '<div class="big">Lesson complete!</div>'+
+      '<div class="hint" style="margin-top:6px;">You learned "'+esc(LS.word?T(LS.word,S.learn):"")+ '" and "'+esc(T(LS.sayPhrase,S.learn))+'" in '+(CATS.find(c=>c.id===LS.cat)||{en:catName}).en+". Quiz score: "+LS.qok+"/3.</div></div>";
+    act.innerHTML='<button class="btn blue" id="lchoose">📚 Another lesson</button><button class="btn ghost" id="lfine">Done</button>';
+    document.getElementById("lchoose").onclick=()=>{ document.getElementById("lessonplay").style.display="none"; document.getElementById("lessonmenu").style.display="block"; renderLessonCats(); };
+    document.getElementById("lfine").onclick=()=>switchView("progress");
+    addXp(5,"lesson complete");
+  }
+}
+function renderLessonQuiz(body,act){
+  const q=LS.quiz[LS.qi];
+  body.innerHTML='<div class="lcard"><div class="hint" style="font-weight:800;">STEP 3 · Mini-quiz ('+(LS.qi+1)+'/3)</div>'+
+    '<div class="qword" style="font-size:20px;">What is this in '+(LANGS[S.learn].native)+ '?<br>'+esc(T(q,S.speak))+'</div></div>'+
+    '<div class="chips" style="flex-direction:column;align-items:stretch;" id="lquizopts"></div>';
+  const box=document.getElementById("lquizopts");
+  const others=shuffle(DICT.filter(d=>d.id!==q.id)).slice(0,3);
+  shuffle([q].concat(others)).forEach(d=>{
+    const b=document.createElement("button"); b.className="qopt"; b.textContent=T(d,S.learn);
+    b.onclick=()=>{
+      const ok=d.id===q.id;
+      box.querySelectorAll(".qopt").forEach(x=>{ x.disabled=true; if(x===b) x.classList.add(ok?"correct":"wrong"); });
+      if(ok){ LS.qok++; beep("good"); addXp(2,"lesson quiz"); }
+      else { beep("bad"); addMistake(q.id); }
+      setTimeout(()=>{ LS.qi++; if(LS.qi>=LS.quiz.length){ LS.step=3; } renderLessonStep(); },ok?700:1400);
+    };
+    box.appendChild(b);
+  });
+  act.innerHTML='<button class="btn ghost" id="lexit">✕ Quit lesson</button>';
+  document.getElementById("lexit").onclick=()=>{ document.getElementById("lessonplay").style.display="none"; document.getElementById("lessonmenu").style.display="block"; };
+}
+
+/* ---------------- SAY IT ---------------- */
+let pPhrase=null, pCat="all";
+function pNewPhrase(){
+  const pool=pCat==="all"?PHR_ALL:PHR_ALL.filter(p=>p.cat===pCat);
+  const list=pool.length?pool:PHR_ALL;
+  pPhrase=list[Math.floor(Math.random()*list.length)];
+  const txt=T(pPhrase,S.learn);
+  document.getElementById("pphrase").innerHTML=
+    '<div class="hint" style="font-weight:700;letter-spacing:.5px;">SAY THIS ('+LANGS[S.learn].name.toUpperCase()+')</div>'+
+    '<div class="big">'+esc(txt)+'</div>'+(TR(pPhrase,S.learn)?'<div class="tr">'+esc(TR(pPhrase,S.learn))+'</div>':'')+
+    '<button class="mini" style="margin-top:10px;" id="plisten">🔊 Listen first</button>';
+  document.getElementById("plisten").onclick=()=>speak(txt,S.learn);
+  document.getElementById("pscore").textContent="";
+  document.getElementById("pscore").className="score";
+  document.getElementById("pheard").textContent="";
+  document.getElementById("phint").textContent="💡 Show hint";
+  document.getElementById("phint").onclick=()=>{
+    const cur=document.getElementById("phint").textContent;
+    document.getElementById("phint").textContent=cur.indexOf("Show")===0
+      ? "🙈 Hide hint ("+T(pPhrase,S.speak)+")"
+      : "💡 Show hint";
+  };
+}
+function pScore(heardText){
+  const target=norm(T(pPhrase,S.learn));
+  const heard=norm(heardText);
+  const dist=lev(target,heard);
+  const sim=1-dist/Math.max(target.length,1);
+  const sc=document.getElementById("pscore");
+  document.getElementById("pheard").textContent='Heard: "'+heardText+'"';
+  if(sim>=0.82){
+    sc.textContent="🎉 Perfect! ("+Math.round(sim*100)+"%)"; sc.className="score good";
+    S.perfect++; save();
+    addXp(8,"perfect pronunciation"); beep("level");
+    setTimeout(pNewPhrase,1800);
+  } else if(sim>=0.55){
+    sc.textContent="👍 Good! ("+Math.round(sim*100)+"%) — try again for full marks"; sc.className="score ok";
+    addXp(4,"nice try"); beep("good");
+  } else {
+    sc.textContent="🔁 Not quite ("+Math.round(sim*100)+"%) — listen again and retry"; sc.className="score bad";
+    beep("bad"); addMistake(pPhrase.id);
+  }
+}
+
+/* ---------------- PROGRESS / XP ---------------- */
+function renderXp(){
+  document.getElementById("xpval").textContent=S.xp+" XP";
+  document.getElementById("lvlval").textContent=LEVELS[levelOf(S.xp)].en;
+  document.getElementById("streakval").textContent=S.streak;
+}
+function renderProgress(){
+  document.getElementById("st-xp").textContent=S.xp;
+  document.getElementById("st-streak").textContent=S.streak;
+  const knownTotal=Object.values(S.known).reduce((a,b)=>a+b.length,0);
+  document.getElementById("st-known").textContent=knownTotal;
+  document.getElementById("st-chat").textContent=S.chatCount;
+  const li=levelOf(S.xp);
+  document.getElementById("st-level").textContent=li+1;
+  document.getElementById("st-perfect").textContent=S.perfect;
+  document.getElementById("st-mistakes").textContent=mistakeCount();
+  document.getElementById("st-favs").textContent=Object.keys(S.favs||{}).length;
+  document.getElementById("lvlname2").textContent=LEVELS[li].en;
+  renderBadges();
+  const nl=nextLevel(S.xp), base=LEVELS[li].min;
+  document.getElementById("lvlbar").style.width=nl?Math.round(100*(S.xp-base)/(nl-base)):"100%";
+  touchStreak();
+  const gp=S.goal?Math.min(100,Math.round(100*S.today.xp/S.goal)):0;
+  document.getElementById("goalbar").style.width=gp+"%";
+  document.getElementById("goaltxt").textContent=S.today.xp+"/"+S.goal+" XP";
+  const box=document.getElementById("catmastery");
+  box.innerHTML=CATS.map(c=>{
+    const items=DICT.filter(d=>d.cat===c.id);
+    const k=(S.known[c.id]||[]).filter(id=>items.some(d=>d.id===id)).length;
+    const pct=items.length?Math.round(100*k/items.length):0;
+    return '<div class="catrow"><span class="nm">'+c.icon+' '+c.en+'</span>'+
+      '<div class="pbar"><i style="width:'+pct+'%;background:'+(pct>=70?"var(--good)":pct>=30?"linear-gradient(90deg,var(--teal),#37c4b4)":"var(--gold)")+'"></i></div>'+
+      '<span class="pct">'+k+"/"+items.length+'</span></div>';
+  }).join("");
+}
+
+/* ---------------- WORD OF DAY ---------------- */
+function renderWot(){
+  const day=Math.floor(Date.now()/86400000);
+  const e=WORDS_ALL[(day*7+LCODES.indexOf(S.learn))%WORDS_ALL.length];
+  document.getElementById("wot").innerHTML=
+    '<span class="lbl">🌟 Word of the day</span>'+
+    '<span class="grow"><b>'+esc(T(e,S.learn))+'</b>'+(TR(e,S.learn)?' <i>('+esc(TR(e,S.learn))+')</i>':'')+' = '+esc(T(e,S.speak))+'</span>'+ 
+    '<button class="mini" id="wotlisten">🔊</button>';
+  document.getElementById("wotlisten").onclick=()=>speak(T(e,S.learn),S.learn);
+}
+
+/* ============================================================
+   V3 FEATURES — confetti · badges · mistake notebook · spaced
+   repetition · words browser · unscramble/cloze/dictation ·
+   AI quiz/story · free conversation · shadowing · backup
+   ============================================================ */
+
+/* ---- confetti ---- */
+function confetti(){
+  try{
+    const c=document.createElement("canvas");
+    c.style.cssText="position:fixed;inset:0;pointer-events:none;z-index:999;";
+    document.body.appendChild(c);
+    const ctx=c.getContext("2d");
+    c.width=window.innerWidth; c.height=window.innerHeight;
+    const cols=["#ff6a3d","#0f9d8f","#ffb703","#2f9e44","#e03131","#37c4b4","#ff9d5c","#f77f00"];
+    const ps=Array.from({length:130},()=>({
+      x:Math.random()*c.width, y:-30-Math.random()*c.height*0.4,
+      w:6+Math.random()*7, h:8+Math.random()*8,
+      vx:(Math.random()-.5)*3, vy:2.2+Math.random()*3,
+      r:Math.random()*Math.PI, vr:(Math.random()-.5)*.22,
+      col:cols[Math.floor(Math.random()*cols.length)]
+    }));
+    const t0=performance.now();
+    (function tick(t){
+      const el=t-t0;
+      ctx.clearRect(0,0,c.width,c.height);
+      ps.forEach(p=>{
+        p.x+=p.vx; p.y+=p.vy; p.vy+=0.05; p.r+=p.vr;
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r);
+        ctx.fillStyle=p.col; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      });
+      if(el<2600) requestAnimationFrame(tick); else c.remove();
+    })(t0);
+  }catch(e){}
+}
+
+/* ---- badges ---- */
+function knownTotal(){ return Object.values(S.known||{}).reduce((a,b)=>a+b.length,0); }
+const BADGES=[
+  {id:"first",   icon:"🌱", name:"First Steps",      desc:"Earn your first XP",                    test:s=>s.xp>0},
+  {id:"words10", icon:"📖", name:"Word Collector",   desc:"Know 10 words",                         test:s=>knownTotal()>=10},
+  {id:"words50", icon:"📚", name:"Wordsmith",        desc:"Know 50 words",                         test:s=>knownTotal()>=50},
+  {id:"conv10",  icon:"💬", name:"Chatterbox",       desc:"Send 10 chat messages",                 test:s=>s.chatCount>=10},
+  {id:"conv50",  icon:"🗣️", name:"Storyteller",      desc:"Send 50 chat messages",                 test:s=>s.chatCount>=50},
+  {id:"streak3", icon:"🔥", name:"On a Roll",        desc:"3-day streak",                          test:s=>s.streak>=3},
+  {id:"streak7", icon:"🌋", name:"Week Warrior",     desc:"7-day streak",                          test:s=>s.streak>=7},
+  {id:"perf10",  icon:"🎯", name:"Pronunciation Pro",desc:"10 perfect sayings",                    test:s=>s.perfect>=10},
+  {id:"quiz9",   icon:"🏆", name:"Quiz Wizard",      desc:"Score 9+/10 in a quiz",                 test:s=>(s.bestQuiz||0)>=9},
+  {id:"ai1",     icon:"🤖", name:"AI Pal",           desc:"Chat with the AI tutor",                test:s=>(s.aiChats||0)>=1},
+  {id:"xp500",   icon:"💎", name:"Half a Thousand",  desc:"Reach 500 XP",                          test:s=>s.xp>=500},
+  {id:"xp1200",  icon:"👑", name:"Grand Master",     desc:"Reach Master level (1200 XP)",          test:s=>s.xp>=1200},
+];
+function checkBadges(){
+  let got=false;
+  BADGES.forEach(b=>{
+    if(!(S.badges||{})[b.id] && b.test(S)){
+      S.badges=S.badges||{}; S.badges[b.id]=Date.now(); got=true;
+      toast("🏅 Badge unlocked: "+b.icon+" <b>"+b.name+"</b> — "+b.desc,4200);
+      beep("level"); confetti();
+    }
+  });
+  if(got){
+    save();
+    if(document.getElementById("view-progress").classList.contains("on")) renderBadges();
+  }
+}
+function renderBadges(){
+  const box=document.getElementById("bgrid"); if(!box) return;
+  const n=Object.keys(S.badges||{}).length;
+  document.getElementById("badgecount").textContent="("+n+"/"+BADGES.length+")";
+  box.innerHTML=BADGES.map(b=>{
+    const un=!!(S.badges||{})[b.id];
+    return '<div class="bcell'+(un?"":" lock")+'" title="'+(un?"Unlocked":"Locked")+'"><div class="bi">'+b.icon+'</div>'
+      +'<div class="bn">'+b.name+'</div><div class="bd">'+b.desc+'</div></div>';
+  }).join("");
+}
+
+/* ---- mistake notebook (persistent) ---- */
+function addMistake(id){
+  const e=BYID[id]; if(!e) return;
+  S.mistakes=S.mistakes||{};
+  const m=S.mistakes[id]||(S.mistakes[id]={n:0,last:0});
+  const isNew=!m.n;
+  m.n++; m.last=Date.now();
+  save();
+  if(isNew) toast("📓 Added to your mistake notebook: <b>"+esc(T(e,S.learn))+"</b>",3000);
+}
+function mistakeCount(){ return S.mistakes?Object.keys(S.mistakes).length:0; }
+
+/* ---- spaced repetition (SM-2) ---- */
+function srsGrade(id,q){
+  S.srs=S.srs||{};
+  const st=S.srs[id]||(S.srs[id]={due:0,itv:0,ease:2.5,reps:0});
+  if(q<3){
+    st.reps=0; st.itv=0; st.due=Date.now()+86400000;
+  } else {
+    st.reps++;
+    if(st.reps===1) st.itv=1;
+    else if(st.reps===2) st.itv=6;
+    else st.itv=Math.max(st.itv,1)*st.ease;
+    st.itv=Math.round(st.itv);
+    st.ease=Math.max(1.3, st.ease+(0.1-(5-q)*(0.08+(5-q)*0.02)));
+    st.due=Date.now()+st.itv*86400000;
+  }
+}
+function srsDueList(){
+  const now=Date.now();
+  return DICT.filter(d=>{
+    const st=S.srs&&S.srs[d.id];
+    return !st || st.due<=now;
+  });
+}
+
+/* ---- WORDS BROWSER (search + star) ---- */
+let wQuery="", wCat="all", wFavsOnly=false;
+function renderWords(){
+  const q=norm(wQuery);
+  const favN=Object.keys(S.favs||{}).length;
+  const box=document.getElementById("wchips");
+  let h='<button class="chip" data-wc="all" '+(wCat==="all"&&!wFavsOnly?"style='border-color:var(--orange);color:var(--orange-dark);background:#fff4ec;'":"")+'>⭐ All</button>';
+  CATS.forEach(c=>{
+    h+='<button class="chip" data-wc="'+c.id+'" '+(wCat===c.id?"style='border-color:var(--orange);color:var(--orange-dark);background:#fff4ec;'":"")+'> '+c.icon+' '+c.en+'</button>';
+  });
+  h+='<button class="chip" data-wc="__favs" '+(wFavsOnly?"style='border-color:var(--gold);color:var(--orange-dark);background:#fff4ec;'":"")+'>⭐ Starred ('+favN+')</button>';
+  box.innerHTML=h;
+  box.querySelectorAll(".chip").forEach(b=>{
+    b.onclick=()=>{
+      const c=b.getAttribute("data-wc");
+      if(c==="__favs") wFavsOnly=!wFavsOnly;
+      else { wCat=c; wFavsOnly=false; }
+      renderWords();
+    };
+  });
+  const list=document.getElementById("wordslist");
+  let items=DICT.filter(d=>(!wFavsOnly||(S.favs||{})[d.id]) && (wCat==="all"||d.cat===wCat));
+  if(q){
+    items=items.filter(d=> LCODES.some(L=> norm(T(d,L)).includes(q) || norm(TR(d,L)).includes(q)) || norm(d.cat).includes(q));
+  }
+  if(!items.length){ list.innerHTML='<div class="hint" style="padding:14px;">No words found — try another search 🌱</div>'; return; }
+  list.innerHTML=items.map(d=>{
+    const fav=!!(S.favs||{})[d.id];
+    const icon=((CATS.find(c=>c.id===d.cat))||{icon:""}).icon;
+    return '<div class="wordrow">'
+      +'<button class="starbtn'+(fav?" on":"")+'" data-id="'+d.id+'" title="Star / unstar">'+(fav?"★":"☆")+'</button>'
+      +'<div class="wgrow"><div class="wt"><b>'+esc(T(d,S.learn))+'</b>'+(TR(d,S.learn)?' <i>'+esc(TR(d,S.learn))+'</i>':'')+'</div>'
+      +'<div class="wm">'+icon+' '+esc(T(d,S.speak))+' · '+(d.type==="p"?"phrase":"word")+'</div></div>'
+      +'<button class="mini" data-ttsid="'+d.id+'">🔊</button></div>';
+  }).join("");
+  list.querySelectorAll(".starbtn").forEach(b=>{
+    b.onclick=()=>{
+      const id=b.getAttribute("data-id");
+      S.favs=S.favs||{};
+      if(S.favs[id]) delete S.favs[id]; else S.favs[id]=Date.now();
+      save(); renderWords();
+    };
+  });
+  list.querySelectorAll("[data-ttsid]").forEach(b=>{
+    b.onclick=()=>{ const d=BYID[b.getAttribute("data-ttsid")]; speak(T(d,S.learn),S.learn); };
+  });
+}
+
+/* ---- SHADOWING (say-it, full sentences) ---- */
+let shPhrase=null;
+function shNew(){
+  const p=PHR_ALL[Math.floor(Math.random()*PHR_ALL.length)];
+  shPhrase=p;
+  const txt=T(p,S.learn);
+  document.getElementById("shphrase").innerHTML=
+    '<div class="hint" style="font-weight:700;letter-spacing:.5px;">SHADOW THIS ('+LANGS[S.learn].name.toUpperCase()+')</div>'
+    +'<div class="big" style="font-size:22px;">'+esc(txt)+'</div>'
+    +(TR(p,S.learn)?'<div class="tr">'+esc(TR(p,S.learn))+'</div>':'')
+    +'<button class="mini" style="margin-top:10px;" id="shplay">🔊 Listen (2×)</button>';
+  document.getElementById("shplay").onclick=()=>{
+    speak(txt,S.learn);
+    setTimeout(()=>speak(txt,S.learn,0.7), 900+txt.length*170);
+  };
+  document.getElementById("shscore").textContent="";
+  document.getElementById("shscore").className="score";
+  document.getElementById("shheard").textContent="";
+  document.getElementById("shhint").textContent="💡 Show meaning";
+  document.getElementById("shhint").onclick=()=>{
+    const el=document.getElementById("shhint");
+    el.textContent=el.textContent.indexOf("Show")===0 ? "🙈 Hide meaning ("+T(p,S.speak)+")" : "💡 Show meaning";
+  };
+  if(document.getElementById("view-speak").classList.contains("on")) setTimeout(()=>speak(txt,S.learn),350);
+}
+function shScore(heard){
+  if(!shPhrase) return;
+  const target=norm(T(shPhrase,S.learn));
+  const h=norm(heard);
+  const sim=1-lev(target,h)/Math.max(target.length,1);
+  const sc=document.getElementById("shscore");
+  document.getElementById("shheard").textContent='Heard: "'+heard+'"';
+  if(sim>=0.75){
+    sc.textContent="🎉 Excellent shadowing! ("+Math.round(sim*100)+"%)"; sc.className="score good";
+    S.perfect++; save();
+    addXp(8,"perfect shadowing"); beep("level");
+    setTimeout(shNew,2000);
+  } else if(sim>=0.5){
+    sc.textContent="👍 Good! ("+Math.round(sim*100)+"%) — shadow it again for full marks"; sc.className="score ok";
+    addXp(4,"nice shadowing"); beep("good");
+  } else {
+    sc.textContent="🔁 Not quite ("+Math.round(sim*100)+"%) — listen again and retry"; sc.className="score bad";
+    beep("bad"); addMistake(shPhrase.id);
+  }
+}
+
+/* ---- FREE CONVERSATION MODE (AI) ---- */
+function toggleConv(){
+  if(!S.convOn && !aiReady()){
+    toast("Free conversation needs the AI tutor — enable it in ⚙️ (the free option needs no key) 🤖");
+    openSettings(); return;
+  }
+  S.convOn=!S.convOn; save();
+  document.getElementById("convbtn").textContent="🗣 Free conversation: "+(S.convOn?"ON":"OFF");
+  if(S.convOn){
+    addMsg("bot","Free conversation ON! 🗣 Let's talk about anything — your day, food, travel, dreams. I'll stay in "+LANGS[S.learn].name+" and translate for you. When you're done, tap '📝 Review session' for a summary.",null,null,S.learn);
+  } else {
+    addMsg("bot","Back to tutor mode — I'll guide you with topics, phrases and corrections. 🎓",null,null,S.learn);
+  }
+}
+
+/* ---- SESSION REVIEW (AI) ---- */
+async function sessionReview(){
+  if(!aiReady()){ toast("Session review needs the AI tutor — enable it in ⚙️ (the free option needs no key) 🤖"); openSettings(); return; }
+  if(!CHAT_HIST.length){ toast("Chat with me a little first, then I'll review us 💬"); return; }
+  const btn=document.getElementById("reviewbtn");
+  btn.disabled=true; btn.textContent="📝 Reviewing…";
+  addMsg("user","📝 Please review our session",null,null,null);
+  const sys='You are reviewing a language practice conversation. The user was practicing '+LANGS[S.learn].name+' (they speak '+LANGS[S.speak]+'). Reply with ONLY valid JSON (no markdown): '
+    +'{"summary":"2-3 sentences in '+LANGS[S.speak].name+' about how the practice went and what they did well",'
+    +'"mistakes":[{"said":"what they said (in '+LANGS[S.learn].name+')","fix":"the better version","why":"short reason in '+LANGS[S.speak].name+'"}] (up to 3 most important; empty array if none),'
+    +'"newwords":[{"w":"useful phrase in '+LANGS[S.learn].name+'","m":"meaning in '+LANGS[S.speak].name+'"}] (exactly 3 phrases useful for them next time)}';
+  const msgs=[{role:"system",content:sys}];
+  CHAT_HIST.slice(-16).forEach(m=>msgs.push({role:m.role==="assistant"?"assistant":m.role,content:m.content}));
+  try{
+    const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({provider:S.ai.provider,key:S.ai.key,model:S.ai.model,messages:msgs,max_tokens:800})});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.error||"AI request failed");
+    let s=String(j.text).trim().replace(/^```(?:json)?/,"").replace(/```$/,"").trim();
+    const a=s.indexOf("{"), b=s.lastIndexOf("}");
+    if(a>=0&&b>a) s=s.slice(a,b+1);
+    const o=JSON.parse(s);
+    renderReviewCard(o);
+    addXp(10,"session review");
+  }catch(e){
+    showMicBanner("⚠️ Review failed: "+e.message);
+  }finally{
+    btn.disabled=false; btn.textContent="📝 Review session";
+  }
+}
+function renderReviewCard(o){
+  const div=document.createElement("div"); div.className="msg bot";
+  const who=document.createElement("div"); who.className="who"; who.textContent="Talkora 🤖 · Session review";
+  div.appendChild(who);
+  const card=document.createElement("div"); card.className="bub";
+  let h="<b>📝 Session review</b><br>"+esc(o.summary||"Great practice!");
+  if(Array.isArray(o.mistakes)&&o.mistakes.length){
+    h+="<br><br><b>Corrections:</b>";
+    o.mistakes.slice(0,3).forEach(m=>{
+      h+="<br><span style='color:var(--bad);text-decoration:line-through;'>"+esc(m.said||"")+"</span> → <b style='color:var(--good);'>"+esc(m.fix||"")+"</b>"+(m.why?" <i>("+esc(m.why)+")</i>":"");
+    });
+  }
+  if(Array.isArray(o.newwords)&&o.newwords.length){
+    h+="<br><br><b>✨ Learn these next:</b>";
+    o.newwords.slice(0,3).forEach(w=>{ h+="<br>• "+esc(w.w||"")+" — "+esc(w.m||""); });
+  }
+  card.innerHTML=h;
+  div.appendChild(card);
+  const a=document.createElement("div"); a.className="actions";
+  const b=document.createElement("button"); b.className="mini"; b.textContent="🔊 Listen to summary";
+  b.onclick=()=>speak(String(o.summary||""),S.speak);
+  a.appendChild(b); div.appendChild(a);
+  chatlog.appendChild(div);
+  chatlog.scrollTop=chatlog.scrollHeight;
+}
+
+/* ---- AI QUIZ ---- */
+async function aiQuiz(topic){
+  if(!aiReady()){ toast("Enable the AI tutor in ⚙️ Settings first (the free option needs no key) 🤖"); openSettings(); return; }
+  const btn=document.getElementById("aquizbtn");
+  btn.disabled=true; btn.textContent="Thinking…";
+  document.getElementById("qlistennote").textContent="🤖 Generating 5 custom questions…";
+  try{
+    const sys='You generate language-learning quizzes. The user speaks '+LANGS[S.speak].name+' and is learning '+LANGS[S.learn].name+'. Topic: '+(topic&&String(topic).trim()?"everyday vocabulary about "+String(topic).trim():"everyday life")+'. Level: A2-B1 mixed. Reply with ONLY valid JSON (no markdown): '
+      +'{"questions":[{"q":"question in '+LANGS[S.speak].name+'","options":["...","...","...","..."],"answer":0,"explain":"one short explanation in '+LANGS[S.speak].name+'"}]} '
+      +'- exactly 5 questions, all 4 options in '+LANGS[S.learn].name+', "answer" is the 0-based index of the correct option, options in a sensible (not always alphabetical) order.';
+    const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({provider:S.ai.provider,key:S.ai.key,model:S.ai.model,
+        messages:[{role:"system",content:sys},{role:"user",content:"Generate the quiz now."}],max_tokens:900})});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.error||"AI request failed");
+    let s=String(j.text).trim().replace(/^```(?:json)?/,"").replace(/```$/,"").trim();
+    const a=s.indexOf("{"), b=s.lastIndexOf("}");
+    if(a>=0&&b>a) s=s.slice(a,b+1);
+    const o=JSON.parse(s);
+    const qs=(Array.isArray(o.questions)?o.questions:[])
+      .map(x=>({
+        q:String(x.q||"").trim(),
+        options:(Array.isArray(x.options)?x.options:[]).map(String),
+        answer:parseInt(x.answer,10),
+        explain:String(x.explain||"")
+      }))
+      .filter(x=>x.q&&x.options.length>=2)
+      .map(x=>{ x.answer=Math.max(0,Math.min(x.options.length-1,isNaN(x.answer)?0:x.answer)); return x; })
+      .slice(0,5);
+    if(!qs.length) throw new Error("the AI returned no usable questions");
+    QZ.mode="ai"; QZ.items=qs; QZ.i=0; QZ.score=0; QZ.streak=0; QZ.locked=false; QZ.us=null;
+    document.getElementById("quizmenu").style.display="none";
+    document.getElementById("quizdone").style.display="none";
+    document.getElementById("quizplay").style.display="block";
+    renderQuestion();
+  }catch(e){
+    document.getElementById("qlistennote").textContent="⚠️ "+e.message;
+  }finally{
+    btn.disabled=false; btn.textContent="Generate";
+  }
+}
+
+/* ---- AI STORY & COMPREHENSION (lesson tab) ---- */
+const AIST={active:false,story:"",gloss:[],qs:[],qi:0,qok:0};
+async function aiStory(){
+  if(!aiReady()){ toast("Enable the AI tutor in ⚙️ Settings first (the free option needs no key) 🤖"); openSettings(); return; }
+  document.getElementById("lessonmenu").style.display="none";
+  document.getElementById("lessonplay").style.display="block";
+  document.getElementById("lsteps").innerHTML=[0,1,2,3,4].map(i=>'<div class="lstep"><i></i></div>').join("");
+  document.getElementById("lbody").innerHTML='<div class="lcard"><div style="font-size:40px;">🤖✨</div><div class="big" style="font-size:20px;">Writing your story…</div><p class="hint">using your AI key · '+LANGS[S.learn].name+'</p></div>';
+  document.getElementById("lactions").innerHTML="";
+  try{
+    const sys='You are a language tutor writing graded reading. The user speaks '+LANGS[S.speak].name+' and is learning '+LANGS[S.learn].name+' (level A2-B1). Reply with ONLY valid JSON (no markdown): '
+      + '{"story":"a short story of 5-7 simple sentences in '+LANGS[S.learn].name+' about everyday life (travel, food, family or weather)",'
+      + '"gloss":[{"w":"key word or short phrase from the story, in '+LANGS[S.learn].name+'","m":"meaning in '+LANGS[S.speak].name+'"}] (exactly 3),'
+      + '"questions":[{"q":"comprehension question in '+LANGS[S.learn].name+'","options":["a","b","c","d"],"answer":0}] (exactly 3; all options in '+LANGS[S.learn].name+', "answer" is the 0-based index)}';
+    const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({provider:S.ai.provider,key:S.ai.key,model:S.ai.model,
+        messages:[{role:"system",content:sys},{role:"user",content:"Write the story now."}],max_tokens:1300})});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.error||"AI request failed");
+    let s=String(j.text).trim().replace(/^```(?:json)?/,"").replace(/```$/,"").trim();
+    const a=s.indexOf("{"), b=s.lastIndexOf("}");
+    if(a>=0&&b>a) s=s.slice(a,b+1);
+    const o=JSON.parse(s);
+    if(!o.story||!String(o.story).trim()) throw new Error("the AI returned no story");
+    AIST.active=true;
+    AIST.story=String(o.story).trim();
+    AIST.gloss=(Array.isArray(o.gloss)?o.gloss:[]).slice(0,3).map(g=>({w:String(g.w||""),m:String(g.m||"")})).filter(g=>g.w);
+    AIST.qs=(Array.isArray(o.questions)?o.questions:[])
+      .map(q=>({q:String(q.q||"").trim(),options:(Array.isArray(q.options)?q.options:[]).map(String),answer:parseInt(q.answer,10)}))
+      .filter(q=>q.q&&q.options.length>=2)
+      .map(q=>{ q.answer=Math.max(0,Math.min(q.options.length-1,isNaN(q.answer)?0:q.answer)); return q; })
+      .slice(0,3);
+    AIST.qi=0; AIST.qok=0;
+    addXp(2,"AI story read");
+    aiStoryStep();
+  }catch(e){
+    document.getElementById("lbody").innerHTML='<div class="lcard"><div style="font-size:40px;">😅</div><div class="big" style="font-size:18px;">Story failed</div><p class="hint" style="margin-top:6px;">'+esc(e.message)+'</p></div>';
+    document.getElementById("lactions").innerHTML='<button class="btn blue" id="astoryback">← Back to lessons</button>';
+    document.getElementById("astoryback").onclick=aiStoryExit;
+  }
+}
+function aiStoryExit(){
+  AIST.active=false;
+  document.getElementById("lessonplay").style.display="none";
+  document.getElementById("lessonmenu").style.display="block";
+  renderLessonCats();
+}
+function aiStoryStep(){
+  const body=document.getElementById("lbody"), act=document.getElementById("lactions");
+  const steps=document.getElementById("lsteps");
+  const stage=AIST.qi===0?0:Math.min(4,AIST.qi);
+  steps.innerHTML=[0,1,2,3,4].map(i=>'<div class="lstep '+(i<stage||(i===0&&AIST.qi>0)?"done":"")+'"><i></i></div>').join("");
+  if(AIST.qi<AIST.qs.length){
+    if(AIST.qi===0){
+      body.innerHTML='<div class="lcard"><div class="hint" style="font-weight:800;">📖 READ THE STORY ('+LANGS[S.learn].name+')</div>'
+        +'<div style="font-size:17px;text-align:left;line-height:1.75;margin:10px 0;">'+esc(AIST.story)+'</div>'
+        +'<button class="mini" id="astorylisten" style="font-size:13px;padding:7px 14px;">🔊 Listen</button></div>'
+        +(AIST.gloss.length?'<div class="lcard" style="text-align:left;"><div class="hint" style="font-weight:800;">✨ KEY WORDS</div>'
+          +AIST.gloss.map(g=>'<div style="padding:5px 0;font-size:14.5px;"><b>'+esc(g.w)+'</b> — '+esc(g.m)+'</div>').join("")+'</div>':"");
+      act.innerHTML='<button class="btn green big" id="astorynext">Got it → questions</button>';
+      document.getElementById("astorylisten").onclick=()=>speak(AIST.story,S.learn);
+      document.getElementById("astorynext").onclick=()=>{ AIST.qi=1; aiStoryStep(); };
+    } else {
+      const q=AIST.qs[AIST.qi-1];
+      body.innerHTML='<div class="lcard"><div class="hint" style="font-weight:800;">❓ QUESTION '+(AIST.qi)+'/'+AIST.qs.length+'</div><div class="qword" style="font-size:19px;line-height:1.5;">'+esc(q.q)+'</div></div>'
+        +'<div id="aistqopts" class="chips" style="flex-direction:column;align-items:stretch;"></div>';
+      act.innerHTML='<button class="btn ghost" id="astoryquit">✕ Quit story</button>';
+      document.getElementById("astoryquit").onclick=aiStoryExit;
+      const box=document.getElementById("aistqopts");
+      q.options.forEach((op,i)=>{
+        const b=document.createElement("button"); b.className="qopt"; b.textContent=op;
+        b.onclick=()=>{
+          box.querySelectorAll(".qopt").forEach(x=>x.disabled=true);
+          const ok=i===q.answer;
+          box.querySelectorAll(".qopt")[q.answer].classList.add("correct");
+          if(!ok) b.classList.add("wrong");
+          if(ok){ AIST.qok++; addXp(2,"AI story quiz"); beep("good"); } else beep("bad");
+          setTimeout(()=>{
+            AIST.qi++;
+            if(AIST.qi>=AIST.qs.length) aiStoryDone(); else aiStoryStep();
+          },ok?700:1500);
+        };
+        box.appendChild(b);
+      });
+    }
+  } else aiStoryDone();
+}
+function aiStoryDone(){
+  document.getElementById("lsteps").innerHTML=[0,1,2,3,4].map(i=>'<div class="lstep done"><i></i></div>').join("");
+  document.getElementById("lbody").innerHTML='<div class="lcard"><div style="font-size:44px;">🎉</div><div class="big">Story complete!</div>'
+    +'<div class="hint" style="margin-top:6px;">Comprehension score: '+AIST.qok+'/'+AIST.qs.length+'</div></div>';
+  document.getElementById("lactions").innerHTML='<button class="btn blue" id="astoryagain">📖 Another story</button><button class="btn ghost" id="astorydone">Done</button>';
+  document.getElementById("astoryagain").onclick=()=>aiStory();
+  document.getElementById("astorydone").onclick=()=>switchView("progress");
+  addXp(5,"AI story complete");
+}
+
+/* ---- BACKUP / RESTORE ---- */
+function exportBackup(){
+  try{
+    const data={app:"talkora",v:3,exported:new Date().toISOString(),state:S};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="talkora-backup-"+new Date().toISOString().slice(0,10)+".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+    toast("💾 Backup downloaded — keep it somewhere safe!");
+  }catch(e){ toast("⚠️ Export failed: "+e.message); }
+}
+function importBackup(file){
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const o=JSON.parse(String(rd.result));
+      const st=(o&&(o.app==="talkora"||o.app==="vazhakam")&&o.state)?o.state:(o&&typeof o.xp==="number")?o:null;
+      if(!st) throw new Error("this file is not a Talkora backup");
+      if(!confirm("Replace your current progress with this backup?\n(You can export your current state first.)")) return;
+      localStorage.setItem(SKEY,JSON.stringify(Object.assign(sDefaults(),st)));
+      location.reload();
+    }catch(e){ alert("Import failed: "+e.message); }
+  };
+  rd.onerror=()=>alert("Could not read that file.");
+  rd.readAsText(file);
+}
+
+/* ---- V3 BINDINGS ---- */
+function initV3(){
+  // words tab
+  document.getElementById("wsearch").addEventListener("input",e=>{ wQuery=e.target.value; renderWords(); });
+  // flashcards: new Good button
+  document.getElementById("fgood").onclick=()=>fMark("good");
+  // quiz modes
+  document.getElementById("qunscbtn").onclick=()=>startQuiz("unscramble");
+  document.getElementById("qclozebtn").onclick=()=>startQuiz("cloze");
+  document.getElementById("qtypebtn").onclick=()=>{ if(!("speechSynthesis" in window)){ toast("Dictation needs speech synthesis — use Chrome/Edge 🎧"); return; } startQuiz("type"); };
+  document.getElementById("aquizbtn").onclick=()=>aiQuiz(document.getElementById("aitopic").value);
+  // lesson: AI story
+  document.getElementById("astorybtn").onclick=aiStory;
+  // shadowing
+  document.getElementById("shnew").onclick=shNew;
+  document.getElementById("shmicsay").onclick=()=>{
+    if(!SR){ toast("Speech recognition not supported here — use Chrome/Edge 🎤"); return; }
+    if(recBusy||!shPhrase) return;
+    recBusy=true; setMic(true);
+    rec=newRec(S.learn,{ text:t=>{ shScore(t); } },()=>{ rec=null; });
+    try{ rec.start(); }catch(e){ recBusy=false; setMic(false); }
+  };
+  shNew();
+  // chat: conversation + review
+  document.getElementById("convbtn").onclick=toggleConv;
+  if(S.convOn) document.getElementById("convbtn").textContent="🗣 Free conversation: ON";
+  document.getElementById("reviewbtn").onclick=sessionReview;
+  // settings
+  document.getElementById("ailevsel").value=S.aiLevel||"b2";
+  document.getElementById("ailevsel").onchange=()=>{ S.aiLevel=document.getElementById("ailevsel").value; save(); };
+  document.getElementById("expbtn").onclick=exportBackup;
+  document.getElementById("impbtn").onclick=()=>document.getElementById("impfile").click();
+  document.getElementById("impfile").onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(f) importBackup(f); e.target.value=""; };
+}
+
+/* ---------------- DIRECTION & TABS ---------------- */
+function applyDirection(){
+  if(S.learn===S.speak) S.learn=S.speak==="en"?"ta":"en";
+  save();
+  document.getElementById("selSpeak").value=S.speak;
+  document.getElementById("selLearn").value=S.learn;
+  document.getElementById("tfrom").textContent=LANGS[S.speak].name;
+  document.getElementById("quizhint").textContent=LANGS[S.speak].name;
+  chatlog.innerHTML=""; CHAT_HIST=[];
+  lastBotText=""; lastBotLang=null;
+  botGreet();
+  pPhrase=null;
+  renderWot(); refreshChips(); renderCatbar(); renderCard();
+}
+function switchView(name){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+  document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.getAttribute("data-view")===name));
+  document.getElementById("view-"+name).classList.add("on");
+  if(name==="progress") renderProgress();
+  if(name==="cards"){ renderCatbar(); renderCard(); }
+  if(name==="words") renderWords();
+  if(name==="lesson"&&document.getElementById("lessonmenu").style.display!=="none") renderLessonCats();
+  if(name==="quiz"){
+    if(!SR) document.getElementById("qlistennote").textContent="⚠️ Listening quiz needs speech synthesis + recognition — use Chrome/Edge.";
+    else document.getElementById("qlistennote").textContent="👂 Headphones recommended for the listening quiz!";
+  }
+  if(name==="speak"){
+    document.getElementById("prlang").textContent=LANGS[S.learn].name;
+    if(!pPhrase) pNewPhrase();
+    if(!SR) document.getElementById("primicnote").textContent="⚠️ Speech recognition not supported in this browser — use Chrome/Edge for voice scoring.";
+    else document.getElementById("primicnote").textContent="";
+  }
+}
+function refreshChips(){
+  const q=document.getElementById("quick");
+  q.innerHTML="";
+  QUICK_IDS.forEach(id=>{
+    const e=BYID[id]; if(!e) return;
+    const b=document.createElement("button");
+    b.className="chip";
+    b.textContent=T(e,S.speak);
+    b.title="Tap to send";
+    b.onclick=()=>handleUserText(T(e,S.speak));
+    q.appendChild(b);
+  });
+}
+
+/* ---------------- SETTINGS ---------------- */
+function openSettings(){
+  document.getElementById("ai-on").checked=!!S.ai.on;
+  document.getElementById("ai-provider").value=S.ai.provider;
+  const _free=S.ai.provider==="pollinations";
+  const _fn=document.getElementById("ai-freenote"); if(_fn) _fn.style.display=_free?"block":"none";
+  const _k=document.getElementById("ai-key"); if(_k) _k.placeholder=_free?"not needed for the free provider":"sk-...";
+  const _m=document.getElementById("ai-model"); if(_m){ _m.disabled=_free; _m.placeholder=_free?"gpt-oss-20b (fixed)":"auto"; if(_free) _m.value=""; }
+  document.getElementById("ai-model").value=S.ai.model||"";
+  document.getElementById("ai-key").value=S.ai.key||"";
+  document.getElementById("ailevsel").value=S.aiLevel||"b2";
+  document.getElementById("goal-sel").value=String(S.goal);
+  document.getElementById("rate-sel").value=S.rate;
+  document.getElementById("rate-val").textContent=(+S.rate).toFixed(2).replace(/0$/,"");
+  document.getElementById("sound-sel").checked=!!S.sound;
+  document.getElementById("dark-sel").checked=!!S.dark;
+  document.getElementById("settingsmodal").classList.add("on");
+}
+function bindSettings(){
+  document.getElementById("settingsbtn").onclick=openSettings;
+  document.getElementById("settingsclose").onclick=()=>document.getElementById("settingsmodal").classList.remove("on");
+  document.getElementById("settingsmodal").addEventListener("click",e=>{ if(e.target.id==="settingsmodal") e.target.classList.remove("on"); });
+  const onAI=()=>{ S.ai.on=document.getElementById("ai-on").checked; save(); updateAiBadge(); };
+  document.getElementById("ai-on").onchange=onAI;
+  function syncFreeNote(){
+    const free=S.ai.provider==="pollinations";
+    const n=document.getElementById("ai-freenote"); if(n) n.style.display=free?"block":"none";
+    const k=document.getElementById("ai-key"); if(k) k.placeholder=free?"not needed for the free provider":"sk-...";
+    const m=document.getElementById("ai-model"); if(m){ m.disabled=free; m.placeholder=free?"gpt-oss-20b (fixed)":"auto"; if(free) m.value=""; }
+  }
+  document.getElementById("ai-provider").onchange=()=>{
+    S.ai.provider=document.getElementById("ai-provider").value;
+    const defs={openai:"gpt-4o-mini",anthropic:"claude-3-5-haiku-latest",gemini:"gemini-2.0-flash",pollinations:"gpt-oss-20b (fixed)"};
+    document.getElementById("ai-model").placeholder=defs[S.ai.provider]||"";
+    syncFreeNote(); save(); onAI();
+  };
+  document.getElementById("ai-model").oninput=()=>{ S.ai.model=document.getElementById("ai-model").value.trim(); save(); };
+  document.getElementById("ai-key").oninput=()=>{ S.ai.key=document.getElementById("ai-key").value.trim(); save(); onAI(); };
+  document.getElementById("goal-sel").onchange=()=>{ S.goal=+document.getElementById("goal-sel").value; S.today={date:todayStr(),xp:S.today.xp}; save(); renderProgress(); };
+  document.getElementById("rate-sel").oninput=function(){ S.rate=+this.value; document.getElementById("rate-val").textContent=S.rate.toFixed(2).replace(/0$/,""); save(); };
+  document.getElementById("sound-sel").onchange=()=>{ S.sound=document.getElementById("sound-sel").checked; save(); };
+  document.getElementById("dark-sel").onchange=()=>{ S.dark=document.getElementById("dark-sel").checked; save(); applyDark(); };
+}
+function aiReady(){ return S.ai.on && (S.ai.provider==="pollinations" || !!S.ai.key); }
+function updateAiBadge(){
+  const b=document.getElementById("aibadge");
+  if(aiReady()){
+    b.className="ai-badge on";
+    const model=S.ai.provider==="pollinations"?"free · gpt-oss-20b":(S.ai.model||{openai:"gpt-4o-mini",anthropic:"haiku",gemini:"2.0-flash"}[S.ai.provider]);
+    b.textContent="🤖 AI tutor: ON ("+model+")";
+  } else {
+    b.className="ai-badge off";
+    b.textContent=S.ai.on?"🤖 AI on — add key in ⚙️ (free option needs none)":"🤖 Offline tutor";
+  }
+}
+function applyDark(){ document.body.classList.toggle("dark",!!S.dark); }
+
+/* ---------------- INIT ---------------- */
+function initLangSelects(){
+  const sS=document.getElementById("selSpeak"), sL=document.getElementById("selLearn");
+  const opts=LCODES.map(c=>'<option value="'+c+'">'+LANGS[c].native+" · "+LANGS[c].name+'</option>').join("");
+  sS.innerHTML=opts; sL.innerHTML=opts;
+  sS.onchange=()=>{
+    S.speak=sS.value;
+    if(S.learn===S.speak) S.learn=S.speak==="en"?"ta":"en";
+    sL.value=S.learn;
+    applyDirection();
+  };
+  sL.onchange=()=>{
+    S.learn=sL.value;
+    if(S.speak===S.learn) S.speak=S.learn==="en"?"ta":"en";
+    sS.value=S.speak;
+    applyDirection();
+  };
+}
+function init(){
+  applyDark();
+  renderXp();
+  initMicBanner();
+  initLangSelects();
+  applyDirection();
+  bindSettings();
+  updateAiBadge();
+  renderRecents();
+  renderLessonCats();
+
+  document.querySelectorAll("#tabs button").forEach(b=>{
+    b.onclick=()=>switchView(b.getAttribute("data-view"));
+  });
+
+  const ci=document.getElementById("chatinput");
+  const send=()=>{ const v=ci.value; ci.value=""; document.getElementById("interim").textContent=""; handleUserText(v); };
+  document.getElementById("sendbtn").onclick=send;
+  ci.addEventListener("keydown",e=>{ if(e.key==="Enter") send(); });
+
+  const micbtn=document.getElementById("micbtn");
+  micbtn.onclick=()=>{
+    if(!SR){ showMicBanner("⚠️ Voice not supported here — please type. (Chrome/Edge works best)"); return; }
+    if(recBusy) return;
+    recBusy=true; setMic(true);
+    document.getElementById("interim").textContent="";
+    rec=newRec(S.speak,{
+      interim:t=>{ document.getElementById("interim").textContent="… "+t; },
+      text:t=>{ document.getElementById("interim").textContent=""; ci.value=t; send(); }
+    },()=>{ rec=null; });
+    try{ rec.start(); }catch(e){ recBusy=false; setMic(false); }
+  };
+
+  document.getElementById("slowbtn").onclick=function(){
+    S.slow=!S.slow; save();
+    this.textContent="🐢 Slow voice: "+(S.slow?"ON":"OFF");
+  };
+  if(S.slow) document.getElementById("slowbtn").textContent="🐢 Slow voice: ON";
+  document.getElementById("replaybtn").onclick=()=>{ if(lastBotText) speak(lastBotText,lastBotLang||S.learn); };
+  document.getElementById("clearbtn").onclick=()=>{ chatlog.innerHTML=""; CHAT_HIST=[]; botGreet(); };
+
+  const ti=document.getElementById("transinput");
+  document.getElementById("transbtn").onclick=()=>{ const v=ti.value; translate(v); ti.value=""; };
+  ti.addEventListener("keydown",e=>{ if(e.key==="Enter"){ const v=ti.value; translate(v); ti.value=""; } });
+  document.getElementById("tmscbtn").onclick=()=>{
+    if(!SR){ showMicBanner("⚠️ Voice not supported here — please type. (Chrome/Edge works best)"); return; }
+    if(recBusy) return;
+    recBusy=true; setMic(true);
+    rec=newRec(S.speak,{
+      interim:t=>{ document.getElementById("interim").textContent="… "+t; },
+      text:t=>{ ti.value=t; translate(t); ti.value=""; }
+    },()=>{ rec=null; });
+    try{ rec.start(); }catch(e){ recBusy=false; setMic(false); }
+  };
+
+  document.getElementById("fflip").onclick=()=>{ document.getElementById("fcard").classList.toggle("flipped"); fFlipped=!fFlipped; };
+  document.getElementById("fcard").onclick=()=>{ document.getElementById("fcard").classList.toggle("flipped"); fFlipped=!fFlipped; };
+  document.getElementById("fknow").onclick=()=>fMark("know");
+  document.getElementById("ffail").onclick=()=>fMark("again");
+  document.getElementById("faudio").onclick=fAudio;
+  document.getElementById("frestart").onclick=()=>{
+    if(fCat!=="all"&&fCat!=="__mistakes"){ S.known[fCat]=[]; S.unknown[fCat]=[]; fFailSet=new Set(); save(); }
+    renderCatbar(); renderCard();
+  };
+  document.getElementById("freview").onclick=()=>{
+    fCat="__mistakes"; renderCatbar(); renderCard();
+    if(!fDeckItems().length) toast("No mistakes to review — you're doing great! 🌟");
+  };
+
+  document.getElementById("qreadbtn").onclick=()=>startQuiz("read");
+  document.getElementById("qlistenbtn").onclick=()=>{ if(!("speechSynthesis" in window)){ toast("TTS not supported in this browser 🎧"); return; } startQuiz("listen"); };
+  document.getElementById("qagainbtn").onclick=()=>{ document.getElementById("quizdone").style.display="none"; document.getElementById("quizmenu").style.display="block"; };
+
+  document.getElementById("pskip").onclick=pNewPhrase;
+  document.getElementById("pmicbtn").onclick=()=>{
+    if(!SR){ document.getElementById("primicnote").textContent="⚠️ Speech recognition not supported here — use Chrome/Edge for voice scoring."; return; }
+    if(recBusy||!pPhrase) return;
+    recBusy=true; setMic(true);
+    rec=newRec(S.learn,{ text:t=>{ pScore(t); } },()=>{ rec=null; });
+    try{ rec.start(); }catch(e){ recBusy=false; setMic(false); }
+  };
+
+  document.getElementById("resetbtn").onclick=()=>{
+    if(confirm("Reset ALL progress (XP, streak, known words)?")){
+      localStorage.removeItem(SKEY);
+      location.reload();
+    }
+  };
+
+  initV3();
+}
+document.addEventListener("DOMContentLoaded",init);
+</script>
+
+<!-- PWA install bar (shown by the script below) -->
+<div class="installbar" id="installbar" role="dialog" aria-label="Install Talkora">
+  <div class="ib-ic">📲</div>
+  <div class="ib-tx"><b>Install Talkora</b><div id="ibsub">Add it to your home screen — full-screen app that works offline.</div></div>
+  <button class="ib-btn" id="ibinstall">Install</button>
+  <button class="ib-x" id="ibx" aria-label="Dismiss">✕</button>
+</div>
+
+<script>
+/* ---------------- PWA: install prompt + service worker ---------------- */
+(function(){
+  var bar=document.getElementById("installbar");
+  if(!bar) return;
+  var sub=document.getElementById("ibsub"),
+      btn=document.getElementById("ibinstall"),
+      x=document.getElementById("ibx");
+  var deferred=null, shown=false;
+  var standalone=(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+  var ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  var mobile=/mobi|iphone|ipad|android/i.test(navigator.userAgent);
+  function dismissed(){try{return localStorage.getItem("vh_install_dismissed")==="1";}catch(e){return true;}}
+  function closeBar(){bar.classList.remove("on");}
+  x.onclick=function(){closeBar();try{localStorage.setItem("vh_install_dismissed","1");}catch(e){}};
+  window.addEventListener("appinstalled",function(){
+    closeBar();
+    try{localStorage.setItem("vh_install_dismissed","1");}catch(e){}
+    var t=document.getElementById("toast");
+    if(t){t.classList.add("on");setTimeout(function(){t.classList.remove("on");},2600);}
+  });
+  function showBar(html,btnText,btnFn){
+    sub.innerHTML=html;
+    btn.textContent=btnText;
+    btn.onclick=btnFn||function(){closeBar();};
+    bar.classList.add("on");
+    shown=true;
+  }
+  if(standalone) return; // already running as an installed app
+
+  if(!ios){
+    // Android / desktop Chrome: use the real one-tap install prompt
+    window.addEventListener("beforeinstallprompt",function(e){
+      e.preventDefault();
+      deferred=e;
+      if(dismissed()||shown) return;
+      showBar(
+        mobile?"Add it to your home screen — full-screen app that works offline.":"Install Talkora as an app — fast launch, works offline.",
+        "Install",
+        function(){ if(deferred) deferred.prompt(); }
+      );
+    });
+  } else {
+    // iOS Safari: no install event — show one-time instructions
+    setTimeout(function(){
+      if(dismissed()||shown) return;
+      showBar(
+        'In Safari, tap <b>Share</b> 📤 then <b>Add to Home Screen</b> to install the app.',
+        "Got it",
+        function(){closeBar();try{localStorage.setItem("vh_install_dismissed","1");}catch(e){}}
+      );
+    },5000);
+  }
+
+  // Offline PWA: register the service worker (silently skips if unsupported)
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+})();
+</script>
+</body>
+</html>

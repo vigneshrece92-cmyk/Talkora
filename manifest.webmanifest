@@ -1,0 +1,20 @@
+{
+  "name": "Talkora — Learn 5 languages by voice",
+  "short_name": "Talkora",
+  "description": "Speak English, Tamil, हिन्दी, മലയാളം or Français — your voice tutor listens, understands and replies in the language you're learning. Works offline. No AI key needed.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff8f2",
+  "theme_color": "#ff6a3d",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "lifestyle", "productivity"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
