@@ -14,6 +14,7 @@ native app.
 - 🎙️ **Voice-first** — every word/phrase is spoken with native voices; speak back to score your pronunciation (Word / Shadowing / Dictation modes)
 - 🧠 **Core learning** — curated dictionary + offline intents, levels & XP, streaks + daily goals
 - 📝 **Practice** — mistake book, SM-2 spaced repetition, quizzes (unscramble, cloze, type, read-aloud, listening) + AI quizzes, 12 badges
+- 🔤 **Script Trainer** — learn Tamil / Devanagari / Malayalam alphabets with voiced letter cards, known-tracking and letter quizzes
 - 🤖 **AI tutor (free)** — conversations at levels A1–B2, interactive stories with choices, session reviews, grammar feedback. Default provider Pollinations `gpt-oss-20b` — **no key needed**
 - 💾 **Private** — everything lives in your browser's localStorage; JSON backup / restore / wipe
 - 📶 **Offline** — the service worker caches the whole app shell; machine translation is only used online for unseen sentences

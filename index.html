@@ -481,6 +481,27 @@ body.dark .brow .fix{background:linear-gradient(135deg,#2b2118,#241c15);border-c
 .brow .fix .lbl{font-size:10.5px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:var(--orange-dark);margin-bottom:3px;}
 body.dark .brow .fix .lbl{color:#ff9d5c;}
 
+
+/* ---------- script trainer ---------- */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px;}
+.stile{border:1.5px solid var(--line-strong);background:var(--card);border-radius:14px;padding:10px 4px 8px;cursor:pointer;
+  font-family:inherit;text-align:center;transition:all .15s;box-shadow:var(--shadow-sm);}
+.stile:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--orange-soft);}
+.stile:active{transform:scale(.96);}
+.stile .g{font-size:27px;line-height:1.25;display:block;}
+.stile .t{font-size:10.5px;color:var(--ink-soft);font-weight:700;margin-top:2px;display:block;}
+.stile.known{border-color:var(--good);background:#e9f9ee;}
+body.dark .stile.known{background:#17351f;}
+.stile.cur{border-color:var(--orange);box-shadow:var(--glow-brand);}
+.sdetail{display:flex;align-items:center;gap:16px;background:linear-gradient(150deg,#fff8ef,#fff);border:1.5px solid #ffd9b8;
+  border-radius:18px;padding:14px 18px;margin-bottom:12px;box-shadow:var(--shadow-sm), inset 0 1px 0 #fff;flex-wrap:wrap;animation:fadein .25s ease;}
+body.dark .sdetail{background:linear-gradient(150deg,#2b2118,#241c15);border-color:#4d3a29;box-shadow:none;}
+.sdetail .big{font-size:58px;line-height:1.15;font-weight:600;min-width:74px;text-align:center;
+  filter:drop-shadow(0 3px 5px rgba(93,58,20,.18));}
+.sdetail .nm{font-size:19px;font-weight:800;}
+.sdetail .ht{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+.sdetail .grow{flex:1;min-width:120px;}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
 }
@@ -518,6 +539,7 @@ body.dark .brow .fix .lbl{color:#ff9d5c;}
       <button data-view="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Quiz</button>
       <button data-view="lesson"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Lesson</button>
       <button data-view="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/><path d="M8 23h8"/></svg>Say It</button>
+      <button data-view="script"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Script</button>
       <button data-view="words"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5z"/></svg>Words</button>
       <button data-view="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>Progress</button>
     </nav>
@@ -713,6 +735,26 @@ body.dark .brow .fix .lbl{color:#ff9d5c;}
   </section>
 
   <!-- WORDS -->
+  <!-- SCRIPT TRAINER -->
+  <section class="view" id="view-script">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+        <div style="font-size:16px;font-weight:800;">🔤 Script Trainer</div>
+        <span class="hint" style="margin-left:auto;" id="scrcount"></span>
+      </div>
+      <div class="catbar" id="scrbar"></div>
+      <div class="catbar" id="scrgrp" style="margin-bottom:12px;"></div>
+      <div class="sdetail" id="scrdetail" style="display:none;"></div>
+      <div class="sgrid" id="scrgrid"></div>
+      <div class="factions">
+        <button class="btn blue" id="scrquizbtn">🎯 Letter quiz</button>
+        <button class="mini" id="scrhearall">🔊 Hear this row</button>
+      </div>
+      <div id="scrquiz" style="margin-top:14px;display:none;"></div>
+      <p class="hint" style="margin-top:12px;">English &amp; French use the Latin alphabet — for them, practice sounds in <b>Say It</b>. Tap any letter to see &amp; hear it; mark letters you know.</p>
+    </div>
+  </section>
+
   <section class="view" id="view-words">
     <div class="card">
       <div style="font-size:16px;font-weight:700;margin-bottom:4px;">📖 Phrase book — search &amp; star</div>
@@ -2693,6 +2735,7 @@ function switchView(name){
   document.getElementById("view-"+name).classList.add("on");
   if(name==="progress") renderProgress();
   if(name==="bot") renderBotSeg();
+  if(name==="script") renderScript();
   if(name==="cards"){ renderCatbar(); renderCard(); }
   if(name==="words") renderWords();
   if(name==="lesson"&&document.getElementById("lessonmenu").style.display!=="none") renderLessonCats();
@@ -2918,6 +2961,247 @@ function initBot(){
   renderBotSeg();
 }
 document.addEventListener("DOMContentLoaded",initBot);
+
+
+/* ---------------- SCRIPT TRAINER ---------------- */
+const SCRIPTS={
+  ta:{name:"Tamil · தமிழ்",groups:[
+    ["Vowels · உயிர்",[
+      ["அ","a","short a, like 'u' in cup"],
+      ["ஆ","aa","long aa, like 'a' in father"],
+      ["இ","i","short i, like 'i' in bit"],
+      ["ஈ","ee","long ee, like 'ee' in see"],
+      ["உ","u","short u, like 'u' in put"],
+      ["ஊ","oo","long oo, like 'oo' in boot"],
+      ["எ","e","short e, like 'e' in bed"],
+      ["ஏ","ay","long ay, like 'a' in cake"],
+      ["ஐ","ai","ai, like 'i' in ice"],
+      ["ஒ","o","short o, like 'o' in cot"],
+      ["ஓ","oh","long oh, like 'o' in bone"],
+      ["ஔ","au","au, like 'ou' in out"]]],
+    ["Consonants · மெய்",[
+      ["க","ka","ka"],
+      ["ங","nga","nga, like 'ng' in song"],
+      ["ச","cha","cha"],
+      ["ஞ","nya","nya, like 'ni' in onion"],
+      ["ட","ta","hard ta (retroflex, no breath)"],
+      ["ண","na","retroflex na (tongue curled)"],
+      ["த","tha","soft tha, like English 'th' in this"],
+      ["ந","na","dental na"],
+      ["ப","pa","pa"],
+      ["ம","ma","ma"],
+      ["ய","ya","ya"],
+      ["ர","ra","ra (single trill)"],
+      ["ல","la","la"],
+      ["வ","va","va / wa"],
+      ["ழ","zha","zha — the classic Tamil buzz (like 'bird' in US English)"],
+      ["ள","la","retroflex la (deeper l)"],
+      ["ற","ra","strong ra (trilled rr)"],
+      ["ன","na","alveolar na"]]],
+    ["Special",[
+      ["ஃ","akh","aytham — rare standalone dot sound"]]]]},
+  hi:{name:"Hindi · देवनागरी",groups:[
+    ["Vowels · स्वर",[
+      ["अ","a","short a, like 'u' in cup"],
+      ["आ","aa","long aa, like 'a' in father"],
+      ["इ","i","short i, like 'i' in bit"],
+      ["ई","ee","long ee, like 'ee' in see"],
+      ["उ","u","short u, like 'u' in put"],
+      ["ऊ","oo","long oo, like 'oo' in boot"],
+      ["ए","e","ay, like 'a' in cake"],
+      ["ऐ","ai","ai, like 'i' in ice"],
+      ["ओ","o","oh, like 'o' in bone"],
+      ["औ","au","au, like 'ou' in out"]]],
+    ["Consonants · व्यंजन",[
+      ["क","ka","ka"],
+      ["ख","kha","kha — k with a puff of air"],
+      ["ग","ga","ga"],
+      ["घ","gha","gha — g with a puff"],
+      ["ङ","nga","nga, like 'ng' in song"],
+      ["च","cha","cha"],
+      ["छ","chha","chha — ch with a puff"],
+      ["ज","ja","ja"],
+      ["झ","jha","jha — j with a puff"],
+      ["ट","ta","retroflex ta (tongue curled)"],
+      ["ठ","tha","retroflex tha with puff"],
+      ["ड","da","retroflex da"],
+      ["ढ","dha","retroflex dha with puff"],
+      ["ण","na","retroflex na"],
+      ["त","ta","dental ta (soft, no puff)"],
+      ["थ","tha","dental ta WITH puff (not 'th'!)"],
+      ["द","da","dental da"],
+      ["ध","dha","dental dha with puff"],
+      ["न","na","na"],
+      ["प","pa","pa"],
+      ["फ","pha","pha — p with a puff (like 'ph' in phone)"],
+      ["ब","ba","ba"],
+      ["भ","bha","bha — b with a puff"],
+      ["म","ma","ma"],
+      ["य","ya","ya"],
+      ["र","ra","ra"],
+      ["ल","la","la"],
+      ["व","va","va / wa"],
+      ["श","sha","sha, like 'sh' in ship"],
+      ["ष","sha","retroflex sha"],
+      ["स","sa","sa"],
+      ["ह","ha","ha"]]]]},
+  ml:{name:"Malayalam · മലയാളം",groups:[
+    ["Vowels · സ്വരം",[
+      ["അ","a","short a, like 'u' in cup"],
+      ["ആ","aa","long aa, like 'a' in father"],
+      ["ഇ","i","short i, like 'i' in bit"],
+      ["ഈ","ee","long ee, like 'ee' in see"],
+      ["ഉ","u","short u, like 'u' in put"],
+      ["ഊ","oo","long oo, like 'oo' in boot"],
+      ["എ","e","short e, like 'e' in bed"],
+      ["ഏ","ay","long ay, like 'a' in cake"],
+      ["ഐ","ai","ai, like 'i' in ice"],
+      ["ഒ","o","short o, like 'o' in cot"],
+      ["ഓ","oh","long oh, like 'o' in bone"],
+      ["ഔ","au","au, like 'ou' in out"]]],
+    ["Consonants · വ്യഞ്ജനം",[
+      ["ക","ka","ka"],
+      ["ഖ","kha","kha — k with a puff"],
+      ["ഗ","ga","ga"],
+      ["ഘ","gha","gha — g with a puff"],
+      ["ങ","nga","nga, like 'ng' in song"],
+      ["ച","cha","cha"],
+      ["ജ","ja","ja"],
+      ["ഞ","nya","nya, like 'ni' in onion"],
+      ["ട","ta","retroflex ta (tongue curled)"],
+      ["ഠ","tha","retroflex tha with puff"],
+      ["ഡ","da","retroflex da"],
+      ["ഢ","dha","retroflex dha with puff"],
+      ["ണ","na","retroflex na"],
+      ["ത","tha","dental tha, soft like 'th' in this"],
+      ["ദ","da","dental da"],
+      ["ധ","dha","dental dha with puff"],
+      ["ന","na","na"],
+      ["പ","pa","pa"],
+      ["ഫ","pha","pha — p with a puff"],
+      ["ബ","ba","ba"],
+      ["ഭ","bha","bha — b with a puff"],
+      ["മ","ma","ma"],
+      ["യ","ya","ya"],
+      ["ര","ra","ra"],
+      ["ല","la","la"],
+      ["വ","va","va / wa"],
+      ["ശ","sha","sha, like 'sh' in ship"],
+      ["ഷ","sha","retroflex sha"],
+      ["സ","sa","sa"],
+      ["ഹ","ha","ha"],
+      ["ള","la","retroflex la (deeper l)"],
+      ["ഴ","zha","zha — the buzz, like Tamil ழ"],
+      ["റ","ra","strong ra (trilled rr)"]]]]}
+};
+S.scrKnown=S.scrKnown||{ta:[],hi:[],ml:[]};
+S.scrScript=S.scrScript||((SCRIPTS[S.learn])?S.learn:"ta");
+const SCR={group:0,cur:-1,script:S.scrScript};
+const SCQ={on:false,items:[],i:0,score:0,locked:false};
+function scrAll(code){ const out=[]; SCRIPTS[code].groups.forEach(g=>g[1].forEach(l=>out.push(l))); return out; }
+function scrKnownList(){ return S.scrKnown[SCR.script]||(S.scrKnown[SCR.script]=[]); }
+function renderScript(){
+  if(!SCRIPTS[SCR.script]) SCR.script="ta";
+  SCQ.on=false;
+  const qz=document.getElementById("scrquiz"); if(qz) qz.style.display="none";
+  const bar=document.getElementById("scrbar");
+  if(bar){ let h=""; Object.keys(SCRIPTS).forEach(c=>{
+      const on=SCR.script===c;
+      h+='<button class="chip" style="'+(on?"border-color:var(--orange);color:var(--orange-dark);background:#fff4ec;":"")+'" data-scr="'+c+'">'+SCRIPTS[c].name+'</button>';
+    }); bar.innerHTML=h;
+    bar.querySelectorAll("button").forEach(b=>b.onclick=()=>{ SCR.script=b.getAttribute("data-scr"); SCR.group=0; SCR.cur=-1; S.scrScript=SCR.script; save(); renderScript(); });
+  }
+  const grp=document.getElementById("scrgrp");
+  if(grp){ let h=""; SCRIPTS[SCR.script].groups.forEach((g,i)=>{
+      h+='<button class="chip" style="'+(SCR.group===i?"border-color:var(--teal);color:var(--teal-dark);background:#e9fbf8;":"")+'" data-g="'+i+'">'+g[0]+'</button>';
+    }); grp.innerHTML=h;
+    grp.querySelectorAll("button").forEach(b=>b.onclick=()=>{ SCR.group=+b.getAttribute("data-g"); SCR.cur=-1; renderScript(); });
+  }
+  const all=scrAll(SCR.script), known=scrKnownList();
+  const cnt=document.getElementById("scrcount");
+  if(cnt) cnt.innerHTML="✍️ <b>"+known.length+"</b>/"+all.length+" letters known";
+  const grid=document.getElementById("scrgrid");
+  if(grid){ let h=""; SCRIPTS[SCR.script].groups[SCR.group][1].forEach((l,i)=>{
+      const k=known.includes(l[0]);
+      h+='<button class="stile'+(k?" known":"")+(SCR.cur===i?" cur":"")+'" data-i="'+i+'"><span class="g">'+l[0]+'</span><span class="t">'+esc(l[1])+(k?" ✓":"")+'</span></button>';
+    }); grid.innerHTML=h;
+    grid.querySelectorAll(".stile").forEach(b=>b.onclick=()=>{ SCR.cur=+b.getAttribute("data-i"); renderScriptDetail(); renderScriptKeepGrid(); });
+  }
+  renderScriptDetail();
+}
+function renderScriptKeepGrid(){
+  const grid=document.getElementById("scrgrid");
+  if(grid) grid.querySelectorAll(".stile").forEach((b,i)=>b.classList.toggle("cur",i===SCR.cur));
+}
+function renderScriptDetail(){
+  const d=document.getElementById("scrdetail"); if(!d) return;
+  const letters=SCRIPTS[SCR.script].groups[SCR.group][1];
+  if(SCR.cur<0||SCR.cur>=letters.length){ d.style.display="none"; return; }
+  const l=letters[SCR.cur], known=scrKnownList().includes(l[0]);
+  d.style.display="flex";
+  d.innerHTML='<div class="big">'+l[0]+'</div><div class="grow"><div class="nm">'+esc(l[1])+'</div><div class="ht">'+esc(l[2])+'</div></div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+
+    '<button class="btn blue" id="scrhear">🔊 Hear</button>'+
+    '<button class="btn '+(known?"ghost":"green")+'" id="scrknow">'+(known?"✓ Known":"Mark known")+'</button>'+
+    '<button class="mini" id="scrnext">Next →</button></div>';
+  const h=document.getElementById("scrhear"); if(h) h.onclick=()=>speak(l[0],SCR.script);
+  const k=document.getElementById("scrknow"); if(k) k.onclick=()=>{
+    const list=scrKnownList(); const ix=list.indexOf(l[0]);
+    if(ix>=0) list.splice(ix,1); else { list.push(l[0]); addXp(1,"letters"); }
+    save(); renderScript(); SCR.cur=letters.indexOf(l); renderScriptKeepGrid();
+  };
+  const n=document.getElementById("scrnext"); if(n) n.onclick=()=>{ SCR.cur=(SCR.cur+1)%letters.length; renderScriptDetail(); renderScriptKeepGrid(); };
+}
+function scrQueueSpeak(texts,lang,i){
+  if(i>=texts.length) return;
+  speak(texts[i],lang,undefined,()=>setTimeout(()=>scrQueueSpeak(texts,lang,i+1),250));
+}
+function scriptQuiz(){
+  const box=document.getElementById("scrquiz"); if(!box) return;
+  const all=scrAll(SCR.script);
+  const pool=shuffle(all.slice()).slice(0,5);
+  SCQ.on=true; SCQ.items=pool.map(l=>{
+    const wrong=shuffle(all.filter(x=>x[0]!==l[0])).slice(0,3).map(x=>x[1]);
+    return { glyph:l[0], answer:l[1], opts:shuffle([l[1]].concat(wrong)) };
+  });
+  SCQ.i=0; SCQ.score=0; SCQ.locked=false;
+  box.style.display="block";
+  renderScq();
+}
+function renderScq(){
+  const box=document.getElementById("scrquiz"); if(!box) return;
+  if(SCQ.i>=SCQ.items.length){
+    const n=SCQ.score;
+    box.innerHTML='<div class="qresult"><div class="big">'+(n>=4?"🏆":n>=2?"🎉":"💪")+'</div><div class="n">'+n+'/'+SCQ.items.length+'</div>'+
+      '<div class="hint">'+(n>=4?"Script master! Amazing.":n>=2?"Great — those letters are sticking!":"Good start — tap letters above to hear them again.")+'</div>'+
+      '<button class="btn ghost" style="margin-top:10px;" id="scqagain">🔁 Play again</button></div>';
+    const a=document.getElementById("scqagain"); if(a) a.onclick=scriptQuiz;
+    return;
+  }
+  const q=SCQ.items[SCQ.i]; SCQ.locked=false;
+  box.innerHTML='<div class="qhead"><span class="hint">Letter '+(SCQ.i+1)+'/'+SCQ.items.length+' · score '+SCQ.score+'</span></div>'+
+    '<div class="qword" style="font-size:44px;text-align:center;">'+q.glyph+'</div>'+
+    '<div class="hint" style="text-align:center;margin-bottom:6px;">Which sound is this?</div>'+
+    q.opts.map((o,i)=>'<button class="qopt" data-o="'+i+'">'+esc(o)+'</button>').join("");
+  box.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>{
+    if(SCQ.locked) return; SCQ.locked=true;
+    const pick=b.getAttribute("data-o"); const val=q.opts[+pick];
+    box.querySelectorAll(".qopt").forEach(x=>{
+      if(x.innerHTML===esc(q.answer)) x.classList.add("correct");
+    });
+    if(val===q.answer){ SCQ.score++; addXp(2,"letter quiz"); beep&&beep("good"); }
+    else { b.classList.add("wrong"); }
+    setTimeout(()=>{ SCQ.i++; renderScq(); },900);
+  });
+}
+function initScript(){
+  SCR.script=S.scrScript&&SCRIPTS[S.scrScript]?S.scrScript:"ta";
+  const q=document.getElementById("scrquizbtn"); if(q) q.onclick=scriptQuiz;
+  const ha=document.getElementById("scrhearall"); if(ha) ha.onclick=()=>{
+    scrQueueSpeak(SCRIPTS[SCR.script].groups[SCR.group][1].map(l=>l[0]),SCR.script,0);
+  };
+}
+document.addEventListener("DOMContentLoaded",initScript);
 
 /* ---------------- INIT ---------------- */
 function initLangSelects(){
