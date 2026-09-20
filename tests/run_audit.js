@@ -44,6 +44,8 @@ globalThis.__T = {
   renderGrammar, tourStart, tourEnd, shareProgress, packInit, get GRAMMAR(){return GRAMMAR;},
   renderScenes, startScene, finishScene, get SCENES(){return SCENES;},
   get BOT(){return BOT;},
+  get BADGES(){return BADGES;}, get LS(){return LS;}, get UNITS(){return UNITS;}, get PATH_TIERS(){return PATH_TIERS;},
+  renderPath, unitDone, unitUnlocked, markPathStep, markPathQuiz, pathProg,
 };
 `;
 delete globalThis.__T;
@@ -96,6 +98,21 @@ nothrow("bot: botListen() without SR → toast only", () => T.botListen());
   try { T.renderWords(); T.renderProgress(); T.renderBadges(); T.checkBadges(); ok("words/progress/badges render", true); } catch (e) { ok("words/progress/badges render", false, e.message); }
   try { T.openSettings(); T.applyDark(); T.updateAiBadge(); ok("settings modal + dark + ai badge", true); } catch (e) { ok("settings modal + dark + ai badge", false, e.message); }
   try { T.exportBackup(); ok("backup export runs", true); } catch (e) { ok("backup export runs", false, e.message); }
+
+
+  // ---------- LEARNING PATH ----------
+  ok("path: 10 units across 3 CEFR tiers", Array.isArray(T.UNITS) && T.UNITS.length === 10 && T.PATH_TIERS.length === 3);
+  try { T.renderPath(); ok("path: renderPath builds journey board", document.getElementById("pathlist").innerHTML.indexOf("pnode") >= 0); }
+  catch (e) { ok("path: renderPath builds journey board", false, e.message); }
+  try {
+    T.S.units = {}; T.S.pathActive = { lang: T.S.learn, unit: "u1" };
+    T.LS.cat = "greetings"; T.markPathStep("lesson");
+    T.markPathQuiz(80);
+    T.S.units[T.S.learn].u1.speak = true;
+    ok("path: lesson+quiz+speak complete a unit", T.unitDone("u1") && T.unitUnlocked(1));
+    ok("path: locked unit stays locked", !T.unitUnlocked(2));
+  } catch (e) { ok("path: unit completion flow", false, e.message); }
+  ok("path: badges include Pathfinder + Trekker", T.BADGES.length === 15);
 
   console.log(`\n${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);

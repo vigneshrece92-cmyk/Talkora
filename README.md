@@ -19,6 +19,9 @@ native app.
 - 👋 **Onboarding tour**, 📤 share-progress card, 🔥 streak nudge + optional daily reminder
 - 📜 **Daily quests** (Duolingo-style) with a +20 XP bonus, ❄️ **streak freezes** every 7-day streak,
   🟢🟡 **per-word pronunciation feedback** (ELSA-style) and a 🧭 **study plan** with finish-date ETA (Busuu-style).
+- 🧗 **Learning Path** — professional end-to-end curriculum: 10 units across A1/A2/B1 tiers,
+  each unit = lesson + challenge quiz (60% to pass) + speaking drill; units unlock in order,
+  with XP rewards and Pathfinder/Trekker badges.
 - 🤖 **AI tutor (free)** — conversations at levels A1–B2, interactive stories with choices, session reviews, grammar feedback. Default provider Pollinations `gpt-oss-20b` — **no key needed**
 - 🎭 **Roleplay scenes** — mission-based AI conversations (restaurant, airport, shopping, doctor) with scores, XP and a 🎭 Stage Star badge
 - 💾 **Private** — everything lives in your browser's localStorage; JSON backup / restore / wipe
