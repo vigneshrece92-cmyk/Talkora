@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Talkora — Learn 5 languages by voice</title>
 <meta name="description" content="Speak English, Tamil, हिन्दी, മലയാളം or Français — your voice tutor listens, understands and replies in the language you're learning. Free, offline-first, installable on your phone.">
+<meta property="og:title" content="Talkora — learn 5 languages by voice">
+<meta property="og:description" content="A voice tutor & live bot that listens, translates and corrects you out loud. Free, private, offline-ready.">
+<meta property="og:image" content="/icon-512.png">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -530,6 +534,62 @@ body.dark .gex{background:linear-gradient(135deg,#12332e,#0f2622);border-color:#
   box-shadow:var(--shadow-sm), inset 0 1px 0 #fff;animation:fadein .3s ease;}
 body.dark .nudge{background:linear-gradient(135deg,#2b2118,#241c15);border-color:#6b4a30;box-shadow:none;}
 
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;border-radius:26px;margin:14px 0 4px;padding:28px 24px 24px;
+  background:linear-gradient(150deg,#1d1410 0%,#33200f 45%,#5a2a10 100%);color:#ffe9d6;box-shadow:var(--shadow-lg);}
+.hero h2{font-size:clamp(22px,5vw,30px);font-weight:800;letter-spacing:-.5px;line-height:1.15;position:relative;}
+.hero .grad{background:linear-gradient(90deg,#ffb27e,#ff6a3d,#ffd166);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero p{margin-top:9px;font-size:13px;opacity:.85;max-width:58ch;font-weight:500;position:relative;}
+.hstats2{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px;position:relative;}
+.hchip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:6px 12px;
+  font-size:11.5px;font-weight:700;backdrop-filter:blur(4px);}
+.hctas{display:flex;gap:9px;margin-top:16px;flex-wrap:wrap;position:relative;}
+.hero .btn.ghost{background:rgba(255,255,255,.08);color:#ffe9d6;border-color:rgba(255,255,255,.25);box-shadow:none;}
+.hero .btn.ghost:hover{background:rgba(255,255,255,.16);}
+.aurora{position:absolute;border-radius:50%;filter:blur(46px);opacity:.45;pointer-events:none;}
+.aurora.a1{width:260px;height:260px;background:#ff6a3d;top:-90px;right:-60px;animation:drift 9s ease-in-out infinite alternate;}
+.aurora.a2{width:220px;height:220px;background:#17c3ae;bottom:-110px;left:-70px;animation:drift 11s ease-in-out infinite alternate-reverse;}
+@keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(-30px,20px) scale(1.15);}}
+@media (display-mode:standalone){ .hero{display:none;} }
+
+/* ---------- bot avatar + thinking dots ---------- */
+.botava{width:78px;height:78px;border-radius:50%;margin:2px auto 10px;position:relative;
+  background:radial-gradient(circle at 30% 25%, #ffd9c2, #ff7a45 45%, #e0400f 100%);
+  box-shadow:var(--glow-brand), inset 0 4px 8px rgba(255,255,255,.5), inset 0 -6px 12px rgba(170,35,0,.4);
+  display:flex;align-items:center;justify-content:center;}
+.botava .wave{display:flex;gap:4px;align-items:center;height:26px;}
+.botava .wave i{width:5px;border-radius:99px;background:#fff;height:10px;animation:wv 1.8s ease-in-out infinite;}
+.botava .wave i:nth-child(2){animation-delay:.2s;}
+.botava .wave i:nth-child(3){animation-delay:.4s;}
+@keyframes wv{0%,100%{height:8px;}50%{height:24px;}}
+body.talking .botava .wave i{animation-duration:.45s;}
+.botava.listening{animation:pulse 1.2s infinite;}
+.botava.listening::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:3px solid var(--orange);opacity:.5;animation:ring 1.2s infinite;}
+.botscore{font-size:11.5px;color:var(--ink-soft);font-weight:700;margin-top:10px;}
+.botscore b{color:var(--orange-dark);}
+body.dark .botscore b{color:#ff9d5c;}
+.dots i{display:inline-block;width:5px;height:5px;border-radius:50%;background:currentColor;margin:0 2px;animation:dot 1s infinite;}
+.dots i:nth-child(2){animation-delay:.15s;}
+.dots i:nth-child(3){animation-delay:.3s;}
+@keyframes dot{0%,100%{opacity:.25;transform:translateY(0);}50%{opacity:1;transform:translateY(-3px);}}
+
+/* ---------- app-style bottom nav on phones ---------- */
+@media (max-width:640px){
+  nav{position:fixed;left:0;right:0;bottom:0;top:auto;margin:0 0 0;border-radius:0;border:0;
+    border-top:1px solid var(--line);background:rgba(253,247,240,.94);
+    backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);
+    z-index:70;padding:6px 8px calc(6px + env(safe-area-inset-bottom));gap:2px;}
+  body.dark nav{background:rgba(18,15,13,.95);border-top-color:rgba(255,255,255,.07);}
+  nav button{flex-direction:column;gap:3px;padding:7px 12px;font-size:9.5px;border-radius:12px;}
+  nav button svg{width:19px;height:19px;}
+  nav button.on{transform:none;}
+  .wrap{padding-bottom:92px;}
+  .installbar{bottom:calc(84px + env(safe-area-inset-bottom));}
+  #toast{bottom:calc(92px + env(safe-area-inset-bottom));}
+  footer{padding-bottom:calc(96px + env(safe-area-inset-bottom));}
+}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
 }
@@ -560,22 +620,36 @@ body.dark .nudge{background:linear-gradient(135deg,#2b2118,#241c15);border-color
       <select id="selLearn"></select>
     </div>
     <nav id="tabs">
-      <button data-view="chat" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg>Chat</button>
-      <button data-view="bot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="9" width="16" height="11" rx="3"/><path d="M12 9V6"/><circle cx="12" cy="4.5" r="1.5"/><path d="M9.5 14h.01"/><path d="M14.5 14h.01"/><path d="M9.5 17h5"/><path d="M2 13v3"/><path d="M22 13v3"/></svg>Live Bot</button>
-      <button data-view="translate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10"/><path d="M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/></svg>Translate</button>
-      <button data-view="cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Cards</button>
-      <button data-view="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Quiz</button>
-      <button data-view="lesson"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Lesson</button>
-      <button data-view="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/><path d="M8 23h8"/></svg>Say It</button>
-      <button data-view="script"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Script</button>
-      <button data-view="grammar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Grammar</button>
-      <button data-view="words"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5z"/></svg>Words</button>
-      <button data-view="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>Progress</button>
+      <button data-view="chat" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/></svg><span class="tl">Chat</span></button>
+      <button data-view="bot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="9" width="16" height="11" rx="3"/><path d="M12 9V6"/><circle cx="12" cy="4.5" r="1.5"/><path d="M9.5 14h.01"/><path d="M14.5 14h.01"/><path d="M9.5 17h5"/><path d="M2 13v3"/><path d="M22 13v3"/></svg><span class="tl">Live Bot</span></button>
+      <button data-view="translate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.5 9a9 9 0 0 1 14.9-3.4L23 10"/><path d="M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/></svg><span class="tl">Translate</span></button>
+      <button data-view="cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span class="tl">Cards</span></button>
+      <button data-view="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="tl">Quiz</span></button>
+      <button data-view="lesson"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="tl">Lesson</span></button>
+      <button data-view="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/><path d="M8 23h8"/></svg><span class="tl">Say It</span></button>
+      <button data-view="script"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span class="tl">Script</span></button>
+      <button data-view="grammar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="tl">Grammar</span></button>
+      <button data-view="words"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5z"/></svg><span class="tl">Words</span></button>
+      <button data-view="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg><span class="tl">Progress</span></button>
     </nav>
   </div>
 </header>
 
 <div class="wrap">
+
+<div class="hero" id="hero">
+  <div class="aurora a1"></div><div class="aurora a2"></div>
+  <h2>Speak a new language<br><span class="grad">with your own voice.</span></h2>
+  <p>Your voice tutor &amp; live bot listen, translate and correct you out loud — across English, தமிழ், हिन्दी, മലയാളം &amp; français. Free · private · offline-ready.</p>
+  <div class="hstats2">
+    <span class="hchip">🌐 5 languages</span><span class="hchip">🎮 11 practice modes</span><span class="hchip">🤖 Free AI coach</span><span class="hchip">📴 Works offline</span>
+  </div>
+  <div class="hctas">
+    <button class="btn blue" id="herocta1">🎙 Talk to the Live Bot</button>
+    <button class="btn ghost" id="herocta2">⚡ Quick quiz</button>
+  </div>
+</div>
+
 
   <!-- CHAT -->
   <section class="view on" id="view-chat">
@@ -607,7 +681,9 @@ body.dark .nudge{background:linear-gradient(135deg,#2b2118,#241c15);border-color
   <!-- LIVE BOT -->
   <section class="view" id="view-bot">
     <div class="card botstage">
+      <div class="botava" id="botava"><span class="wave"><i></i><i></i><i></i></span></div>
       <div class="botstat" id="botstat">🤖 <b>Talkora Live Bot</b> — your hands-free voice coach</div>
+      <div class="botscore" id="botscore"></div>
       <div class="seg" id="botseg">
         <button data-mode="speak" class="on">🗣 Speak</button>
         <button data-mode="learn">🎯 Try</button>
@@ -1463,8 +1539,10 @@ function speak(text,lang,rate,cb){
     if(v) u.voice=v;
     u.lang=(LANGS[lang]||LANGS.en).tts;
     u.rate=rate||(S.slow?0.55:S.rate);
-    if(cb){ u.onend=cb; u.onerror=cb; }
     window.speechSynthesis.cancel();
+    document.body.classList.add("talking");
+    const __done=()=>{ document.body.classList.remove("talking"); if(cb) cb(); };
+    u.onend=__done; u.onerror=__done;
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -2898,11 +2976,13 @@ function botListen(){
   BOT.busy=true;
   const lang=S.bot.mode==="learn"?S.learn:S.speak;
   if(mb) mb.classList.add("rec");
+  const ava=document.getElementById("botava"); if(ava) ava.classList.add("listening");
   botStat("🎧 Listening in <b>"+esc(LANGS[lang].name)+"</b>… speak now");
   BOT.rec=newRec(lang,
     { interim:t=>{ const i=document.getElementById("botinterim"); if(i) i.textContent="“"+t+"”"; },
       text:t=>{ botHeard(t,lang); } },
     ()=>{ if(mb) mb.classList.remove("rec");
+          const ava2=document.getElementById("botava"); if(ava2) ava2.classList.remove("listening");
           const i=document.getElementById("botinterim"); if(i) i.textContent="";
           BOT.rec=null;
           if(!BOT.busy) botStat("🤖 Tap the mic when ready");
@@ -2913,13 +2993,14 @@ function botListen(){
 async function botHeard(text,lang){
   BOT.busy=true;
   botRow("user",'<span class="tag2">You · '+esc(LANGS[lang].name)+'</span><div class="bub">'+esc(text)+'</div>');
+  BOT.n.turns++; botScore();
   if(lang===S.speak) await botTranslate(text); else await botCorrect(text);
   BOT.busy=false;
   botStat("🤖 "+(S.bot.auto?"Listening again soon…":"Tap the mic when ready"));
   botRelisten(600);
 }
 async function botTranslate(text){
-  botStat("🧠 Translating…");
+  botStat("🧠 Translating <span class=\"dots\"><i></i><i></i><i></i></span>");
   const from=S.speak,to=S.learn;
   let out=null;
   const exact=PHRASEMAPS[from]&&PHRASEMAPS[from].get(norm(text));
@@ -2935,14 +3016,16 @@ async function botTranslate(text){
     return;
   }
   addXp(2,"live bot");
+  BOT.lastAn=out;
   botRow("bot",'<span class="tag2">Talkora · '+esc(LANGS[to].name)+'</span><div class="bub">🌐 '+esc(out)+'</div>'+
-    '<div class="fix"><div class="lbl">🎯 Now you try</div>Say it in '+esc(LANGS[to].name)+' — switch to 🎯 Try and tap the mic!</div>');
+    '<div class="fix"><div class="lbl">🎯 Now you try</div>Say it in '+esc(LANGS[to].name)+' — switch to 🎯 Try and tap the mic!</div>'+
+    '<div style="display:flex;gap:6px;margin-top:8px;"><button class="mini" data-bact="hearan">🔁 Hear again</button><button class="mini" data-bact="try">🎯 I\'ll try now</button></div>');
   S.bot.mode="learn"; renderBotSeg(); save();
   const after=()=>botStat("🎯 Your turn — say it in <b>"+esc(LANGS[to].name)+"</b>");
   if(S.bot.voice) speak(out,to,undefined,after); else after();
 }
 async function botCorrect(text){
-  botStat("🧠 Checking your "+esc(LANGS[S.learn].name)+"…");
+  botStat("🧠 Checking your "+esc(LANGS[S.learn].name)+" <span class=\"dots\"><i></i><i></i><i></i></span>");
   const X=LANGS[S.speak],Y=LANGS[S.learn];
   if(aiReady()){
     try{
@@ -2967,8 +3050,10 @@ async function botCorrect(text){
       const perfect=!!o.perfect;
       addXp(perfect?5:3,"live bot");
       const line=perfect?(praise+" "+corrected):("Almost! Say it like this: "+corrected);
+      BOT.lastSay=line; if(perfect) BOT.n.perfect++; else BOT.n.fixed++; botScore();
       botRow("bot",'<span class="tag2">Talkora · coach</span><div class="bub">'+(perfect?"✅ ":"🛠️ ")+esc(line)+'</div>'+
-        (tip&&!perfect?'<div class="fix"><div class="lbl">💡 Tip · '+esc(X.name)+'</div>'+esc(tip)+'</div>':''));
+        (tip&&!perfect?'<div class="fix"><div class="lbl">💡 Tip · '+esc(X.name)+'</div>'+esc(tip)+'</div>':'')+
+        '<div style="display:flex;gap:6px;margin-top:8px;"><button class="mini" data-bact="hear">🔁 Hear again</button></div>');
       if(S.bot.voice) speak(line,S.learn,undefined,()=>botStat("🤖 "+(S.bot.auto?"Listening again soon…":"Tap the mic when ready")));
       return;
     }catch(e){ /* offline fallback below */ }
@@ -2976,7 +3061,7 @@ async function botCorrect(text){
   const hit=PHRASEMAPS[S.learn]&&PHRASEMAPS[S.learn].get(norm(text));
   if(hit){
     const say=T(hit,S.learn);
-    addXp(3,"live bot");
+    addXp(3,"live bot"); BOT.n.perfect++; botScore();
     botRow("bot",'<span class="tag2">Talkora · coach</span><div class="bub">✅ Perfect! '+esc(say)+'</div>');
     if(S.bot.voice) speak("Perfect! "+say,S.learn);
   }else{
@@ -3375,10 +3460,32 @@ function packInit(){
 }
 document.addEventListener("DOMContentLoaded",packInit);
 
+
+/* ---------------- PRO POLISH (hero CTAs, bot session score, quick chips) ---------------- */
+const FLAGS={en:"🇬",ta:"🇮",hi:"🇮🇳",ml:"🇮🇳",fr:"🇫"};
+BOT.n=BOT.n||{turns:0,fixed:0,perfect:0};
+function botScore(){
+  const el=document.getElementById("botscore"); if(!el) return;
+  el.innerHTML="🗨 <b>"+BOT.n.turns+"</b> turns · 🛠 <b>"+BOT.n.fixed+"</b> corrections · ✅ <b>"+BOT.n.perfect+"</b> perfect this session";
+}
+function initPro(){
+  const c1=document.getElementById("herocta1"); if(c1) c1.onclick=()=>switchView("bot");
+  const c2=document.getElementById("herocta2"); if(c2) c2.onclick=()=>switchView("quiz");
+  document.addEventListener("click",(e)=>{
+    const b=e.target&&e.target.closest?e.target.closest("[data-bact]"):null; if(!b) return;
+    const a=b.getAttribute("data-bact");
+    if(a==="try"){ S.bot.mode="learn"; save(); renderBotSeg(); botListen(); }
+    else if(a==="hear"&&BOT.lastSay){ speak(BOT.lastSay,S.learn); }
+    else if(a==="hearan"&&BOT.lastAn){ speak(BOT.lastAn,S.learn); }
+  });
+  botScore();
+}
+document.addEventListener("DOMContentLoaded",initPro);
+
 /* ---------------- INIT ---------------- */
 function initLangSelects(){
   const sS=document.getElementById("selSpeak"), sL=document.getElementById("selLearn");
-  const opts=LCODES.map(c=>'<option value="'+c+'">'+LANGS[c].native+" · "+LANGS[c].name+'</option>').join("");
+  const opts=LCODES.map(c=>'<option value="'+c+'">'+(FLAGS[c]||"")+" "+LANGS[c].native+" · "+LANGS[c].name+'</option>').join("");
   sS.innerHTML=opts; sL.innerHTML=opts;
   sS.onchange=()=>{
     S.speak=sS.value;
