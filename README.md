@@ -18,6 +18,7 @@ native app.
 - 📘 **Grammar Guide** — two-minute essentials for all 5 languages with spoken examples
 - 👋 **Onboarding tour**, 📤 share-progress card, 🔥 streak nudge + optional daily reminder
 - 🤖 **AI tutor (free)** — conversations at levels A1–B2, interactive stories with choices, session reviews, grammar feedback. Default provider Pollinations `gpt-oss-20b` — **no key needed**
+- 🎭 **Roleplay scenes** — mission-based AI conversations (restaurant, airport, shopping, doctor) with scores, XP and a 🎭 Stage Star badge
 - 💾 **Private** — everything lives in your browser's localStorage; JSON backup / restore / wipe
 - 📶 **Offline** — the service worker caches the whole app shell; machine translation is only used online for unseen sentences
 
