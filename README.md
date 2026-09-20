@@ -22,6 +22,10 @@ native app.
 - 🧗 **Learning Path** — professional end-to-end curriculum: 10 units across A1/A2/B1 tiers,
   each unit = lesson + challenge quiz (60% to pass) + speaking drill; units unlock in order,
   with XP rewards and Pathfinder/Trekker badges.
+- 📖 **Story Mode** — AI writes a graded reader at your CEFR level with key-word chips
+  (tap to hear) and a 3-question comprehension quiz.
+- 🃏 **Memory Match** + ⚡ **Blitz 60s** games in the Quiz tab (offline, XP, combos).
+- 📈 **Skill radar** (Vocab/Speaking/Listening/Reading/Grammar) computed from real activity.
 - 🤖 **AI tutor (free)** — conversations at levels A1–B2, interactive stories with choices, session reviews, grammar feedback. Default provider Pollinations `gpt-oss-20b` — **no key needed**
 - 🎭 **Roleplay scenes** — mission-based AI conversations (restaurant, airport, shopping, doctor) with scores, XP and a 🎭 Stage Star badge
 - 💾 **Private** — everything lives in your browser's localStorage; JSON backup / restore / wipe

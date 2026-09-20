@@ -46,6 +46,9 @@ globalThis.__T = {
   get BOT(){return BOT;},
   get BADGES(){return BADGES;}, get LS(){return LS;}, get UNITS(){return UNITS;}, get PATH_TIERS(){return PATH_TIERS;},
   renderPath, unitDone, unitUnlocked, markPathStep, markPathQuiz, pathProg,
+  get MM(){return MM;}, get BZ(){return BZ;}, get STORY(){return STORY;},
+  startMatch, matchFlip, startBlitz, bzAnswer, endBlitz, renderSkills, skillVals,
+  initGames, genStory, renderStory, answerStory,
 };
 `;
 delete globalThis.__T;
@@ -112,7 +115,28 @@ nothrow("bot: botListen() without SR → toast only", () => T.botListen());
     ok("path: lesson+quiz+speak complete a unit", T.unitDone("u1") && T.unitUnlocked(1));
     ok("path: locked unit stays locked", !T.unitUnlocked(2));
   } catch (e) { ok("path: unit completion flow", false, e.message); }
-  ok("path: badges include Pathfinder + Trekker", T.BADGES.length === 15);
+  ok("path: badges include Pathfinder + Trekker", T.BADGES.length === 17);
+
+
+  // ---------- MEGA PACK: story / match / blitz / radar ----------
+  try { T.initGames(); ok("mega: initGames wires match/blitz/story controls", true); } catch (e) { ok("mega: initGames wires controls", false, e.message); }
+  try {
+    T.startMatch();
+    const pairIdx = T.MM.cards.findIndex((c, i) => i > 0 && c.p === T.MM.cards[0].p);
+    T.matchFlip(0); T.matchFlip(pairIdx);
+    ok("mega: memory match builds 12 cards + finds a pair", T.MM.cards.length === 12 && T.MM.found === 1);
+    clearInterval(T.MM.timer);
+  } catch (e) { ok("mega: memory match", false, e.message); }
+  try {
+    T.startBlitz(); const q0 = T.BZ.items[0];
+    T.bzAnswer(q0.a);
+    ok("mega: blitz builds 15 Qs + scores correct answer", T.BZ.items.length === 15 && T.BZ.correct === 1);
+    T.endBlitz(); clearInterval(T.BZ.timer);
+  } catch (e) { ok("mega: blitz", false, e.message); }
+  try { T.renderSkills(); ok("mega: skill radar renders 5-axis svg", document.getElementById("skillcard").innerHTML.indexOf("polygon") >= 0); }
+  catch (e) { ok("mega: skill radar", false, e.message); }
+  try { T.answerStory(0, 0); ok("mega: story guards survive without data", true); } catch (e) { ok("mega: story guards", false, e.message); }
+  ok("mega: badges include Bookworm + Blitzer", T.BADGES.length === 17);
 
   console.log(`\n${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);

@@ -652,6 +652,25 @@ body.dark .pnode.active{background:linear-gradient(150deg,#1c2a1e,var(--card) 60
 .pstate{font-size:18px;flex:0 0 auto;}
 .ppanel{background:var(--card);border:1.5px dashed var(--line-strong);border-radius:16px;padding:12px 14px;margin:-4px 0 12px;}
 
+
+/* ---------- mega pack: match, blitz, radar, story ---------- */
+.mmgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px;}
+.mmcard{min-height:64px;border-radius:14px;border:1.5px solid var(--line);background:linear-gradient(160deg,var(--card),var(--bg));
+  font-size:13.5px;font-weight:700;padding:6px;cursor:pointer;transition:transform .12s ease;word-break:break-word;}
+.mmcard:hover{transform:translateY(-2px);}
+.mmcard.done{background:#e8f5e9;border-color:#81c784;cursor:default;}
+.bztimer{height:8px;border-radius:99px;background:var(--bg);border:1px solid var(--line);overflow:hidden;margin:8px 0;}
+.bztimer i{display:block;height:100%;background:linear-gradient(90deg,#ff5a2d,#ffb347);width:100%;transition:width .25s linear;}
+.sw{cursor:pointer;}
+.sw:hover{color:var(--brand);}
+.vchip{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700;cursor:pointer;}
+.vchip:hover{border-color:var(--brand);}
+.sq{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line-strong);}
+.sq .sopt{display:block;width:100%;text-align:left;margin-top:6px;padding:9px 12px;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--card);font-weight:600;cursor:pointer;font-size:13.5px;}
+.sq .sopt.right{background:#e8f5e9;border-color:#81c784;}
+.sq .sopt.wrong{background:#fdecea;border-color:#ef9a9a;}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
 }
@@ -689,6 +708,7 @@ body.dark .pnode.active{background:linear-gradient(150deg,#1c2a1e,var(--card) 60
       <button data-view="cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span class="tl">Cards</span></button>
       <button data-view="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="tl">Quiz</span></button>
       <button data-view="lesson"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="tl">Lesson</span></button>
+      <button data-view="story"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="tl">Story</span></button>
       <button data-view="speak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v4"/><path d="M8 23h8"/></svg><span class="tl">Say It</span></button>
       <button data-view="script"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span class="tl">Script</span></button>
       <button data-view="grammar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span class="tl">Grammar</span></button>
@@ -833,6 +853,8 @@ body.dark .pnode.active{background:linear-gradient(150deg,#1c2a1e,var(--card) 60
         <button class="btn blue" id="qunscbtn">🔀 Unscramble<br><small class="hint" style="color:#fff;opacity:.85;">tap the words in order</small></button>
         <button class="btn blue" id="qclozebtn">✍️ Fill the gap<br><small class="hint" style="color:#fff;opacity:.85;">pick the missing word</small></button>
         <button class="btn blue" id="qtypebtn">⌨️ Dictation<br><small class="hint" style="color:#fff;opacity:.85;">hear it, type it</small></button>
+        <button class="btn blue" id="qmatchbtn">🃏 Memory Match<br><small class="hint" style="color:#fff;opacity:.85;">match word ↔ meaning</small></button>
+        <button class="btn blue" id="qblitzbtn">⚡ Blitz 60s<br><small class="hint" style="color:#fff;opacity:.85;">race the clock</small></button>
       </div>
       <div class="srow" style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;">
         <span class="sl" style="white-space:nowrap;">🤖 AI quiz</span>
@@ -863,6 +885,21 @@ body.dark .pnode.active{background:linear-gradient(150deg,#1c2a1e,var(--card) 60
         </div>
       </div>
     </div>
+    <div class="card" id="matchplay" style="display:none;">
+      <div style="font-size:16px;font-weight:700;">🃏 Memory Match</div>
+      <p class="hint">Flip two cards — match each word with its translation. Faster = more XP!</p>
+      <div class="hint" id="mmstats" style="margin-top:8px;font-weight:700;"></div>
+      <div class="mmgrid" id="mmgrid"></div>
+      <div class="factions"><button class="btn ghost" id="mmback">← Back to quizzes</button></div>
+    </div>
+    <div class="card" id="blitzplay" style="display:none;">
+      <div style="font-size:16px;font-weight:700;">⚡ Blitz — 60 seconds, no mercy</div>
+      <div class="bztimer"><i id="bzbar"></i></div>
+      <div class="hint" style="font-weight:700;">⏱ <span id="bztime">60s</span> · <span id="bzscore">✅ 0 · 🔥 combo 0</span></div>
+      <div id="bzq" style="margin:10px 0;"></div>
+      <div class="factions" id="bzopts"></div>
+      <div class="factions"><button class="btn ghost" id="bzback">← Back to quizzes</button></div>
+    </div>
   </section>
 
   <!-- LESSON -->
@@ -885,6 +922,19 @@ body.dark .pnode.active{background:linear-gradient(150deg,#1c2a1e,var(--card) 60
   </section>
 
   <!-- SAY IT -->
+  <!-- STORY -->
+  <section class="view" id="view-story">
+    <div class="card">
+      <div style="font-size:16px;font-weight:700;">📖 Story Mode — graded readers, written by AI</div>
+      <p class="hint" style="margin-bottom:12px;">A tiny story at your level in the language you learn, with key words and a comprehension quiz. Pick a topic:</p>
+      <div class="catbar" id="storycats"></div>
+      <div class="factions" style="margin-top:10px;">
+        <button class="btn blue big" id="storygo">✨ Write my story</button>
+      </div>
+      <div id="storybox" style="margin-top:14px;"></div>
+    </div>
+  </section>
+
   <section class="view" id="view-speak">
     <div class="card">
       <div style="font-size:16px;font-weight:700;">🎯 Say it in <span id="prlang" style="color:var(--teal-dark);">Tamil</span></div>
@@ -968,6 +1018,7 @@ body.dark .pnode.active{background:linear-gradient(150deg,#1c2a1e,var(--card) 60
     <div class="card">
       <div class="card" id="questcard"></div>
       <div class="card" id="plancard"></div>
+      <div class="card" id="skillcard"></div>
       <div class="stat-grid">
         <div class="stat"><div class="n" id="st-xp">0</div><div class="l">Total XP</div></div>
         <div class="stat"><div class="n" id="st-streak">0</div><div class="l">Day streak 🔥</div></div>
@@ -2413,7 +2464,7 @@ function renderXp(){
   document.getElementById("streakval").textContent=S.streak+((S.freezes||0)?" ❄"+S.freezes:"");
 }
 function renderProgress(){
-  renderQuests(); renderPlan();
+  renderQuests(); renderPlan(); renderSkills();
   document.getElementById("st-xp").textContent=S.xp;
   document.getElementById("st-streak").textContent=S.streak;
   const knownTotal=Object.values(S.known).reduce((a,b)=>a+b.length,0);
@@ -2508,6 +2559,8 @@ const BADGES=[
   {id:"actor",  icon:"🎭", name:"Stage Star",     desc:"Complete a roleplay scene",           test:s=>(s.scenesDone||0)>=1},
   {id:"pathfinder", icon:"🧗", name:"Pathfinder", desc:"Complete your first path unit", test:s=>{const m=(s.units&&s.units[s.learn])||{};return Object.keys(m).some(k=>{const u=m[k];return u&&u.lesson&&(u.quiz||0)>=60&&u.speak;});}},
   {id:"trekker", icon:"🌍", name:"Trekker", desc:"Complete 5 path units", test:s=>{const m=(s.units&&s.units[s.learn])||{};return Object.keys(m).filter(k=>{const u=m[k];return u&&u.lesson&&(u.quiz||0)>=60&&u.speak;}).length>=5;}},
+  {id:"bookworm", icon:"📖", name:"Bookworm", desc:"Finish an AI story + quiz", test:s=>(s.storiesRead||0)>=1},
+  {id:"blitzer", icon:"⚡", name:"Blitzer", desc:"Score 10+ in a Blitz round", test:s=>(s.blitzBest||0)>=10},
 ];
 function checkBadges(){
   let got=false;
@@ -3879,6 +3932,203 @@ function renderPath(){
   });
 }
 document.addEventListener("DOMContentLoaded",renderPath);
+
+
+/* ---------------- MEGA PACK: Story Mode · Memory Match · Blitz · Skill Radar ---------------- */
+
+/* ===== Memory Match ===== */
+const MM={cards:[],first:-1,lock:false,found:0,moves:0,t0:0,timer:null};
+function showQuizCard(id){ ["quizmenu","quizplay","quizdone","matchplay","blitzplay"].forEach(x=>{ const el=document.getElementById(x); if(el) el.style.display=(x===id?"block":"none"); }); }
+function startMatch(){
+  const pool=shuffle(WORDS_ALL).slice(0,6);
+  const cards=[];
+  pool.forEach((w,i)=>{ cards.push({p:i,txt:T(w,S.learn),done:false,open:false}); cards.push({p:i,txt:TR(w,S.speak)||T(w,S.speak),done:false,open:false}); });
+  MM.cards=shuffle(cards); MM.first=-1; MM.lock=false; MM.found=0; MM.moves=0; MM.t0=Date.now();
+  showQuizCard("matchplay"); renderMatch();
+  clearInterval(MM.timer); MM.timer=setInterval(mmTick,1000);
+}
+function mmTick(){ const el=document.getElementById("mmtime"); if(el) el.textContent=Math.floor((Date.now()-MM.t0)/1000)+"s"; }
+function renderMatch(){
+  const grid=document.getElementById("mmgrid"); if(!grid) return;
+  grid.innerHTML=MM.cards.map((c,i)=>'<button class="mmcard'+(c.done?" done":"")+'" data-i="'+i+'"><span>'+(c.open||c.done?esc(c.txt):"❔")+'</span></button>').join("");
+  const st=document.getElementById("mmstats");
+  if(st) st.innerHTML='🃏 Pairs: <b>'+MM.found+'/6</b> · Moves: <b>'+MM.moves+'</b> · ⏱ <span id="mmtime">'+Math.floor((Date.now()-MM.t0)/1000)+'s</span>';
+  grid.querySelectorAll(".mmcard").forEach(b=>{ b.onclick=()=>matchFlip(+b.getAttribute("data-i")); });
+}
+function matchFlip(i){
+  const c=MM.cards[i]; if(!c||MM.lock||c.open||c.done) return;
+  c.open=true; renderMatch();
+  if(MM.first<0){ MM.first=i; return; }
+  const fi=MM.first, f=MM.cards[fi]; MM.first=-1; MM.moves++;
+  if(f.p===c.p){ f.done=true; c.done=true; MM.found++; beep("good"); renderMatch();
+    if(MM.found===6){ clearInterval(MM.timer);
+      const secs=Math.floor((Date.now()-MM.t0)/1000); const xp=Math.max(8,20-Math.floor(secs/5));
+      confetti(); beep("level"); addXp(xp,"memory match in "+secs+"s");
+      const st=document.getElementById("mmstats");
+      if(st) st.innerHTML='🎉 All pairs in <b>'+MM.moves+'</b> moves · <b>'+secs+'s</b> · +'+xp+' XP!';
+    }
+    return;
+  }
+  MM.lock=true; beep("bad"); renderMatch();
+  setTimeout(()=>{ f.open=false; c.open=false; MM.lock=false; renderMatch(); },800);
+}
+
+/* ===== Blitz 60s ===== */
+const BZ={items:[],i:0,correct:0,streak:0,best:0,t0:0,timer:null,done:false};
+function startBlitz(){
+  const pool=shuffle(WORDS_ALL);
+  BZ.items=pool.slice(0,15).map(w=>{
+    const opts=shuffle([w].concat(shuffle(WORDS_ALL.filter(x=>x.id!==w.id)).slice(0,3)));
+    return {w:w,opts:opts,a:opts.indexOf(w)};
+  });
+  BZ.i=0; BZ.correct=0; BZ.streak=0; BZ.best=0; BZ.t0=Date.now(); BZ.done=false;
+  showQuizCard("blitzplay"); renderBlitz();
+  clearInterval(BZ.timer); BZ.timer=setInterval(bzTick,250);
+}
+function bzTick(){
+  const left=60-Math.floor((Date.now()-BZ.t0)/1000);
+  const bar=document.getElementById("bzbar"); if(bar) bar.style.width=Math.max(0,left/60*100)+"%";
+  const t=document.getElementById("bztime"); if(t) t.textContent=Math.max(0,left)+"s";
+  if(left<=0) endBlitz();
+}
+function renderBlitz(){
+  const q=BZ.items[BZ.i]; if(!q) return endBlitz();
+  const qe=document.getElementById("bzq"); if(qe) qe.innerHTML='<div class="qword">'+esc(T(q.w,S.learn))+'</div>';
+  const box=document.getElementById("bzopts");
+  if(box){ box.innerHTML=q.opts.map((o,k)=>'<button class="btn" data-i="'+k+'">'+esc(TR(o,S.speak)||T(o,S.speak))+'</button>').join("");
+    box.querySelectorAll("button").forEach(b=>b.onclick=()=>bzAnswer(+b.getAttribute("data-i"))); }
+  const sc=document.getElementById("bzscore"); if(sc) sc.textContent='✅ '+BZ.correct+' · 🔥 combo '+BZ.streak;
+}
+function bzAnswer(i){
+  if(BZ.done) return; const q=BZ.items[BZ.i]; if(!q) return;
+  if(i===q.a){ BZ.correct++; BZ.streak++; BZ.best=Math.max(BZ.best,BZ.streak); beep("good"); }
+  else { BZ.streak=0; beep("bad"); }
+  BZ.i++; if(BZ.i>=BZ.items.length) endBlitz(); else renderBlitz();
+}
+function endBlitz(){
+  if(BZ.done) return; BZ.done=true; clearInterval(BZ.timer);
+  S.blitzBest=Math.max(S.blitzBest||0,BZ.correct);
+  S.today.quizzes=(S.today.quizzes||0)+1; save();
+  addXp(BZ.correct,"blitz round"); checkQuests(); checkBadges();
+  const qe=document.getElementById("bzq"); if(qe) qe.innerHTML='<div class="qword">⚡ Time!</div>';
+  const box=document.getElementById("bzopts");
+  if(box) box.innerHTML='<p class="hint"><b>'+BZ.correct+'/'+BZ.items.length+'</b> correct · best combo <b>🔥'+BZ.best+'</b> · +'+BZ.correct+' XP</p>'+
+    '<button class="btn blue" id="bzagain">⚡ Go again</button>';
+  const g=document.getElementById("bzagain"); if(g) g.onclick=startBlitz;
+  if(BZ.correct>=10){ confetti(); beep("level"); }
+}
+
+/* ===== Skill Radar ===== */
+function skillVals(){
+  const srsN=S.srs?Object.keys(S.srs).filter(k=>S.srs[k]&&S.srs[k].reps>0).length:0;
+  return [
+    {l:"Vocab",     v:Math.min(100,srsN*4)},
+    {l:"Speaking",  v:Math.min(100,(S.perfect||0)*5)},
+    {l:"Listening", v:Math.min(100,(S.bestQuiz||0)*8+(S.scenesDone||0)*6)},
+    {l:"Reading",   v:Math.min(100,(S.storiesRead||0)*25+(S.scriptDone||0)*15)},
+    {l:"Grammar",   v:Math.min(100,(S.bestQuiz||0)*10)},
+  ];
+}
+function renderSkills(){
+  const el=document.getElementById("skillcard"); if(!el) return;
+  const vals=skillVals(), cx=110, cy=92, R=66;
+  const pt=(v,i,r)=>{ const a=(-90+i*72)*Math.PI/180; return (cx+Math.cos(a)*r*v/100).toFixed(1)+","+(cy+Math.sin(a)*r*v/100).toFixed(1); };
+  const ring=p=>'<polygon points="'+[0,1,2,3,4].map(i=>pt(100,i,R*p)).join(" ")+'" fill="none" stroke="var(--line-strong)" stroke-width="1"/>';
+  const lines=[0,1,2,3,4].map(i=>'<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+Math.cos((-90+i*72)*Math.PI/180)*R).toFixed(1)+'" y2="'+(cy+Math.sin((-90+i*72)*Math.PI/180)*R).toFixed(1)+'" stroke="var(--line)" stroke-width="1"/>').join("");
+  const poly=[0,1,2,3,4].map(i=>pt(vals[i].v,i,R)).join(" ");
+  const labels=[0,1,2,3,4].map(i=>{ const a=(-90+i*72)*Math.PI/180; const x=cx+Math.cos(a)*(R+20), y=cy+Math.sin(a)*(R+16);
+    return '<text x="'+x.toFixed(1)+'" y="'+(y+3).toFixed(1)+'" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--ink-soft)">'+vals[i].l+' '+vals[i].v+'</text>'; }).join("");
+  el.innerHTML='<div style="font-size:15px;font-weight:800;margin-bottom:4px;">📈 Skill radar</div>'+
+    '<svg viewBox="0 0 220 196" style="width:100%;max-width:330px;display:block;margin:0 auto;">'+ring(.34)+ring(.67)+ring(1)+lines+
+    '<polygon points="'+poly+'" fill="rgba(255,90,45,.25)" stroke="var(--brand)" stroke-width="2"/>'+labels+'</svg>'+
+    '<p class="hint" style="text-align:center;">Grows from your reviews 📚, perfect speech 🎤, quizzes 🧠 and stories 📖.</p>';
+}
+
+/* ===== Story Mode ===== */
+const STORY={cat:"daily life",data:null,ans:[],done:false};
+function initGames(){
+  const chips=document.getElementById("storycats");
+  if(chips){
+    const cats=["daily life","food","travel","family","friends","animals","weather","festival"];
+    chips.innerHTML=cats.map(c=>'<button class="chip'+(c===STORY.cat?" on":"")+'" data-c="'+c+'">'+c+'</button>').join("");
+    chips.querySelectorAll(".chip").forEach(b=>{ b.onclick=()=>{ STORY.cat=b.getAttribute("data-c");
+      chips.querySelectorAll(".chip").forEach(x=>x.classList.toggle("on",x===b)); }; });
+  }
+  const go=document.getElementById("storygo"); if(go) go.onclick=genStory;
+  const qm=document.getElementById("qmatchbtn"); if(qm) qm.onclick=startMatch;
+  const qb=document.getElementById("qblitzbtn"); if(qb) qb.onclick=startBlitz;
+  const mb=document.getElementById("mmback"); if(mb) mb.onclick=()=>{ clearInterval(MM.timer); showQuizCard("quizmenu"); };
+  const bb=document.getElementById("bzback"); if(bb) bb.onclick=()=>{ BZ.done=true; clearInterval(BZ.timer); showQuizCard("quizmenu"); };
+}
+document.addEventListener("DOMContentLoaded",initGames);
+async function genStory(){
+  if(typeof aiReady==="function"&&!aiReady()){ toast("🤖 AI is off — add a free key in ⚙️ Settings first."); return; }
+  const box=document.getElementById("storybox"); if(!box) return;
+  box.innerHTML='<div class="hint" style="text-align:center;padding:22px;">✍️ Your AI author is writing…</div>';
+  const lang=LANGS[S.learn].name, lvl=(S.aiLevel||"a2").toUpperCase();
+  const sys='You write graded readers. Reply with ONLY valid JSON, no markdown fences: {"title":string,"story":string of 60-90 words in '+lang+' at CEFR '+lvl+' level about '+STORY.cat+',"words":[{"w":important word in '+lang+',"m":english meaning} x5],"questions":[{"q":comprehension question in '+lang+',"o":[3 answer options in '+lang+'],"a":index 0-2 of correct option} x3]}';
+  try{
+    const raw=await aiReply("Write the story now.",false,sys);
+    let data=null; try{ data=JSON.parse(String(raw).replace(/```json|```/g,"").trim()); }catch(e){}
+    if(!data||!data.story||!data.questions) throw new Error("bad json");
+    STORY.data=data; STORY.ans=[]; STORY.done=false;
+    renderStory();
+  }catch(err){
+    box.innerHTML='<p class="hint" style="text-align:center;">🙈 The story could not be written right now — check your connection or AI settings and try again.</p>';
+  }
+}
+function renderStory(){
+  const d=STORY.data, box=document.getElementById("storybox"); if(!d||!box) return;
+  box.innerHTML='<div class="card" style="border:1.5px dashed var(--line-strong);">'+
+    '<div style="font-size:18px;font-weight:800;">'+esc(d.title||"Your story")+'</div>'+
+    '<p style="font-size:16.5px;line-height:1.85;margin:10px 0;">'+String(d.story).split(/\s+/).map(w=>'<span class="sw">'+esc(w)+'</span>').join(" ")+'</p>'+
+    '<button class="mini" id="stlisten">🔊 Read aloud</button>'+
+    '<div class="hint" style="margin-top:12px;font-weight:800;">KEY WORDS — tap to hear</div>'+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">'+(d.words||[]).map(w=>'<span class="vchip" data-w="'+esc(w.w)+'" data-m="'+esc(w.m)+'">'+esc(w.w)+' · '+esc(w.m)+'</span>').join("")+'</div>'+
+    '<div id="stquiz" style="margin-top:6px;"></div></div>';
+  const lt=document.getElementById("stlisten"); if(lt) lt.onclick=()=>speak(d.story,S.learn);
+  box.querySelectorAll(".sw").forEach(sp=>{ sp.onclick=()=>{
+    const clean=norm(sp.textContent); const hit=(d.words||[]).find(w=>norm(w.w)===clean);
+    toast(hit?"📖 <b>"+esc(hit.w)+"</b> = "+esc(hit.m):"🔊 Tap “Read aloud” to hear the story."); }; });
+  box.querySelectorAll(".vchip").forEach(ch=>{ ch.onclick=()=>{ speak(ch.getAttribute("data-w"),S.learn); toast("📖 "+esc(ch.getAttribute("data-w"))+" = "+esc(ch.getAttribute("data-m"))); }; });
+  renderStoryQuiz();
+}
+function renderStoryQuiz(){
+  const d=STORY.data, qz=document.getElementById("stquiz"); if(!d||!qz) return;
+  let html='<div class="hint" style="font-weight:800;margin-top:10px;">COMPREHENSION QUIZ — earn XP</div>';
+  (d.questions||[]).forEach((q,qi)=>{
+    html+='<div class="sq"><b>'+(qi+1)+'. '+esc(q.q)+'</b>';
+    (q.o||[]).forEach((o,oi)=>{
+      let cls="sopt";
+      if(STORY.ans[qi]!=null){ if(oi===q.a) cls+=" right"; else if(oi===STORY.ans[qi]) cls+=" wrong"; }
+      html+='<button class="'+cls+'" data-q="'+qi+'" data-o="'+oi+'">'+esc(o)+'</button>';
+    });
+    html+='</div>';
+  });
+  if(STORY.done){
+    let sc=0; (d.questions||[]).forEach((q,i)=>{ if(STORY.ans[i]===q.a) sc++; });
+    html+='<div class="qresult" style="margin-top:12px;"><div class="big">'+(sc===3?"🏆":sc===2?"🌟":"📖")+'</div>'+
+      '<div class="n">'+sc+'/'+(d.questions||[]).length+'</div><p class="hint">'+(sc===3?"Perfect understanding!":"Read again and beat your score!")+'</p>'+
+      '<button class="btn blue" id="storynew">✨ New story</button></div>';
+  }
+  qz.innerHTML=html;
+  qz.querySelectorAll(".sopt").forEach(b=>{ b.onclick=()=>answerStory(+b.getAttribute("data-q"),+b.getAttribute("data-o")); });
+  const nw=document.getElementById("storynew"); if(nw) nw.onclick=genStory;
+}
+function answerStory(qi,oi){
+  if(!STORY.data||STORY.done||STORY.ans[qi]!=null) return;
+  STORY.ans[qi]=oi;
+  const qs=STORY.data.questions||[];
+  if(STORY.ans.filter(a=>a!=null).length>=qs.length&&qs.length>0){
+    STORY.done=true;
+    let sc=0; qs.forEach((q,i)=>{ if(STORY.ans[i]===q.a) sc++; });
+    S.storiesRead=(S.storiesRead||0)+1; save();
+    addXp(sc*4+6,"story quiz"); beep(sc>=2?"level":"good");
+    if(sc===qs.length){ confetti(); }
+    checkBadges();
+  } else beep("click");
+  renderStoryQuiz();
+}
 
 /* ---------------- INIT ---------------- */
 function initLangSelects(){

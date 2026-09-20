@@ -2,7 +2,7 @@
    instantly and works offline (the offline tutor, speech and quizzes
    all work without a connection; only translation + free AI need the
    network, and the app says so when it's unavailable). */
-const VERSION = "talkora-v3";
+const VERSION = "talkora-v4";
 const SHELL = [
   "/",
   "/index.html",
