@@ -617,6 +617,17 @@ body.dark .scenebar{background:linear-gradient(135deg,#241d33,#1f1830);border-co
 .wordfb .wr{color:var(--bad);text-decoration:underline wavy;}
 .fb-legend{font-size:10.5px;color:var(--ink-soft);text-align:center;margin-top:4px;font-weight:600;}
 
+
+/* ---------- today dashboard + quiz summary ---------- */
+.todaycard{margin:12px 0 2px;background:linear-gradient(150deg,var(--card) 40%,#fff3e6);
+  border:1.5px solid var(--line-strong);border-radius:20px;padding:14px 16px;box-shadow:var(--shadow-md);}
+body.dark .todaycard{background:linear-gradient(150deg,var(--card) 40%,#2a2016);}
+.tdy-items{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;}
+.tdy-item{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:5px 11px;
+  font-size:11.5px;font-weight:700;color:var(--ink-soft);}
+.qstats{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.qs{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
 }
@@ -677,6 +688,8 @@ body.dark .scenebar{background:linear-gradient(135deg,#241d33,#1f1830);border-co
   </div>
 </div>
 
+
+  <div class="todaycard" id="todaycard"></div>
 
   <!-- CHAT -->
   <section class="view on" id="view-chat">
@@ -808,8 +821,11 @@ body.dark .scenebar{background:linear-gradient(135deg,#241d33,#1f1830);border-co
         <div class="big" id="qemoji">🏆</div>
         <div class="n" id="qfinal">8/10</div>
         <p class="hint" id="qmsg">Great job!</p>
+        <div class="qstats" id="qstats"></div>
         <div class="factions" style="margin-top:14px;">
           <button class="btn blue" id="qagainbtn">🔁 Play again</button>
+          <button class="btn ghost" id="qfixbtn">📓 Fix mistakes</button>
+          <button class="btn ghost" id="qmenubtn">🗂 More quizzes</button>
         </div>
       </div>
     </div>
@@ -1984,7 +2000,7 @@ function fAudio(){
 /* ---------------- QUIZ ---------------- */
 const QZ={mode:null,items:[],i:0,score:0,streak:0,locked:false};
 function startQuiz(mode){
-  QZ.mode=mode; QZ.i=0; QZ.score=0; QZ.streak=0; QZ.locked=false; QZ.us=null;
+  QZ.mode=mode; QZ.i=0; QZ.score=0; QZ.streak=0; QZ.best=0; QZ.xpStart=S.xp; QZ.locked=false; QZ.us=null;
   if(mode==="unscramble"||mode==="cloze"){
     let pool=PHR_ALL.filter(p=>T(p,S.learn).split(/\s+/).length>=3);
     if(pool.length<5) pool=PHR_ALL;
@@ -2057,7 +2073,7 @@ function renderAiQuestion(q,body){
       body.querySelectorAll(".qopt").forEach((x,xi)=>{ x.disabled=true; if(xi===q.answer) x.classList.add("correct"); });
       if(!ok) b.classList.add("wrong");
       document.getElementById("aiqexplain").textContent=q.explain||"";
-      if(ok){ QZ.streak++; QZ.score++; beep("good"); addXp(3+(QZ.streak>=3?1:0),"AI quiz"); }
+      if(ok){ QZ.streak++; QZ.best=Math.max(QZ.best||0,QZ.streak); QZ.score++; beep("good"); addXp(3+(QZ.streak>=3?1:0),"AI quiz"); }
       else { QZ.streak=0; beep("bad"); }
       setTimeout(()=>{ QZ.locked=false; QZ.i++; if(QZ.i>=QZ.items.length) endQuiz(); else renderQuestion(); },ok?1300:2400);
     };
@@ -2091,7 +2107,7 @@ function checkUnscramble(q){
   po.innerHTML="";
   pl.innerHTML=QZ.us.target.map(w=>'<button class="uchip '+(ok?"good":"bad")+'" disabled>'+esc(w)+'</button>').join("");
   if(!ok){ pl.classList.add("ushake"); addMistake(q.id); }
-  if(ok){ QZ.streak++; QZ.score++; beep("good"); addXp(4+(QZ.streak>=3?1:0),"unscramble"); }
+  if(ok){ QZ.streak++; QZ.best=Math.max(QZ.best||0,QZ.streak); QZ.score++; beep("good"); addXp(4+(QZ.streak>=3?1:0),"unscramble"); }
   else { QZ.streak=0; beep("bad"); }
   setTimeout(()=>{ QZ.locked=false; QZ.i++; QZ.us=null; if(QZ.i>=QZ.items.length) endQuiz(); else renderQuestion(); },ok?900:2600);
 }
@@ -2116,7 +2132,7 @@ function renderCloze(q,body){
         x.disabled=true;
         if(norm(x.getAttribute("data-txt"))===norm(target)) x.classList.add("correct");
       });
-      if(ok){ QZ.streak++; QZ.score++; beep("good"); addXp(3+(QZ.streak>=3?1:0),"fill the gap"); }
+      if(ok){ QZ.streak++; QZ.best=Math.max(QZ.best||0,QZ.streak); QZ.score++; beep("good"); addXp(3+(QZ.streak>=3?1:0),"fill the gap"); }
       else { b.classList.add("wrong"); QZ.streak=0; beep("bad"); addMistake(q.id); }
       setTimeout(()=>{ QZ.locked=false; QZ.i++; if(QZ.i>=QZ.items.length) endQuiz(); else renderQuestion(); },ok?800:1800);
     };
@@ -2145,7 +2161,7 @@ function renderDictation(q,body){
       ? '<span style="color:var(--good);font-weight:800;">✔ Correct! ('+Math.round(sim*100)+'%)</span>'
       : '<span style="color:var(--bad);font-weight:700;">✘ '+Math.round(sim*100)+'% — right: <b>'+esc(T(q,S.learn))+'</b></span>';
     inp.disabled=true; document.getElementById("qtypechk").disabled=true;
-    if(ok){ QZ.streak++; QZ.score++; beep("good"); addXp(4+(QZ.streak>=3?1:0),"dictation"); }
+    if(ok){ QZ.streak++; QZ.best=Math.max(QZ.best||0,QZ.streak); QZ.score++; beep("good"); addXp(4+(QZ.streak>=3?1:0),"dictation"); }
     else { QZ.streak=0; beep("bad"); if(sim<0.55) addMistake(q.id); }
     setTimeout(()=>{ QZ.locked=false; QZ.i++; if(QZ.i>=QZ.items.length) endQuiz(); else renderQuestion(); },ok?1000:2800);
   };
@@ -2163,7 +2179,7 @@ function answerQuiz(btn,q){
     if(b.getAttribute("data-id")===q.id) b.classList.add("correct");
   });
   if(ok){
-    QZ.streak++; QZ.score++;
+    QZ.streak++; QZ.best=Math.max(QZ.best||0,QZ.streak); QZ.score++;
     beep("good");
     addXp(3+(QZ.streak>=3?1:0),QZ.streak>=3?"quiz streak +4":"quiz correct");
   } else {
@@ -2187,6 +2203,9 @@ function endQuiz(){
   document.getElementById("qfinal").textContent=n+"/"+QZ.items.length;
   document.getElementById("qemoji").textContent=n>=9?"🏆":n>=6?"🌟":n>=4?"💪":"🌱";
   document.getElementById("qmsg").textContent=n>=9?"Perfect! You are on fire!":n>=6?"Great job! Keep going!":n>=4?"Good start — review and retry!":"No problem — mistakes make masters. Try again!";
+  const __acc=Math.round(100*n/QZ.items.length);
+  const __xpG=Math.max(0,S.xp-(QZ.xpStart||0));
+  document.getElementById("qstats").innerHTML='<span class="qs">🎯 '+__acc+'% accuracy</span><span class="qs">⚡ +'+__xpG+' XP</span><span class="qs">🔥 best combo '+(QZ.best||0)+'</span>';
 }
 
 /* ---------------- LESSON ---------------- */
@@ -2353,6 +2372,7 @@ function pScore(heardText){
 function renderXp(){
   const __x=document.getElementById("xpval"); __x.textContent=S.xp+" XP";
   __x.classList.remove("pop"); void __x.offsetWidth; __x.classList.add("pop");
+  renderToday();
   document.getElementById("lvlval").textContent=LEVELS[levelOf(S.xp)].en;
   document.getElementById("streakval").textContent=S.streak+((S.freezes||0)?" ❄"+S.freezes:"");
 }
@@ -3684,6 +3704,35 @@ function initPlan(){
   }
 }
 document.addEventListener("DOMContentLoaded",initPlan);
+
+
+/* ---------------- UI UPGRADE 2: "Today" dashboard + completion summary ---------------- */
+function renderToday(){
+  const el=document.getElementById("todaycard"); if(!el) return;
+  touchStreak();
+  const due=srsDueList().length;
+  const qd=[ (S.today.xp||0)>=50, (S.today.perfect||0)>=3, ((S.today.quizzes||0)+(S.today.scenes||0))>=1 ].filter(Boolean).length;
+  const items=[];
+  if(due>0) items.push({ic:"🔁",tx:due+" cards due for review",v:"cards"});
+  if(qd<3) items.push({ic:"📜",tx:(3-qd)+" daily quest"+(3-qd>1?"s":"")+" left",v:"progress"});
+  items.push({ic:"🎙",tx:"Speak with the Live Bot",v:"bot"});
+  if(!(S.scenesDone>0)) items.push({ic:"🎭",tx:"Play your first roleplay scene",v:"chat"});
+  const main=items[0];
+  el.innerHTML='<div class="tdy-items">'+items.slice(0,3).map(i=>'<span class="tdy-item">'+i.ic+' '+esc(i.tx)+'</span>').join("")+'</div>'+
+    '<button class="btn blue big" id="tdygo">▶ Continue · '+esc(main.tx)+'</button>';
+  const g=document.getElementById("tdygo"); if(g) g.onclick=()=>switchView(main.v);
+}
+function initUi2(){
+  const a=document.getElementById("qagainbtn"); if(a) a.onclick=()=>startQuiz(QZ.mode);
+  const f=document.getElementById("qfixbtn"); if(f) f.onclick=()=>{ fCat="__mistakes"; switchView("cards"); };
+  const m=document.getElementById("qmenubtn"); if(m) m.onclick=()=>{
+    document.getElementById("quizplay").style.display="none";
+    document.getElementById("quizdone").style.display="none";
+    document.getElementById("quizmenu").style.display="block";
+  };
+  renderToday();
+}
+document.addEventListener("DOMContentLoaded",initUi2);
 
 /* ---------------- INIT ---------------- */
 function initLangSelects(){
