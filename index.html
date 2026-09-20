@@ -603,6 +603,20 @@ body.dark .scenebar{background:linear-gradient(135deg,#241d33,#1f1830);border-co
 .pop{animation:pop .35s cubic-bezier(.34,1.56,.64,1);display:inline-block;}
 [data-say],.fcard .big,.pphrase .big,.lcard .big,.qword{cursor:pointer;}
 
+
+/* ---------- borrow pack (quests, word feedback, plan) ---------- */
+.qrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line-strong);font-size:13px;font-weight:600;}
+.qrow:last-of-type{border-bottom:0;}
+.qrow b{color:var(--ink-soft);}
+.qrow.done{color:var(--good);}
+.qrow.done b{color:var(--good);}
+.wordfb{margin-top:10px;font-size:17px;font-weight:700;text-align:center;letter-spacing:.5px;}
+.wordfb span{margin:0 3px;}
+.wordfb .wg{color:var(--good);}
+.wordfb .wy{color:var(--warn);}
+.wordfb .wr{color:var(--bad);text-decoration:underline wavy;}
+.fb-legend{font-size:10.5px;color:var(--ink-soft);text-align:center;margin-top:4px;font-weight:600;}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
 }
@@ -831,6 +845,8 @@ body.dark .scenebar{background:linear-gradient(135deg,#241d33,#1f1830);border-co
       </div>
       <div class="score" id="pscore"></div>
       <div class="heard" id="pheard"></div>
+      <div class="wordfb" id="pfb"></div>
+      <div class="fb-legend">🟢 right · 🟡 close · 🔴 retry — ELSA-style word feedback</div>
       <div class="factions">
         <button class="btn ghost" id="phint">💡 Show hint</button>
         <button class="btn ghost" id="pskip">⏭ New phrase</button>
@@ -900,6 +916,8 @@ body.dark .scenebar{background:linear-gradient(135deg,#241d33,#1f1830);border-co
   <!-- PROGRESS -->
   <section class="view" id="view-progress">
     <div class="card">
+      <div class="card" id="questcard"></div>
+      <div class="card" id="plancard"></div>
       <div class="stat-grid">
         <div class="stat"><div class="n" id="st-xp">0</div><div class="l">Total XP</div></div>
         <div class="stat"><div class="n" id="st-streak">0</div><div class="l">Day streak 🔥</div></div>
@@ -1497,12 +1515,13 @@ function toast(html,ms=2800){
 function touchStreak(){
   const t=todayStr();
   if(S.lastDate!==t){
-    const y=new Date(); y.setDate(y.getDate()-1);
-    const ys=y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate();
-    S.streak=(S.lastDate===ys)?S.streak+1:1;
+    if(S.lastDate===dstr(1)) S.streak=S.streak+1;
+    else if(S.lastDate===dstr(2)&&(S.freezes||0)>0){ S.freezes--; S.streak++; toast("❄️ Streak freeze used — your 🔥 survives!",3400); }
+    else S.streak=1;
+    if(S.streak>0&&S.streak%7===0){ S.freezes=(S.freezes||0)+1; toast("❄️ 7-day streak! You earned a <b>streak freeze</b>.",3400); }
     S.lastDate=t;
   }
-  if(S.today.date!==t) S.today={date:t,xp:0};
+  if(!S.today||S.today.date!==t) S.today={date:t,xp:0,perfect:0,quizzes:0,scenes:0};
 }
 function addXp(n,label){
   touchStreak();
@@ -2159,6 +2178,7 @@ function answerQuiz(btn,q){
   },ok?800:1600);
 }
 function endQuiz(){
+  S.today.quizzes=(S.today.quizzes||0)+1; checkQuests();
   document.getElementById("quizplay").style.display="none";
   document.getElementById("quizdone").style.display="block";
   const n=QZ.score;
@@ -2241,7 +2261,7 @@ function renderLessonStep(){
         const sim=1-lev(target,heard)/Math.max(target.length,1);
         const sc=document.getElementById("lscore");
         document.getElementById("lheard").textContent='Heard: "'+t+'"';
-        if(sim>=0.8){ sc.textContent="🎉 Perfect! ("+Math.round(sim*100)+"%)"; sc.className="score good"; S.perfect++; save(); addXp(5,"lesson pronunciation"); beep("good"); }
+        if(sim>=0.8){ sc.textContent="🎉 Perfect! ("+Math.round(sim*100)+"%)"; sc.className="score good"; S.perfect++; S.today.perfect=(S.today.perfect||0)+1; save(); checkQuests(); addXp(5,"lesson pronunciation"); beep("good"); }
         else { sc.textContent="👍 " + (sim>=0.5?"Good!":"Try again!") + " ("+Math.round(sim*100)+"%)"; sc.className=sim>=0.5?"score ok":"score bad"; beep(sim>=0.5?"good":"bad"); }
       }},()=>{ rec=null; });
       try{ rec.start(); }catch(err){ recBusy=false; setMic(false); }
@@ -2314,9 +2334,10 @@ function pScore(heardText){
   const sim=1-dist/Math.max(target.length,1);
   const sc=document.getElementById("pscore");
   document.getElementById("pheard").textContent='Heard: "'+heardText+'"';
+  const __pf=document.getElementById("pfb"); if(__pf) __pf.innerHTML=wordFb(target,heard);
   if(sim>=0.82){
     sc.textContent="🎉 Perfect! ("+Math.round(sim*100)+"%)"; sc.className="score good";
-    S.perfect++; save();
+    S.perfect++; S.today.perfect=(S.today.perfect||0)+1; save(); checkQuests();
     addXp(8,"perfect pronunciation"); beep("level");
     setTimeout(pNewPhrase,1800);
   } else if(sim>=0.55){
@@ -2333,9 +2354,10 @@ function renderXp(){
   const __x=document.getElementById("xpval"); __x.textContent=S.xp+" XP";
   __x.classList.remove("pop"); void __x.offsetWidth; __x.classList.add("pop");
   document.getElementById("lvlval").textContent=LEVELS[levelOf(S.xp)].en;
-  document.getElementById("streakval").textContent=S.streak;
+  document.getElementById("streakval").textContent=S.streak+((S.freezes||0)?" ❄"+S.freezes:"");
 }
 function renderProgress(){
+  renderQuests(); renderPlan();
   document.getElementById("st-xp").textContent=S.xp;
   document.getElementById("st-streak").textContent=S.streak;
   const knownTotal=Object.values(S.known).reduce((a,b)=>a+b.length,0);
@@ -2572,7 +2594,7 @@ function shScore(heard){
   document.getElementById("shheard").textContent='Heard: "'+heard+'"';
   if(sim>=0.75){
     sc.textContent="🎉 Excellent shadowing! ("+Math.round(sim*100)+"%)"; sc.className="score good";
-    S.perfect++; save();
+    S.perfect++; S.today.perfect=(S.today.perfect||0)+1; save(); checkQuests();
     addXp(8,"perfect shadowing"); beep("level");
     setTimeout(shNew,2000);
   } else if(sim>=0.5){
@@ -3559,7 +3581,7 @@ function finishScene(a){
   const sc=S.scene&&SCENES.find(x=>x.id===S.scene.id); if(!sc) return;
   const score=a&&a.score!=null?Math.max(0,Math.min(100,Math.round(+a.score))):60;
   const fb=a&&a.feedback?String(a.feedback):"Nice scene — try another one!";
-  S.scenesDone=(S.scenesDone||0)+1;
+  S.scenesDone=(S.scenesDone||0)+1; S.today.scenes=(S.today.scenes||0)+1; checkQuests();
   const xp=Math.max(3,Math.round(score/10));
   S.scene=null; save();
   addMsg("bot","🎬 Scene complete — "+sc.en+"! "+(score>=80?"⭐ ":"")+"Score "+score+"/100. "+fb,null,null,S.speak);
@@ -3604,6 +3626,64 @@ function initInteract(){
   }
 }
 document.addEventListener("DOMContentLoaded",initInteract);
+
+
+/* ---------------- BORROW PACK: quests · streak freeze · word colors · study plan ---------------- */
+function dstr(offset){ const y=new Date(); y.setDate(y.getDate()-offset); return y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate(); }
+function simW(a,b){ if(!b) return 0; a=norm(a); b=norm(b); if(a===b) return 1; const d=lev(a,b); return 1-d/Math.max(a.length,1); }
+function wordFb(target,heard){
+  const a=String(target).split(" ").filter(Boolean), b=String(heard).split(" ").filter(Boolean);
+  return a.map((w,i)=>{ const s=simW(w,b[i]); const cls=s>=0.99?"wg":s>=0.6?"wy":"wr";
+    return '<span class="'+cls+'">'+esc(b[i]||"…")+'</span>'; }).join("");
+}
+function renderQuests(){
+  const el=document.getElementById("questcard"); if(!el) return;
+  touchStreak();
+  const q=[["⚡ Earn 50 XP today",Math.min(50,S.today.xp||0),50],
+           ["🎯 3 perfect pronunciations",Math.min(3,S.today.perfect||0),3],
+           ["🧠 Finish a quiz or roleplay",Math.min(1,(S.today.quizzes||0)+(S.today.scenes||0)),1]];
+  el.innerHTML='<div style="font-size:15px;font-weight:800;margin-bottom:6px;">📜 Daily quests <span class="hint" style="font-weight:600;">· new every day</span></div>'+
+    q.map(x=>'<div class="qrow'+(x[1]>=x[2]?" done":"")+'"><span style="flex:1;">'+x[0]+'</span><b>'+x[1]+'/'+x[2]+'</b>'+(x[1]>=x[2]?" ✅":"")+'</div>').join("")+
+    (S.today.questDone?'<div class="hint" style="margin-top:6px;">🎁 Quest bonus claimed: +20 XP</div>':'');
+}
+function checkQuests(){
+  touchStreak();
+  if(!S.today.questDone && (S.today.xp||0)>=50 && (S.today.perfect||0)>=3 && ((S.today.quizzes||0)+(S.today.scenes||0))>=1){
+    S.today.questDone=true; save(); confetti(); beep("level"); addXp(20,"all daily quests!");
+  }
+  renderQuests();
+}
+function renderPlan(){
+  const el=document.getElementById("plancard"); if(!el) return;
+  const P=S.plan||{lvl:"b1",min:10};
+  const targets={a2:[2,"A2 · Speaker"],b1:[4,"B1 · Storyteller"],b2:[6,"Master"]};
+  const tg=targets[P.lvl]||targets.b1;
+  const need=Math.max(0,LEVELS[tg[0]].min-S.xp);
+  const days=Math.ceil(need/(P.min*2));
+  el.innerHTML='<div style="font-size:15px;font-weight:800;margin-bottom:6px;">🧭 Study plan</div>'+
+    '<p class="hint">At <b>'+P.min+' min/day</b> you reach <b>'+tg[1]+'</b> in about <b>'+
+    (need===0?"— already there! 🎉":days+" days (~"+Math.ceil(days/7)+" weeks)")+'</b>. Tune pace in ⚙️ Settings.</p>'+
+    '<div class="pbar" style="margin-top:8px;"><i style="width:'+Math.min(100,Math.round(100*S.xp/Math.max(1,LEVELS[tg[0]].min)))+'%"></i></div>';
+}
+function initPlan(){
+  const modal=document.querySelector("#settingsmodal .modal");
+  if(modal&&!document.getElementById("planrow")){
+    S.plan=S.plan||{lvl:"b1",min:10};
+    const row=document.createElement("div"); row.className="srow"; row.id="planrow";
+    row.innerHTML='<span class="sl">🧭 Study plan</span>'+
+      '<select id="planlvl"><option value="a2">Reach A2</option><option value="b1">Reach B1</option><option value="b2">Reach B2</option></select>'+
+      '<select id="planmin"><option value="5">5 min/day</option><option value="10">10 min/day</option><option value="20">20 min/day</option><option value="30">30 min/day</option></select>'+
+      '<span class="sd">Progress shows your estimated finish date.</span>';
+    modal.appendChild(row);
+    const l=row.querySelector("#planlvl"), m=row.querySelector("#planmin");
+    if(l&&m){
+      l.value=S.plan.lvl; m.value=String(S.plan.min);
+      l.onchange=()=>{ S.plan.lvl=l.value; save(); renderPlan(); };
+      m.onchange=()=>{ S.plan.min=+m.value; save(); renderPlan(); };
+    }
+  }
+}
+document.addEventListener("DOMContentLoaded",initPlan);
 
 /* ---------------- INIT ---------------- */
 function initLangSelects(){
