@@ -17,6 +17,8 @@ native app.
 - 🔤 **Script Trainer** — learn Tamil / Devanagari / Malayalam alphabets with voiced letter cards, known-tracking and letter quizzes
 - 📘 **Grammar Guide** — two-minute essentials for all 5 languages with spoken examples
 - 👋 **Onboarding tour**, 📤 share-progress card, 🔥 streak nudge + optional daily reminder
+- 📜 **Daily quests** (Duolingo-style) with a +20 XP bonus, ❄️ **streak freezes** every 7-day streak,
+  🟢🟡 **per-word pronunciation feedback** (ELSA-style) and a 🧭 **study plan** with finish-date ETA (Busuu-style).
 - 🤖 **AI tutor (free)** — conversations at levels A1–B2, interactive stories with choices, session reviews, grammar feedback. Default provider Pollinations `gpt-oss-20b` — **no key needed**
 - 🎭 **Roleplay scenes** — mission-based AI conversations (restaurant, airport, shopping, doctor) with scores, XP and a 🎭 Stage Star badge
 - 💾 **Private** — everything lives in your browser's localStorage; JSON backup / restore / wipe
